@@ -5,7 +5,14 @@
     <div class="span8 offset2">
         <div class="hero-unit">
             <h1>Entraste!</h1>
-            <p>Poner algún cartelito que indique si es o no administrador :)</p>
+            #{if user.isAdmin}
+                <p>Bienvenido señor administrador!</p>
+            #{/if}
+            #{else}
+                <p>Por ahora sos un usuario de poca monta :(</p>
+            #{/else}
+            <br>
+            <a class="logout btn btn-primary btn-large btn-danger" href="@{Secure.logout()}">Log out</a>
         </div>
     </div>
 </div>

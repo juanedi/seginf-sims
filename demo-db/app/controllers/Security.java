@@ -17,7 +17,7 @@ public class Security extends controllers.Secure.Security {
 
     static boolean authenticate(final String username, final String password) {
         User user = User.find("byUsername", username).first();
-        return user != null && user.password.equals(password);
+        return user != null && user.comparePassword(password);
     }
     
 }
