@@ -1,0 +1,41 @@
+package models;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import play.db.jpa.Model;
+
+/**
+ * Rol definido para una aplicación.
+ * 
+ * 
+ * @author Juan Edi
+ * @since May 23, 2012
+ */
+@Entity
+@Table(name = "roles")
+public class Role extends Model {
+
+    /** Rol de administrador, capaz de dar de alta aplicaciones */
+    public static final String SIMS_ADMIN_ROLE = "ADMIN";
+    
+    /** Rol del perfil de auditoría del administrador de identidades */
+    public static final String SIMS_AUDIT_ROLE = "AUDIT";
+    
+    /** 
+     * Rol que se le asigna a un usuario sobre una aplicación para 
+     * que pueda modificar los roles de los otros usuarios de la misma 
+     */
+    public static final String APP_ADMIN_ROLE = "SIMS_APP_MANAGER";
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "app_id")
+    public App app;
+    
+    @Column(name = "name", nullable = false)
+    public String name;
+
+}
