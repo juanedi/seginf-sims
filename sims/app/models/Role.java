@@ -19,8 +19,11 @@ import play.db.jpa.Model;
 @Table(name = "roles")
 public class Role extends Model {
 
-    /** Rol de administrador, capaz de dar de alta aplicaciones */
-    public static final String SIMS_ADMIN_ROLE = "ADMIN";
+    /** Rol para quienes pueden crear aplicaciones */
+    public static final String SIMS_CREATE_APP_ROLE = "CREATE_APP";
+    
+    /** Rol para quienes pueden crear usuarios */
+    public static final String SIMS_CREATE_USER_ROLE = "CREATE_USER";
     
     /** Rol del perfil de auditoría del administrador de identidades */
     public static final String SIMS_AUDIT_ROLE = "AUDIT";

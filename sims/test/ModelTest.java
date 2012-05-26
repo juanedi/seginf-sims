@@ -33,7 +33,7 @@ public class ModelTest extends UnitTest {
         
         Role adminRole = new Role();
         adminRole.app = app;
-        adminRole.name = Role.SIMS_ADMIN_ROLE;
+        adminRole.name = Role.SIMS_CREATE_APP_ROLE;
         adminRole.save();
         
         Role auditRole = new Role();
@@ -48,7 +48,7 @@ public class ModelTest extends UnitTest {
         
         assertEquals(1, userRoles.size());
         assertEquals(app.name, userRoles.get(0).app.name);
-        assertEquals(Role.SIMS_ADMIN_ROLE, userRoles.get(0).name);
+        assertEquals(Role.SIMS_CREATE_APP_ROLE, userRoles.get(0).name);
     }
 
 }
