@@ -6,23 +6,6 @@
         <div class="hero-unit">
             <h1>Alto ahí!</h1>
             <p>En algún momento esto va a ser el administrador de identidades</p>
-			<br>
-			<a class="logout btn btn-primary btn-large btn-danger" href="@{Secure.logout()}">Log out</a>
         </div>
-        #{secure.check 'CREATE_APP'}
-        <div class="well">
-            Alta de aplicaciones
-        </div>
-        #{/secure.check}
-        #{secure.check 'CREATE_USER'}
-        <div class="well">
-            Alta de usuarios
-        </div>
-        #{/secure.check}
-        #{secure.check 'AUDIT'}
-        <div class="well">
-            Consulta de logs
-        </div>
-        #{/secure.check}
     </div>
 </div>

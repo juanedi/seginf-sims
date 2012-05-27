@@ -11,14 +11,39 @@
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         <script src="@{'/public/javascripts/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                // Cada template indica qué elemento del menu resaltar
+                $("##{get 'menuItem' /}").addClass("active");
+            });
+        </script>
         #{get 'moreScripts' /}
     </head>
     <body>
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container">
-                    <div class="offset2">
-                    <a class="brand" href="@{Application.index}">seginf-sims</a>
+                    <div>
+	                    <a class="brand" href="@{Application.index}">seginf-sims</a>
+						<div class="nav-collapse">
+						 <ul class="nav">
+						   <li id="nav-pwd"><a href="@{Password.info}">Mi clave</a></li>
+						   #{secure.check 'CREATE_APP'}
+						   <li id="nav-apps"><a href="@{Application.create}">Crear aplicación</a></li>
+						   #{/secure.check}
+						   #{secure.check 'CREATE_USER'}
+	                       <li id="nav-usr"><a href="@{Users.create}">Crear usuario</a></li>
+	                       #{/secure.check}
+	                       #{secure.check 'AUDIT'}
+	                       <li id="nav-logs"><a href="@{Logs.logs}">Logs</a></li>
+	                       #{/secure.check}
+						 </ul>
+						 <ul class="nav pull-right">
+						    <li>
+						     <a href="@{Secure.logout()}">Log out</a>
+						    </li>
+						 </ul>
+						</div>
                     </div>
                 </div>
             </div>

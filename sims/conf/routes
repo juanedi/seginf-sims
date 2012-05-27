@@ -5,6 +5,18 @@
 # Home page
 GET     /                                       Application.index
 
+# Password management
+GET     /password                               Password.info
+
+# Applications
+GET     /applications                           Application.create
+
+# Users
+GET     /users                                  Users.create
+
+# Logs
+GET     /logs                                   Logs.logs
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
