@@ -3,6 +3,8 @@
  */
 package controllers;
 
+import play.modules.spring.Spring;
+
 
 /**
  * Autentica contra el LDAP
