@@ -1,10 +1,9 @@
 package controllers;
 
-import play.modules.spring.Spring;
-
+import models.User;
 
 /**
- * Autentica contra el LDAP
+ * Autentica contra la base de datos. 
  * 
  * 
  * @author Juan Edi
@@ -13,7 +12,8 @@ import play.modules.spring.Spring;
 public class Security extends controllers.Secure.Security {
 
     static boolean authenticate(final String username, final String password) {
-        return false;
+        User user = User.find("byUsername", username).first();
+        return user != null && user.comparePassword(password);
     }
     
 }

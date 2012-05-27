@@ -43,6 +43,12 @@ public class User extends Model {
     public String password;
 
     @ManyToMany
+    @JoinTable( name = "user_apps", 
+                joinColumns = @JoinColumn(name = "user_id"), 
+                inverseJoinColumns = @JoinColumn(name = "app_id"))
+    public List<App> apps;
+    
+    @ManyToMany
     @JoinTable( name = "user_roles", 
                 joinColumns = @JoinColumn(name = "user_id"), 
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -50,6 +56,7 @@ public class User extends Model {
     
     /** Creates the User. */
     public User() {
+        this.apps = new LinkedList<App>();
         this.roles = new LinkedList<Role>();
     }
     

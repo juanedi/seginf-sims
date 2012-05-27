@@ -1,0 +1,24 @@
+# you describe your data using the YAML notation here
+# and then load them using Fixtures.load("data.yml")
+
+App(sims):
+  name: SIMS
+  
+Role(createApp):
+  app: sims
+  name: CREATE_APP
+
+Role(createUser):
+  app: sims
+  name: CREATE_USER
+
+Role(audit):
+  app: sims
+  name: AUDIT
+
+User(admin):
+  username: admin
+  email: admin@sims.com
+  password: admin
+  apps: [sims]
+  roles: [createApp]  
