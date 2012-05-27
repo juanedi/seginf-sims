@@ -87,11 +87,23 @@ public class User extends Model {
         
     }
 
+    public boolean hasRole(final String appName, final String roleName) {
+        long count = User.count("from User u join u.roles r" 
+                             + " where u = ?1 and r.app.name = ?2 and r.name = ?3",
+                             this, appName, roleName);
+        return count > 0;
+    }
+    
+    /** devuelve los roles que el usuario posee para cierta aplicación */
+    public List<Role> getRoles(final String appName) {
+        return User.find("select r from User u join u.roles r where u = ?1 and r.app.name = ?2", 
+                this, appName)
+           .fetch();
+    }
+    
     /** devuelve los roles que el usuario posee para cierta aplicación */
     public List<Role> getRoles(final App application) {
-        return User.find("select r from User u join u.roles r where u = ?1 and r.app = ?2", 
-                         this, application)
-                    .fetch();
+        return getRoles(application.name);
     }
     
     /*-------- ÚTIL --------*/

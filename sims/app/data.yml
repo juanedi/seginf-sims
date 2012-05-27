@@ -21,4 +21,4 @@ User(admin):
   email: admin@sims.com
   password: admin
   apps: [sims]
-  roles: [createApp]  
+  roles: [createApp, createUser, audit]

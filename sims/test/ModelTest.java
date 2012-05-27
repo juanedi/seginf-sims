@@ -1,11 +1,50 @@
 import org.junit.*;
 import java.util.*;
 
+import play.db.jpa.JPA;
 import play.test.*;
 import models.*;
 
 public class ModelTest extends UnitTest {
 
+    private User user;
+    private App app;
+    private Role rol1;
+    private Role rol2;
+
+    /** init */
+    @Before
+    public void init() {
+        user = new User();
+        user.username = "juan";
+        user.password = "pass";
+        user.email = "juan@server.com";
+        user.save();
+        
+        app = new App();
+        app.name = "aplicacion";
+        app.save();
+        
+        rol1 = new Role();
+        rol1.app = app;
+        rol1.name = "unRol";
+        rol1.save();
+        
+        rol2 = new Role();
+        rol2.app = app;
+        rol2.name = "otroRol";
+        rol2.save();
+        
+        user.roles.add(rol1);
+        user.save();
+    }
+
+    /** rollback :) */
+    @After
+    public void rollBack() {
+        JPA.setRollbackOnly();
+    }
+    
     /** Un email válido pasa la validación */
     @Test
     public void testValidEmail() {
@@ -21,34 +60,27 @@ public class ModelTest extends UnitTest {
     /** Prueba la consulta de roles por aplicación de un usuario */
     @Test
     public void retrieveGrantedRolesTest() {
-        User user = new User();
-        user.username = "juan";
-        user.password = "pass";
-        user.email = "juan@server.com";
-        user.save();
-        
-        App app = new App();
-        app.name = App.SIMS_APP_NAME;
-        app.save();
-        
-        Role adminRole = new Role();
-        adminRole.app = app;
-        adminRole.name = Role.SIMS_CREATE_APP_ROLE;
-        adminRole.save();
-        
-        Role auditRole = new Role();
-        auditRole.app = app;
-        auditRole.name = Role.SIMS_AUDIT_ROLE;
-        auditRole.save();
-        
-        user.roles.add(adminRole);
-        user.save();
-        
         List<Role> userRoles = user.getRoles(app);
         
         assertEquals(1, userRoles.size());
         assertEquals(app.name, userRoles.get(0).app.name);
-        assertEquals(Role.SIMS_CREATE_APP_ROLE, userRoles.get(0).name);
+        assertEquals(rol1.name, userRoles.get(0).name);
     }
 
+    /** Chequeo de roles */
+    @Test 
+    public void checkRoleTest() {
+        // rol que tiene
+        assertTrue(user.hasRole("aplicacion", "unRol"));
+        
+        // rol que no tiene
+        assertFalse(user.hasRole("aplicacion", "otroRol"));
+        
+        // rol que no existe
+        assertFalse(user.hasRole("aplicacion", "ningunRol"));
+        
+        // usuario que no existe
+        assertFalse(user.hasRole("ningún usuario", "unRol"));
+    }
+    
 }
