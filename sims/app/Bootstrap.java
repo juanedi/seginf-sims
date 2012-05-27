@@ -2,10 +2,6 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.test.Fixtures;
 
-/*
- * Copyright (c) 2012 Zauber S.A.  -- All rights reserved
- */
-
 /**
  * Carga los datos de data.yml
  * 
@@ -13,7 +9,7 @@ import play.test.Fixtures;
  * @author Juan Edi
  * @since May 19, 2012
  */
-@OnApplicationStart
+//@OnApplicationStart
 public class Bootstrap extends Job {
 
     public void doJob() {
