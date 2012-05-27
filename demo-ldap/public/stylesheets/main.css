@@ -1,0 +1,12 @@
+.login {
+    margin-top: 50px;
+}
+
+.login .well {
+    padding-top: 25px;
+    padding-bottom: 0px;
+}
+
+.login .form-actions {
+	text-align: right;
+}
