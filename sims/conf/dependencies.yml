@@ -3,3 +3,7 @@
 require:
     - play
     - play -> secure
+    - play -> spring 1.0.3
+    - com.rabbitmq -> amqp-client 2.8.0
+    - org.springframework.amqp -> spring-amqp 1.0.0.RELEASE
+    - org.springframework.amqp -> spring-rabbit 1.0.0.RELEASE
