@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -32,6 +34,10 @@ public class App extends Model {
     
     @Column(name = "name", nullable = false)
     public String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "hash_type", nullable = false)
+    public Hash hashType;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "app", cascade = CascadeType.ALL)
     public List<Role> roles;

@@ -23,6 +23,7 @@ public class ModelTest extends UnitTest {
         
         app = new App();
         app.name = "aplicacion";
+        app.hashType = Hash.MD5;
         app.save();
         
         rol1 = new Role();

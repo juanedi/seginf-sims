@@ -90,6 +90,24 @@ public class User extends Model {
         this.email = email;
     }
     
+    /** devuelve el password para determinado tipo de hash */
+    public String getHashedPassword(Hash hashType) {
+        // razonablemente feo :)
+        if (Hash.MD5.equals(hashType)) {
+            return passwordMD5;
+        }
+        if (Hash.SHA1.equals(hashType)) {
+            return passwordSHA1;
+        }
+        if (Hash.SHA256.equals(hashType)) {
+            return passwordSHA256;
+        }
+        if (Hash.SHA512.equals(hashType)) {
+            return passwordSHA512;
+        }
+        return null;
+    }
+    
     /** compara la password */
     public boolean comparePassword(final String password) {
         if (password == null || password.isEmpty()) {

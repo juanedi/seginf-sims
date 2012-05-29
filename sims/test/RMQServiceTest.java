@@ -19,7 +19,7 @@ import services.RMQServiceImpl;
  * @author Juan Edi
  * @since May 28, 2012
  */
-//@Ignore
+@Ignore
 public class RMQServiceTest extends UnitTest {
 
     private RMQService rmqService;
@@ -33,7 +33,7 @@ public class RMQServiceTest extends UnitTest {
     
     @Test
     public final void setupApplicationTest() {
-        rmqService.setupApplication("testApp");
+        rmqService.setupApplication("demodb");
     }
 
     /** Modifica la clave */

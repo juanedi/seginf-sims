@@ -3,10 +3,18 @@
  */
 package services;
 
+import java.util.Collections;
+
 import org.apache.commons.lang.Validate;
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.Binding.DestinationType;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+
+import ar.uba.dc.seginf.sims.MessageType;
 
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
@@ -48,8 +56,20 @@ public class RMQServiceImpl implements RMQService {
     /** @see services.RMQService#setupApplication(java.lang.String) */
     @Override
     public void setupApplication(String appName) {
-        // crea la cola en RMQ
-        admin.declareQueue(new Queue(appName));
+        // se crea un exchange a donde se envían todos los mensajes de la aplicación.
+        admin.declareExchange(new TopicExchange(appName));
+        for (MessageType messageType : MessageType.values()) {
+            // se crea una queue para cada tipo de mensaje,
+            // y se routean los mensaje s ala queue según el
+            // tipo de mensaje.
+            String queueName = appName + "/" + messageType;
+            admin.declareQueue(new Queue(queueName));
+            admin.declareBinding(new Binding(queueName,                     // queue 
+                                            DestinationType.QUEUE,          // destinationType
+                                            appName,                        // exchange
+                                            messageType.name(),             // routingKey
+                                            Collections.<String,Object>emptyMap()));
+        }
         
         // crea usuario con password default
         putUserJSON(appName, appName);
@@ -108,6 +128,6 @@ public class RMQServiceImpl implements RMQService {
     }
     
     private String userPermissionsPayload(String appName) {
-        return "{\"configure\":\"\",\"write\":\"\",\"read\":\"^" + appName + "$\"}";
+        return "{\"configure\":\"\",\"write\":\"\",\"read\":\"^" + appName + "/.+$\"}";
     }
 }

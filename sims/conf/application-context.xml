@@ -45,5 +45,9 @@
         <constructor-arg index="4" value="${rmq.broker.password}" />
         <constructor-arg index="5" ref="rabbitAdmin" />
     </bean>
-                                
+
+    <bean id="appNotificationService" class="services.RMQAppNotificationService">
+        <constructor-arg index="0" ref="newUserRabbitTemplate" />
+    </bean>
+
 </beans>
