@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
     xmlns:rabbit="http://www.springframework.org/schema/rabbit"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -23,7 +25,17 @@
 
     <rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory"/>
 
-    <rabbit:template id="rabbitTemplate" connection-factory="rabbitConnectionFactory"/>
+    <bean id="newUserRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <constructor-arg index="0" ref="rabbitConnectionFactory" />
+        <property name="routingKey" value="NEW_USER" />
+        <property name="messageConverter">
+            <bean class="services.SimsMessageConverter">
+                <constructor-arg index="0">
+                    <bean class="ar.uba.dc.seginf.sims.marshallers.NewUserMessageMarshaller" />
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
 
     <bean id="rmqService" class="services.RMQServiceImpl">
         <constructor-arg index="0" value="${rmq.broker.host}" />
