@@ -20,7 +20,7 @@ import ar.uba.dc.seginf.sims.messages.NewUserMessage;
  */
 public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMessage>{
 
-    private static final String PATTERN = "([\\w]+),([\\w]+),([\\w]+),\\[(([\\w],?)*)\\]";
+    private static final String PATTERN = "([\\w]+),([\\w]+),((?:[\\w]|\\+|/|=)+),\\[((?:[\\w],?)*)\\]";
     
     /** Creates the NewUserMessageMarshaller. */
     public NewUserMessageMarshaller() {
