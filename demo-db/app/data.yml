@@ -3,10 +3,10 @@
 
 User(juanedi):
   username: juanedi
-  password: secret
+  plainPassword: secret
   isAdmin: false
   
 User(pepe):
   username: pepe
-  password: secret
+  plainPassword: secret
   isAdmin: true

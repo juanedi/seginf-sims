@@ -41,10 +41,11 @@ public class User extends Model {
         Validate.notEmpty(username);
         this.username = username;
         this.isAdmin = isAdmin;
-        setPassword(password);
+        this.password = password;
+//        setPassword(password);
     }
     
-    public void setPassword(final String password) {
+    public void setPlainPassword(final String password) {
         Validate.notEmpty(password);
         this.password = hashPassword(password);
     }
