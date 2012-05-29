@@ -12,10 +12,8 @@ package services;
  */
 public interface RMQService {
 
-    void createQueue(String appName);
+    void setUser(String appName);
     
-    void createUser(String appName);
-
     void changeUserPassword(String appName, String password);
     
 }

@@ -29,5 +29,14 @@
     <bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
         <constructor-arg ref="rabbitConnectionFactory" />
     </bean>
+
+    <bean id="rmqService" class="services.RMQServiceImpl">
+        <constructor-arg index="0" value="${rmq.broker.host}" />
+        <constructor-arg index="1" value="${rmq.api.port}" />
+        <constructor-arg index="2" value="${rmq.broker.vhost}" />
+        <constructor-arg index="3" value="${rmq.broker.username}" />
+        <constructor-arg index="4" value="${rmq.broker.password}" />
+        <constructor-arg index="5" ref="rabbitAdmin" />
+    </bean>
                                 
 </beans>
