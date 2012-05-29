@@ -39,9 +39,18 @@ public class User extends Model {
     @Column(name = "email", nullable = false)
     public String email;
     
-    @Column(name = "password", nullable = false)
-    public String password;
+    @Column(name = "password_md5", nullable = false)
+    public String passwordMD5;
 
+    @Column(name = "password_sha_1", nullable = false)
+    public String passwordSHA1;
+    
+    @Column(name = "password_sha_256", nullable = false)
+    public String passwordSHA256;
+    
+    @Column(name = "password_sha_512", nullable = false)
+    public String passwordSHA512;
+    
     @ManyToMany
     @JoinTable( name = "user_apps", 
                 joinColumns = @JoinColumn(name = "user_id"), 
@@ -69,7 +78,10 @@ public class User extends Model {
     /** setea el password */
     public void setPassword(final String password) {
         Validate.notEmpty(password);
-        this.password = hashPassword(password);
+        this.passwordMD5 = hashPassword(password, HashType.MD5);
+        this.passwordSHA1 = hashPassword(password, HashType.SHA1);
+        this.passwordSHA256 = hashPassword(password, HashType.SHA256);
+        this.passwordSHA512 = hashPassword(password, HashType.SHA512);
     }
     
     /** setea el email */
@@ -83,7 +95,7 @@ public class User extends Model {
         if (password == null || password.isEmpty()) {
             return false;
         }
-        return this.password.equals(hashPassword(password));
+        return this.passwordSHA512.equals(hashPassword(password, HashType.SHA512));
         
     }
 
@@ -109,8 +121,8 @@ public class User extends Model {
     /*-------- ÚTIL --------*/
 
     /** hash de las passwords */
-    private static String hashPassword(final String password) {
-        return Crypto.passwordHash(password, HashType.SHA256);
+    private static String hashPassword(final String password, final HashType hashType) {
+        return Crypto.passwordHash(password, hashType);
     }
 
     /** valida que se haya pasado un email no nulo y del formato correcto */

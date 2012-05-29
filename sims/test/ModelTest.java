@@ -17,7 +17,7 @@ public class ModelTest extends UnitTest {
     public void init() {
         user = new User();
         user.username = "juan";
-        user.password = "pass";
+        user.setPassword("pass");
         user.email = "juan@server.com";
         user.save();
         
