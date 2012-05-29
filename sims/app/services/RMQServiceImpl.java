@@ -45,9 +45,9 @@ public class RMQServiceImpl implements RMQService {
         this.admin = admin;
     }
 
-    /** @see services.RMQService#setUser(java.lang.String) */
+    /** @see services.RMQService#setupApplication(java.lang.String) */
     @Override
-    public void setUser(String appName) {
+    public void setupApplication(String appName) {
         // crea la cola en RMQ
         admin.declareQueue(new Queue(appName));
         

@@ -12,7 +12,7 @@ package services;
  */
 public interface RMQService {
 
-    void setUser(String appName);
+    void setupApplication(String appName);
     
     void changeUserPassword(String appName, String password);
     

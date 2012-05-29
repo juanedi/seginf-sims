@@ -14,21 +14,16 @@
         </property>
     </bean>
 
-    <bean id="rabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
-        <constructor-arg value="${rmq.broker.host}" />
-        <property name="port" value="${rmq.broker.port}" />
-        <property name="virtualHost" value="${rmq.broker.vhost}" />
-        <property name="username" value="${rmq.broker.username}" />
-        <property name="password" value="${rmq.broker.password}" />
-    </bean>
+    <rabbit:connection-factory id="rabbitConnectionFactory"
+                               host="${rmq.broker.host}"
+                               port="${rmq.broker.port}"
+                               virtual-host="${rmq.broker.vhost}"
+                               username="${rmq.broker.username}"
+                               password="${rmq.broker.password}"/>
 
-    <bean id="rabbitAdmin" class="org.springframework.amqp.rabbit.core.RabbitAdmin">
-        <constructor-arg ref="rabbitConnectionFactory" />
-    </bean>
+    <rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory"/>
 
-    <bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-        <constructor-arg ref="rabbitConnectionFactory" />
-    </bean>
+    <rabbit:template id="rabbitTemplate" connection-factory="rabbitConnectionFactory"/>
 
     <bean id="rmqService" class="services.RMQServiceImpl">
         <constructor-arg index="0" value="${rmq.broker.host}" />
