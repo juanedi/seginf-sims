@@ -23,18 +23,14 @@
                                username="${rmq.broker.username}"
                                password="${rmq.broker.password}"/>
 
-    <bean id="newUserListener" class="org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter">
+
+    <bean id="newUserListener" class="services.MessageListenerFactoryBean">
         <constructor-arg index="0">
             <bean class="services.NewUserMessageProcessor" />
         </constructor-arg>
         <constructor-arg index="1">
-            <bean class="services.SimsMessageConverter">
-                <constructor-arg index="0">
-                    <bean class="ar.uba.dc.seginf.sims.marshallers.NewUserMessageMarshaller" />
-                </constructor-arg>
-            </bean>
+            <bean class="ar.uba.dc.seginf.sims.marshallers.NewUserMessageMarshaller" />
         </constructor-arg>
-        <property name="defaultListenerMethod" value="process" />
     </bean>
 
     <rabbit:listener-container connection-factory="rabbitConnectionFactory">
