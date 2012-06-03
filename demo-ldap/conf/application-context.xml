@@ -4,4 +4,27 @@
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:ldap.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+          <property name="url" value="${ldap.url}" />
+          <property name="userDn" value="${ldap.userDn}" />
+          <property name="base" value="${ldap.base}" />
+          <property name="password" value="${ldap.password}" />
+     </bean>
+
+     <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+       <constructor-arg ref="contextSource" />
+     </bean>
+          
+     <bean id="authenticator" class="authentication.LDAPService">
+       <constructor-arg ref="ldapTemplate" />
+     </bean>
+
 </beans>
