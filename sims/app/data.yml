@@ -5,7 +5,7 @@
 
 App(demodb):
   name: demodb
-  hashType: MD5
+  hashType: SHA256
 
 Role(demodbAdmin):
   app: demodb
