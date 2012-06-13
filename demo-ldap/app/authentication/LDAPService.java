@@ -1,14 +1,13 @@
 package authentication;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-
-import javax.naming.NamingException;
+import javax.naming.Name;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+
+import models.User;
 
 import org.apache.commons.lang.Validate;
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
@@ -27,7 +26,6 @@ import play.libs.Crypto.HashType;
  */
 public class LDAPService {
 
-    private static AttributesMapper PASSWORD_GETTER = new PasswordAttributesMapper();
     private final LdapTemplate ldapTemplate;
 
     /** Creates the LDAPAuthenticator. */
@@ -36,46 +34,43 @@ public class LDAPService {
         this.ldapTemplate = ldapTemplate;
     }
     
-    public boolean authenticate(final String username, final String password) {
-        String real = getUserPassword(username);
-        String pwHash = Crypto.passwordHash(password, HashType.MD5);
-        return real != null && removePadding(real).equals(removePadding(pwHash));
-    }
-    
-    /** Obtiene el hash del password del LDAP */
-    private String getUserPassword(final String username) {
-        Filter filter = new AndFilter()
-        .and(new EqualsFilter("objectclass", "posixAccount"))
-        .and(new EqualsFilter("uid", username));
-        List<String> results = ldapTemplate.search("ou=users", filter.encode(), PASSWORD_GETTER);
-        if (results.size() != 1) {
-            return null;
-        }
-        return results.get(0);
-    }
-    
-    private static String removePadding(final String hash) {
-        if (hash.contains("=")) {
-            return hash.substring(0, hash.indexOf("="));
-        } else {
-            return hash;
-        }
-    }
-    
-    private static class PasswordAttributesMapper implements AttributesMapper {
-
-        /** @see AttributesMapper#mapFromAttributes(Attributes) */
-        @Override
-        public Object mapFromAttributes(Attributes attrs) throws NamingException {
-            String pwAttr = new String(((byte[])attrs.get("userpassword").get()));
-            
-            // FIXME: esto le saca un "{MD5}" al principio de la pass
-            // que devuelve el LDAP. Si las vamos a guardar en modo
-            // "plain" y encriptadas a mano no hay que hacer esto.
-            pwAttr = pwAttr.substring(5, pwAttr.length() - 1);
-            return pwAttr;
-        }
+    /** crea un usuario nuevo */
+    public void createUser(final User user) {
+        Name name = dName(user);
+        ldapTemplate.bind(name, null, attributes(user));
         
+        //TODO: agregarlo a grupos.
+    }
+    
+    /** autentica el usuario */
+    public boolean authenticate(final String username, final String password) {
+        Filter filter = new AndFilter()
+                            .and(new EqualsFilter("objectclass", "person"))
+                            .and(new EqualsFilter("uid", username));
+        
+        return ldapTemplate.authenticate("ou=users", filter.encode(), password);
+    }
+    
+    /** construye el nombre calificado del usuario */
+    private static Name dName(final User user) {
+        DistinguishedName dn = new DistinguishedName();
+        dn.add("ou", "users");
+        dn.add("uid", user.username);
+        return dn;
+    }
+    
+    /** construye los atributos de un usuario nuevo */
+    private static Attributes attributes(final User user) {
+        BasicAttributes attrs = new BasicAttributes();
+        
+        BasicAttribute objectClass = new BasicAttribute("objectclass");
+        objectClass.add("person");
+        objectClass.add("inetOrgPerson");
+        attrs.put(objectClass);
+        attrs.put("cn", user.firstName + " " + user.lastName);
+        attrs.put("sn", user.lastName);
+        attrs.put("userpassword", "{MD5}" + user.password); //la pass ya viene hasheada al momento de crear.
+        return attrs;
     }
     
 }
