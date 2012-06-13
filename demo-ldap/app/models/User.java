@@ -3,6 +3,7 @@
  */
 package models;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,5 +21,5 @@ public class User {
     public String firstName;
     public String lastName;
 
-    public List<String> groups;
+    public List<String> groups = new LinkedList<String>();
 }
