@@ -1,4 +1,4 @@
-package services;
+package ar.uba.dc.seginf.sims.util;
 
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
@@ -16,6 +16,7 @@ public class MessageListenerFactoryBean extends AbstractFactoryBean<MessageListe
 
     private MessageListenerAdapter instance;
     
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public MessageListenerFactoryBean(final MessageProcessor<?> processor, 
                                       final MessageMarshaller<?> marshaller) {
         instance = new MessageListenerAdapter(processor, new SimsMessageConverter(marshaller));

@@ -1,9 +1,9 @@
 package services;
 
-import models.User;
 import play.db.jpa.JPA;
 import play.db.jpa.JPAPlugin;
 import ar.uba.dc.seginf.sims.messages.Message;
+import ar.uba.dc.seginf.sims.util.MessageProcessor;
 
 /**
  * Abre una transacción play y procesa un mensaje.

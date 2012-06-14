@@ -1,9 +1,7 @@
 package services;
 
-import play.db.jpa.JPA;
-import play.db.jpa.JPAPlugin;
-import play.db.jpa.Transactional;
 import models.User;
+import ar.uba.dc.seginf.sims.messages.Message;
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
 
 /**

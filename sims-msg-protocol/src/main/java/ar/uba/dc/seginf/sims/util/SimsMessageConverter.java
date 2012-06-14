@@ -1,4 +1,4 @@
-package services;
+package ar.uba.dc.seginf.sims.util;
 
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.MessageConversionException;
@@ -6,9 +6,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.amqp.support.converter.SimpleMessageConverter;
 
 import ar.uba.dc.seginf.sims.marshallers.MessageMarshaller;
-import ar.uba.dc.seginf.sims.marshallers.NewUserMessageMarshaller;
 import ar.uba.dc.seginf.sims.messages.Message;
-import ar.uba.dc.seginf.sims.messages.NewUserMessage;
 
 /**
  * Converter genérico para el administrador.
@@ -36,9 +34,9 @@ public class SimsMessageConverter<T extends Message> implements MessageConverter
     }
 
     /** @see MessageConverter#toMessage(Object, MessageProperties) */
+    @SuppressWarnings("unchecked")
     @Override
-    public org.springframework.amqp.core.Message toMessage(Object arg0,
-            MessageProperties arg1) throws MessageConversionException {
+    public org.springframework.amqp.core.Message toMessage(Object arg0, MessageProperties arg1) throws MessageConversionException {
         return stringConverter.toMessage(marshaller.marshall((T) arg0), arg1);
     }
 

@@ -24,7 +24,7 @@
                                password="${rmq.broker.password}"/>
 
 
-    <bean id="newUserListener" class="services.MessageListenerFactoryBean">
+    <bean id="newUserListener" class="ar.uba.dc.seginf.sims.util.MessageListenerFactoryBean">
         <constructor-arg index="0">
             <bean class="services.NewUserMessageProcessor" />
         </constructor-arg>

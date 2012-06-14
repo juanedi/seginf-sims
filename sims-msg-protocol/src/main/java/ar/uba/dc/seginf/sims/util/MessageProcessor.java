@@ -1,4 +1,4 @@
-package services;
+package ar.uba.dc.seginf.sims.util;
 
 import ar.uba.dc.seginf.sims.messages.Message;
 
