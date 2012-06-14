@@ -2,9 +2,9 @@ package controllers;
 
 import javax.inject.Inject;
 
-import authentication.LDAPService;
 
 import play.modules.spring.Spring;
+import services.LDAPService;
 
 
 /**

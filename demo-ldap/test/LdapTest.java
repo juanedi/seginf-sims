@@ -13,11 +13,11 @@ import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 
-import authentication.LDAPService;
 import play.libs.Crypto;
 import play.libs.Crypto.HashType;
 import play.modules.spring.Spring;
 import play.test.UnitTest;
+import services.LDAPService;
 
 /**
  * TODO Descripcion de la clase. Los comentarios van en castellano.

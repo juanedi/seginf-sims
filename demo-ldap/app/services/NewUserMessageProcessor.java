@@ -6,7 +6,6 @@ import org.apache.commons.lang.Validate;
 
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
 import ar.uba.dc.seginf.sims.util.MessageProcessor;
-import authentication.LDAPService;
 
 /**
  * Crea nuevos usuarios.

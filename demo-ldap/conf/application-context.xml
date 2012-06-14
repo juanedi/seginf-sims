@@ -28,7 +28,7 @@
        <constructor-arg ref="contextSource" />
      </bean>
           
-     <bean id="ldapService" class="authentication.LDAPService">
+     <bean id="ldapService" class="services.LDAPService">
        <constructor-arg ref="ldapTemplate" />
      </bean>
 
