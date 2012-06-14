@@ -10,8 +10,7 @@ import play.mvc.With;
  * @author Juan Edi
  * @since May 27, 2012
  */
-@With(Secure.class)
-public class Logs extends Controller {
+public class Logs extends SecureController {
 
     /** Sirve pantalla principal de consulta de logs */
     public static void logs() {

@@ -10,6 +10,7 @@ GET     /password                               Password.info
 
 # Applications
 GET     /applications                           Application.create
+POST    /applications                           Application.postApp
 
 # Users
 GET     /users                                  Users.create

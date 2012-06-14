@@ -1,6 +1,7 @@
 package models;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,6 +30,8 @@ import play.db.jpa.Model;
         uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class App extends Model {
 
+    public static final Pattern NAME_PATTERN = Pattern.compile("[\\w]+");
+
     /** Nombre de la aplicación del administrador de identidades */
     public static final String SIMS_APP_NAME = "SIMS";
     
@@ -41,4 +44,5 @@ public class App extends Model {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "app", cascade = CascadeType.ALL)
     public List<Role> roles;
+    
 }

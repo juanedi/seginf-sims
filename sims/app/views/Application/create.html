@@ -4,6 +4,43 @@
 
 <div class="row">
     <div class="span8 offset2">
-        <div class="alert alert-info">Volvé en un par de días :)</div>
+		#{form @Application.postApp(), class:'form-horizontal'}
+		<fieldset>
+			<legend>Nueva aplicación</legend>
+			<div class="control-group">
+				<label class="control-label" for="date">Nombre</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="name" name="name">
+				</div>
+			</div>
+            <div class="control-group">
+                <label class="control-label" for="date">Hash</label>
+                <div class="controls">
+                      #{select 'hash', items:hashTypes, class:'input-small', size:'2'}
+                      #{/select}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Roles</label>
+                <div class="controls">
+                    <textarea rows="3" class="input-xlarge" name="roleList"></textarea>
+                    <p class="help-block">Lista de roles (uno por línea).</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Roles por defecto</label>
+                <div class="controls">
+                    <textarea rows="3" class="input-xlarge" name="defaultRoleList"></textarea>
+                    <p class="help-block">Lista de roles que se sugerirán al agregar un usuario.</p>
+                </div>
+            </div>
+		</fieldset>
+		#{if flash.error}
+		  <div class="alert alert-error">&{flash.error}</div>
+		#{/if}
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">Aceptar</button>
+		</div>
+		#{/form}
     </div>
 </div>

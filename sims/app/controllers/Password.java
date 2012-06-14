@@ -10,8 +10,7 @@ import play.mvc.With;
  * @author Juan Edi
  * @since May 27, 2012
  */
-@With(Secure.class)
-public class Password extends Controller {
+public class Password extends SecureController {
 
     /** sirve pantalla de cambio de password */
     public static void info() {

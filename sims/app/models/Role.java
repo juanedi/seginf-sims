@@ -1,5 +1,7 @@
 package models;
 
+import java.util.regex.Pattern;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -41,4 +43,6 @@ public class Role extends Model {
     @Column(name = "name", nullable = false)
     public String name;
 
+    @Column(name = "selected_by_default", nullable = false)
+    public Boolean selectedByDefault = false;
 }

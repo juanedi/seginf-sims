@@ -10,8 +10,7 @@ import play.mvc.With;
  * @author Juan Edi
  * @since May 27, 2012
  */
-@With(Secure.class)
-public class Users extends Controller {
+public class Users extends SecureController {
 
     public static void create() {
         render();
