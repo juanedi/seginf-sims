@@ -20,7 +20,7 @@ import ar.uba.dc.seginf.sims.messages.NewUserMessage;
  */
 public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMessage>{
 
-    private static final String PATTERN = "([\\w]+),([\\w]+),((?:[\\w]|\\+|/|=)+),\\[((?:[\\w],?)*)\\]";
+    private static final String PATTERN = "([\\w]+),([\\w]+),([\\w]+),([\\w]+),((?:[\\w]|\\+|/|=)+),\\[((?:[\\w],?)*)\\]";
     
     /** Creates the NewUserMessageMarshaller. */
     public NewUserMessageMarshaller() {
@@ -31,18 +31,22 @@ public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMes
     @Override
     protected NewUserMessage doUnMarshall(String msg, Matcher matcher) {
         String username = matcher.group(1);
-        String hashType = matcher.group(2);
-        String password = matcher.group(3);
-        String roleList = matcher.group(4);
+        String firstName = matcher.group(2);
+        String lastName = matcher.group(3);
+        String hashType = matcher.group(4);
+        String password = matcher.group(5);
+        String roleList = matcher.group(6);
         List<String> roles = Arrays.asList(StringUtils.split(roleList, ","));
-        return new NewUserMessage(username, hashType, password, roles);
+        return new NewUserMessage(username, firstName, lastName, hashType, password, roles);
     }
 
     /** @see RegexpMessageMarshaller#doMarshall(Message) */
     @Override
     protected String doMarshall(NewUserMessage msg) {
         return listJoin(
-                msg.getUsername(), 
+                msg.getUsername(),
+                msg.getFirstName(),
+                msg.getLastName(),
                 msg.getHashType(), 
                 msg.getPassword(), 
                 "[" + listJoin(msg.getRoles().toArray()) + "]");

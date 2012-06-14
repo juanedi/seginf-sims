@@ -21,23 +21,23 @@ public class NewUserMessageMashallerTest {
     
     @Test
     public final void emptyRolesMarshallTest() {
-        NewUserMessage msg = new NewUserMessage("juanedi", "MD5", "123", Collections.<String>emptyList());
+        NewUserMessage msg = new NewUserMessage("juanedi", "Juan", "Edi", "MD5", "123", Collections.<String>emptyList());
         String str = marshaller.marshall(msg);
-        assertEquals("juanedi,MD5,123,[]", str);
+        assertEquals("juanedi,Juan,Edi,MD5,123,[]", str);
     }
     
     @Test
     public final void singleRoleMarshallTest() {
-        NewUserMessage msg = new NewUserMessage("juanedi", "MD5", "123", Arrays.asList("ROL1"));
+        NewUserMessage msg = new NewUserMessage("juanedi", "Juan", "Edi", "MD5", "123", Arrays.asList("ROL1"));
         String str = marshaller.marshall(msg);
-        assertEquals("juanedi,MD5,123,[ROL1]", str);
+        assertEquals("juanedi,Juan,Edi,MD5,123,[ROL1]", str);
     }
     
     @Test
     public final void multipleRolesMarshallTest() {
-        NewUserMessage msg = new NewUserMessage("juanedi", "MD5", "123", Arrays.asList("ROL1", "ROL2"));
+        NewUserMessage msg = new NewUserMessage("juanedi", "Juan", "Edi", "MD5", "123", Arrays.asList("ROL1", "ROL2"));
         String str = marshaller.marshall(msg);
-        assertEquals("juanedi,MD5,123,[ROL1,ROL2]", str);
+        assertEquals("juanedi,Juan,Edi,MD5,123,[ROL1,ROL2]", str);
     }
     
     /** mensaje inválido */
@@ -48,8 +48,10 @@ public class NewUserMessageMashallerTest {
 
     @Test
     public final void emptyRolesUnMarshallTest() {
-        NewUserMessage msg = marshaller.unMarshall("juanedi,MD5,123,[]");
+        NewUserMessage msg = marshaller.unMarshall("juanedi,Juan,Edi,MD5,123,[]");
         assertEquals("juanedi", msg.getUsername());
+        assertEquals("Juan", msg.getFirstName());
+        assertEquals("Edi", msg.getLastName());
         assertEquals("MD5", msg.getHashType());
         assertEquals("123", msg.getPassword());
         assertEquals(0, msg.getRoles().size());
@@ -57,8 +59,10 @@ public class NewUserMessageMashallerTest {
     
     @Test
     public final void singleRoleUnMarshallTest() {
-        NewUserMessage msg = marshaller.unMarshall("juanedi,MD5,123,[ROL1]");
+        NewUserMessage msg = marshaller.unMarshall("juanedi,Juan,Edi,MD5,123,[ROL1]");
         assertEquals("juanedi", msg.getUsername());
+        assertEquals("Juan", msg.getFirstName());
+        assertEquals("Edi", msg.getLastName());
         assertEquals("MD5", msg.getHashType());
         assertEquals("123", msg.getPassword());
         assertEquals(1, msg.getRoles().size());
@@ -67,8 +71,10 @@ public class NewUserMessageMashallerTest {
     
     @Test
     public final void multipleRolesUnMarshallTest() {
-        NewUserMessage msg = marshaller.unMarshall("juanedi,MD5,123,[ROL1,ROL2,ROL3]");
+        NewUserMessage msg = marshaller.unMarshall("juanedi,Juan,Edi,MD5,123,[ROL1,ROL2,ROL3]");
         assertEquals("juanedi", msg.getUsername());
+        assertEquals("Juan", msg.getFirstName());
+        assertEquals("Edi", msg.getLastName());
         assertEquals("MD5", msg.getHashType());
         assertEquals("123", msg.getPassword());
         assertEquals(3, msg.getRoles().size());

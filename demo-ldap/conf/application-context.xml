@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:rabbit="http://www.springframework.org/schema/rabbit"
     xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
                 <value>classpath:ldap.properties</value>
+                <value>classpath:rmq.properties</value>
             </list>
         </property>
     </bean>
+
+    <!-- LDAP -->
 
     <bean id="contextSource" class="org.springframework.ldap.core.support.LdapContextSource">
           <property name="url" value="${ldap.url}" />
@@ -23,8 +28,34 @@
        <constructor-arg ref="contextSource" />
      </bean>
           
-     <bean id="authenticator" class="authentication.LDAPService">
+     <bean id="ldapService" class="authentication.LDAPService">
        <constructor-arg ref="ldapTemplate" />
      </bean>
+
+    <!-- RABBIT RMQ -->
+
+    <rabbit:connection-factory id="rabbitConnectionFactory"
+                               host="${rmq.broker.host}"
+                               port="${rmq.broker.port}"
+                               virtual-host="${rmq.broker.vhost}"
+                               username="${rmq.broker.username}"
+                               password="${rmq.broker.password}"/>
+
+
+    <bean id="newUserListener" class="services.MessageListenerFactoryBean">
+        <constructor-arg index="0">
+            <bean class="services.NewUserMessageProcessor">
+                <constructor-arg index="0" ref="ldapService" />
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <bean class="ar.uba.dc.seginf.sims.marshallers.NewUserMessageMarshaller" />
+        </constructor-arg>
+    </bean>
+
+    <rabbit:listener-container connection-factory="rabbitConnectionFactory">
+        <rabbit:listener ref="newUserListener" queue-names="${rmq.queues.newUser}" />
+        <!-- otros listener se agregan acá -->
+    </rabbit:listener-container>
 
 </beans>

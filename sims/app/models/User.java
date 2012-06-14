@@ -39,6 +39,12 @@ public class User extends Model {
     @Column(name = "email", nullable = false)
     public String email;
     
+    @Column(name = "first_name", nullable = false)
+    public String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    public String lastName;
+    
     @Column(name = "password_md5", nullable = false)
     public String passwordMD5;
 

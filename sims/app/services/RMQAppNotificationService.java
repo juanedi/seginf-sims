@@ -38,8 +38,8 @@ public class RMQAppNotificationService implements AppNotificationService {
     @Override
     public void notifyNewUser(User user, App app) {
         List<String> roles = roleNames(user.getRoles(app));
-        NewUserMessage msg = new NewUserMessage(user.username, app.hashType.name(), 
-                                                user.getHashedPassword(app.hashType), roles);
+        NewUserMessage msg = new NewUserMessage(user.username, user.firstName, user.lastName,
+                                                app.hashType.name(), user.getHashedPassword(app.hashType), roles);
         newUserTemplate.convertAndSend(app.name, MessageType.NEW_USER.name(), msg, nullPostProcessor());
     }
 

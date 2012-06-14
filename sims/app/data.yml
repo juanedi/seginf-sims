@@ -1,6 +1,17 @@
 # you describe your data using the YAML notation here
 # and then load them using Fixtures.load("data.yml")
 
+################## DEMOLDAP APP ##################
+
+App(demoldap):
+  name: demoldap
+  hashType: MD5
+
+Role(demoldapBase):
+  app: demoldap
+  name: base
+
+
 ################### DEMODB APP ###################
 
 App(demodb):
@@ -33,6 +44,8 @@ Role(audit):
 
 User(admin):
   username: admin
+  firstName: Señor
+  lastName: Administrador
   email: admin@sims.com
   password: admin
   apps: [sims]
@@ -40,7 +53,9 @@ User(admin):
   
 User(jedi):
   username: jedi
+  firstName: Juan
+  lastName: Edi
   email: jedi@dc.uba.ar
   password: jedi
-  apps: [demodb]
-  roles: [demodbAdmin]
+  apps: [demodb, demoldap]
+  roles: [demodbAdmin, demoldapBase]
