@@ -1,5 +1,6 @@
 package models;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -9,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -41,8 +44,12 @@ public class App extends Model {
     @Enumerated(EnumType.STRING)
     @Column(name = "hash_type", nullable = false)
     public Hash hashType;
+
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "owner", nullable = false)
+    public User owner;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "app", cascade = CascadeType.ALL)
-    public List<Role> roles;
+    public List<Role> roles = new LinkedList<Role>();
     
 }
