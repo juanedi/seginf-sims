@@ -142,6 +142,10 @@ public class User extends Model {
         return getRoles(application.name);
     }
     
+    public static User forUsername(final String username) {
+        return User.find("byUsername", username).first();
+    }
+    
     /*-------- ÚTIL --------*/
 
     /** hash de las passwords */

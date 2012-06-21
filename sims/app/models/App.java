@@ -55,9 +55,12 @@ public class App extends Model {
     @Column(name = "configured", nullable = false)
     public Boolean configured = false;
     
+    public static App forName(final String appName) {
+        return App.find("byName", appName).first();
+    }
     
     /** aplicaciones todavía no configuradas a cargo de un usuario */
     public static List<App> toConfigureBy(final User user) {
-        return App.find("configured = 0 and owner = ?1", user).fetch();
+        return App.find("configured = 0 and owner = ?1 and name != ?2", user, SIMS_APP_NAME).fetch();
     }
 }

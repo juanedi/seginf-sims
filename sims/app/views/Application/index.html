@@ -7,7 +7,7 @@
             <h1>Bienvenido al administrador de identidades.</h1>
         </div>
 		#{list items:appsToConfigure, as:'app'}
-		    <a href="#">
+		    <a href="@{Application.detail(app.name)} ">
             <div class="alert alert-info">
 	            Click aquí para configurar la aplicación <strong>${app.name}</strong>
 	        </div>

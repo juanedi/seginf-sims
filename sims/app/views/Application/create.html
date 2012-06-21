@@ -14,6 +14,13 @@
 				</div>
 			</div>
             <div class="control-group">
+                <label class="control-label" for="ownerName">Usuario a cargo</label>
+                <div class="controls">
+                      #{select 'ownerName', items:users, class:'input-large', labelProperty: 'username', valueProperty: 'username'}
+                      #{/select}
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="date">Hash</label>
                 <div class="controls">
                       #{select 'hash', items:hashTypes, class:'input-small', size:'2'}

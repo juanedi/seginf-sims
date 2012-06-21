@@ -1,0 +1,55 @@
+#{extends 'main.html' /}
+#{set title:'Aplicaciones - SIMS' /}
+
+<div class="row">
+    <div class="span8 offset2">
+    <div class="page-header"><h2>Configuración de ${app.name}</h2></div>
+        #{if app.owner.equals(user) && !app.configured}
+            <div class="well">
+                        #{form @Application.configureApp(app.name), class:'form-horizontal light-submit'}
+                        <fieldset>
+                            <legend>Configuración inicial</legend>
+                            <div class="control-group">
+                                <label class="control-label" for="rmqPass">Password RMQ</label>
+                                <div class="controls">
+                                    <input type="password" class="input-xlarge" id="rmqPass" name="rmqPass">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="rmqPassConfirm">Confirmar</label>
+                                <div class="controls">
+                                    <input type="password" class="input-xlarge" id="rmqPassConfirm" name="rmqPassConfirm">
+                                </div>
+                            </div>
+                        </fieldset>
+				        #{if flash.error}
+				          <div class="alert alert-error">&{flash.error}</div>
+				        #{/if}
+			            <button type="submit" class="btn btn-primary">Aceptar</button>
+                        #{/form}
+            </div>
+        #{/if}
+        <div class="well">
+            <div class="info-line">
+                <span>Algoritmo de hash</span>
+                ${app.hashType}
+            </div>
+            <div class="info-line">
+                <span>Roles</span>
+                <ul>
+		        #{list items:app.roles, as:'role'}
+		            <li>
+		            #{if role.selectedByDefault}
+		              ${role.name} (*)
+		            #{/if}
+		            #{else}
+		              ${role.name}
+                    #{/else}
+		            </li>
+		        #{/list}
+		        </ul>
+		        <i>Los roles marcados con asterisco se aplican por default al asignar usuarios.</i>
+            </div>
+        </div>
+    </div>
+</div>

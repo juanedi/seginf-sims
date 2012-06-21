@@ -14,3 +14,19 @@
 .navbar-inner {
 	border-radius: 0;
 }
+
+.info-line {
+    display: block;
+    margin-top: 10px;
+}
+.info-line span:first-child {
+    font-weight: bold;
+    margin-right: 6px;
+}
+.info-line ul li {
+    margin-top: 5px;
+}
+
+form.light-submit .btn-primary{
+	margin-left: 375px;
+}

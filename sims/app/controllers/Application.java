@@ -3,6 +3,7 @@ package controllers;
 import play.*;
 import play.data.validation.Required;
 import play.mvc.*;
+import play.mvc.results.Status;
 import services.RMQService;
 
 import java.util.*;
@@ -24,13 +25,68 @@ public class Application extends SecureController {
     }
 
     /** sirve pantalla de alta de aplicaciones */
+    @Check(Role.SIMS_CREATE_APP_ROLE)
     public static void create() {
+        List<User> users = User.all().fetch();
         List<Hash> hashTypes = Arrays.asList(Hash.values());
-        render(hashTypes);
+        render(users, hashTypes);
+    }
+    
+    /** pantalla de detalle de aplicación */
+    public static void detail(final String appName) {
+        User user = connectedUser();
+        App app = App.forName(appName);
+        if (!app.owner.username.equals(user.username)) {
+            response.status = 403;
+            return;
+        }
+        render(app);
+    }
+    
+    public static void configureApp(@Required final String appName,
+                                    @Required final String rmqPass,
+                                    @Required final String rmqPassConfirm) {
+        User user = connectedUser();
+        App app = App.forName(appName);
+        
+        if (!app.owner.username.equals(user.username)) {
+            response.status = 403;
+            return;
+        }
+        
+        boolean fail = false;
+        
+        if (!rmqPass.equals(rmqPassConfirm)) {
+            flash.error("Las claves no concuerdan");
+            fail = true;            
+        }
+        
+        if (validation.hasErrors()) {
+            Set<String> missingFields = validation.errorsMap().keySet();
+            flash.error("Falta completar los campos: %s", missingFields);
+            fail = true;
+        }
+        
+        try {
+            rmqService.changeUserPassword(appName, rmqPass);
+            app.configured = true;
+            app.save();
+        } catch (Exception e) {
+            flash.error("Error grave al guardar configuración de la aplicación.");
+            fail = true;
+        }
+        
+        if (fail) {
+            detail(appName);
+        } else {
+            flash.success("Aplicación " + appName + " configurada correctamente");
+            index();
+        }
     }
     
     @Check(Role.SIMS_CREATE_APP_ROLE)
     public static void postApp(@Required final String name,
+                               @Required final String ownerName,
                                @Required final Hash hash,
                                @Required final String roleList,
                                final String defaultRoleList) {
@@ -55,6 +111,12 @@ public class Application extends SecureController {
             hasErrors = true;
         }
         
+        if (StringUtils.isEmpty(ownerName)) {
+            flash.error("No se especificó usuario a cargo.");
+            hasErrors = true;            
+        }
+        
+        User owner = User.forUsername(ownerName);
         Set<String> roles = roleSet(roleList);
         Set<String> defaultRoles = roleSet(defaultRoleList);
         if(roles.isEmpty()) {
@@ -80,6 +142,7 @@ public class Application extends SecureController {
         }
         
         App app = new App();
+        app.owner = owner;
         app.name = name;
         app.hashType = hash;
         app.roles = new LinkedList<Role>();
