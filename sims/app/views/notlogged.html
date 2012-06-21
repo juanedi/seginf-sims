@@ -9,6 +9,13 @@
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.7.2.min.js'}" type="text/javascript" charset="UTF-8"></script>
+        <script type="text/javascript">
+        $(document).ready(function() 
+        	    { 
+        	        $(".alert-success").delay(2000).fadeOut('fast');
+        	    } 
+       	); 
+        </script>
         #{get 'moreScripts' /}
     </head>
     <body>
