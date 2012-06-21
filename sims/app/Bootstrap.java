@@ -14,7 +14,7 @@ import play.test.Fixtures;
  * @author Juan Edi
  * @since May 19, 2012
  */
-//@OnApplicationStart
+@OnApplicationStart
 public class Bootstrap extends Job {
 
     public void doJob() {
@@ -46,6 +46,7 @@ public class Bootstrap extends Job {
         App demoldap = new App();
         demoldap.name = "demoldap";
         demoldap.hashType = Hash.MD5;
+        demoldap.configured = true;
         
         Role demoLdapBase = new Role();
         demoLdapBase.app = demoldap;
@@ -59,6 +60,7 @@ public class Bootstrap extends Job {
         App demodb = new App();
         demodb.name = "demodb";
         demodb.hashType = Hash.SHA256;
+        demodb.configured = true;
         
         Role demoDbAmin = new Role();
         demoDbAmin.app = demodb;

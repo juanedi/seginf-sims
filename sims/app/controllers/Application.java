@@ -45,9 +45,13 @@ public class Application extends SecureController {
     
     public static void configureApp(@Required final String appName,
                                     @Required final String rmqPass,
-                                    @Required final String rmqPassConfirm) {
+                                    @Required final String rmqPassConfirm,
+                                    @Required final String roleList,
+                                    final String defaultRoleList) {
         User user = connectedUser();
         App app = App.forName(appName);
+        Set<String> roles = roleSet(roleList);
+        Set<String> defaultRoles = roleSet(defaultRoleList);
         
         if (!app.owner.username.equals(user.username)) {
             response.status = 403;
@@ -55,6 +59,15 @@ public class Application extends SecureController {
         }
         
         boolean fail = false;
+        
+        if(roles.isEmpty()) {
+            flash.error("No se definieron roles válidos para la aplicación", appName);
+            fail = true;
+        }
+        if(!roles.containsAll(defaultRoles)) {
+            flash.error("Todos los roles marcados por defecto deben pertenecer a la primera lista");
+            fail = true;
+        }
         
         if (!rmqPass.equals(rmqPassConfirm)) {
             flash.error("Las claves no concuerdan");
@@ -67,29 +80,34 @@ public class Application extends SecureController {
             fail = true;
         }
         
-        try {
-            rmqService.changeUserPassword(appName, rmqPass);
-            app.configured = true;
-            app.save();
-        } catch (Exception e) {
-            flash.error("Error grave al guardar configuración de la aplicación.");
-            fail = true;
-        }
         
         if (fail) {
             detail(appName);
         } else {
-            flash.success("Aplicación " + appName + " configurada correctamente");
-            index();
+            try {
+                rmqService.changeUserPassword(appName, rmqPass);
+                for (String roleName : roles) {
+                    Role role = new Role();
+                    role.name = roleName;
+                    role.app = app;
+                    role.selectedByDefault = defaultRoles.contains(roleName);
+                    app.roles.add(role);
+                }
+                app.configured = true;
+                app.save();
+                flash.success("Aplicación " + appName + " configurada correctamente");
+                index();
+            } catch (Exception e) {
+                flash.error("Error grave al guardar configuración de la aplicación.");
+                detail(appName);
+            }
         }
     }
     
     @Check(Role.SIMS_CREATE_APP_ROLE)
     public static void postApp(@Required final String name,
                                @Required final String ownerName,
-                               @Required final Hash hash,
-                               @Required final String roleList,
-                               final String defaultRoleList) {
+                               @Required final Hash hash) {
         boolean hasErrors = false;
         if (validation.hasErrors()) {
             Set<String> missingFields = validation.errorsMap().keySet();
@@ -117,16 +135,6 @@ public class Application extends SecureController {
         }
         
         User owner = User.forUsername(ownerName);
-        Set<String> roles = roleSet(roleList);
-        Set<String> defaultRoles = roleSet(defaultRoleList);
-        if(roles.isEmpty()) {
-            flash.error("No se definieron roles válidos para la aplicación", name);
-            hasErrors = true;
-        }
-        if(!roles.containsAll(defaultRoles)) {
-            flash.error("Todos los roles marcados por defecto deben pertenecer a la primera lista");
-            hasErrors = true;
-        }
         
         try {
             rmqService.setupApplication(name);
@@ -146,13 +154,6 @@ public class Application extends SecureController {
         app.name = name;
         app.hashType = hash;
         app.roles = new LinkedList<Role>();
-        for (String roleName : roles) {
-            Role role = new Role();
-            role.name = roleName;
-            role.app = app;
-            role.selectedByDefault = defaultRoles.contains(roleName);
-            app.roles.add(role);
-        }
         app.save();
         
         flash.success(String.format("Aplicación %s creada exitosamente", name));
