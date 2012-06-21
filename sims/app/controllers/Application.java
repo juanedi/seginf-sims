@@ -19,7 +19,8 @@ public class Application extends SecureController {
     
     /** sirve página principal */
     public static void index() {
-        render();
+        List<App> appsToConfigure = App.toConfigureBy(connectedUser());
+        render(appsToConfigure);
     }
 
     /** sirve pantalla de alta de aplicaciones */

@@ -26,6 +26,7 @@ public class ModelTest extends UnitTest {
         app = new App();
         app.name = "aplicacion";
         app.hashType = Hash.MD5;
+        app.owner = user;
         app.save();
         
         rol1 = new Role();
@@ -84,6 +85,14 @@ public class ModelTest extends UnitTest {
         
         // usuario que no existe
         assertFalse(user.hasRole("ningún usuario", "unRol"));
+    }
+    
+    /** Aplicaciones a configurar por un usuario */
+    @Test
+    public void appsToConfigure() {
+        List<App> appsToConfigureByUser = App.toConfigureBy(user);
+        assertEquals(1, appsToConfigureByUser.size());
+        assertEquals(app.name, appsToConfigureByUser.get(0).name);
     }
     
 }

@@ -18,9 +18,13 @@ public abstract class SecureController extends Controller {
     @Before
     static void setConnectedUser() {
         if (Security.isConnected()) {
-            User user = User.find("byUsername", Security.connected()).first();
+            User user = connectedUser();
             renderArgs.put("user", user);
         }
+    }
+    
+    static User connectedUser() {
+        return User.find("byUsername", Security.connected()).first();
     }
     
 }

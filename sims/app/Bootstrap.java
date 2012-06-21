@@ -14,7 +14,7 @@ import play.test.Fixtures;
  * @author Juan Edi
  * @since May 19, 2012
  */
-@OnApplicationStart
+//@OnApplicationStart
 public class Bootstrap extends Job {
 
     public void doJob() {

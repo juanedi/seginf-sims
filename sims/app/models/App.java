@@ -51,5 +51,13 @@ public class App extends Model {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "app", cascade = CascadeType.ALL)
     public List<Role> roles = new LinkedList<Role>();
+
+    @Column(name = "configured", nullable = false)
+    public Boolean configured = false;
     
+    
+    /** aplicaciones todavía no configuradas a cargo de un usuario */
+    public static List<App> toConfigureBy(final User user) {
+        return App.find("configured = 0 and owner = ?1", user).fetch();
+    }
 }

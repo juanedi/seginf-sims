@@ -1,12 +1,19 @@
-#{extends 'main.html' /}
+    #{extends 'main.html' /}
 #{set title:'Home - SIMS' /}
 
 <div class="row">
     <div class="span8 offset2">
         <div class="hero-unit">
-            <h1>Alto ahí!</h1>
-            <p>En algún momento esto va a ser el administrador de identidades</p>
+            <h1>Bienvenido al administrador de identidades.</h1>
         </div>
+		#{list items:appsToConfigure, as:'app'}
+		    <a href="#">
+            <div class="alert alert-info">
+	            Click aquí para configurar la aplicación <strong>${app.name}</strong>
+	        </div>
+	        </a>
+		#{/list}
+ 
 	    #{if flash.success}
 	      <div class="alert alert-success">${flash.success}</div>
 	    #{/if}
