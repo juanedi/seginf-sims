@@ -1,1 +1,2 @@
 V	130621052727Z		01	unknown	/CN=seginf-sims/O=server
+V	130621220116Z		02	unknown	/CN=seginf-demodb/O=client
