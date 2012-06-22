@@ -34,13 +34,16 @@
 
     <!-- RABBIT RMQ -->
 
-    <rabbit:connection-factory id="rabbitConnectionFactory"
-                               host="${rmq.broker.host}"
-                               port="${rmq.broker.port}"
-                               virtual-host="${rmq.broker.vhost}"
-                               username="${rmq.broker.username}"
-                               password="${rmq.broker.password}"/>
-
+    <bean id="rabbitConnectionFactory" class="ar.uba.dc.seginf.sims.util.RMQConnectionFactoryFactoryBean">
+        <property name="host" value="${rmq.broker.host}" />
+        <property name="port" value="${rmq.broker.port}" />
+        <property name="vhost" value="${rmq.broker.vhost}" />
+        <property name="username" value="${rmq.broker.username}" />
+        <property name="password" value="${rmq.broker.password}" />
+        <property name="useSSL" value="${rmq.broker.useSSL}" />
+        <property name="trustStoreLocation" value="${rmq.broker.trustStoreLocation}" />
+        <property name="trustStorePassphrase" value="${rmq.broker.trustStorePassphrase}" />
+    </bean>
 
     <bean id="newUserListener" class="ar.uba.dc.seginf.sims.util.MessageListenerFactoryBean">
         <constructor-arg index="0">
