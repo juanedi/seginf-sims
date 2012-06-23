@@ -3,6 +3,34 @@
 
 <div class="row">
     <div class="span8 offset2">
-        <div class="alert alert-info">Volvé en un par de días :)</div>
+		#{form @Password.changePassword(), class:'form-horizontal'}
+		<fieldset>
+			<legend>Cambio de password</legend>
+			<div class="control-group">
+			    <label class="control-label" for="password">Clave</label>
+			    <div class="controls">
+			        <input type="password" class="input-xlarge" id="password" name="password">
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="newPassword">Nueva Clave</label>
+			    <div class="controls">
+			        <input type="password" class="input-xlarge" id="newPassword" name="newPassword">
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="newPasswordConfirmation">Confirmar Clave</label>
+			    <div class="controls">
+			        <input type="password" class="input-xlarge" id="newPasswordConfirmation" name="newPasswordConfirmation">
+			    </div>
+			</div>
+		</fieldset>
+		#{if flash.error}
+		  <div class="alert alert-error">&{flash.error}</div>
+		#{/if}
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">Aceptar</button>
+		</div>
+		#{/form}
     </div>
 </div>
