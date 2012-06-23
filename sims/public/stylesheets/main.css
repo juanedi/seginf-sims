@@ -30,3 +30,16 @@
 form.light-submit .btn-primary{
 	margin-left: 375px;
 }
+
+.table tr th,
+.table tr td {
+	text-align: center;
+}
+
+.table tr td.enableUser {
+	width: 10px;
+}
+
+.table tr td.userName {
+    width: 100px;
+}

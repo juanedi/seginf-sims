@@ -1,6 +1,7 @@
 package controllers.dto;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import models.Role;
 
 import org.apache.commons.lang.StringUtils;
 
+import play.data.binding.As;
 import play.data.validation.Required;
 import play.mvc.Scope.Flash;
 
@@ -26,10 +28,6 @@ public class BaseAppConfig {
     @Required public String defaultRoleList;
     
     public boolean validate(Flash flash) {
-        if (roleList == null) {
-            flash.error("No se definieron roles para la aplicación");
-            return false;
-        }
         if (rmqPass == null || rmqPass.isEmpty()) {
             flash.error("Se deben completar la clave de RMQ");
             return false;
@@ -70,6 +68,7 @@ public class BaseAppConfig {
     }
     
     private static Set<String> roleSet(String rolesList) {
+        if (rolesList == null) return Collections.<String>emptySet();
         String[] splitted = StringUtils.split(rolesList, "\n");
         Set<String> roles = new HashSet<String>();
         for(int i = 0; i < splitted.length; i++) {

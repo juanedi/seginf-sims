@@ -1,5 +1,6 @@
 package models;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.persistence.Column;
@@ -47,4 +48,12 @@ public class Role extends Model {
 
     @Column(name = "selected_by_default", nullable = false)
     public Boolean selectedByDefault = false;
+    
+    public static List<Role> defaultForApp(App app) {
+        return Role.find("app = ?1 and selectedByDefault = true", app).fetch();
+    }
+    
+    public static Role find(final App app, final String name) {
+        return Role.find("app = ?1 and name = ?2", app, name).first();
+    }
 }

@@ -55,9 +55,9 @@ public class RMQAppNotificationService implements AppNotificationService {
         throw new NotImplementedException();
     }
 
-    /** @see AppNotificationService#notifyUserRemove(User) */
+    /** @see AppNotificationService#notifyUserRemove(User, App) */
     @Override
-    public void notifyUserRemove(User user) {
+    public void notifyUserRemove(User user, App app) {
         throw new NotImplementedException();
     }
 

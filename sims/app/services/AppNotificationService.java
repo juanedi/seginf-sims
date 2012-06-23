@@ -18,5 +18,5 @@ public interface AppNotificationService {
     
     void notifyRolesChanged(User user, App app);
     
-    void notifyUserRemove(User user);
+    void notifyUserRemove(User user, App app);
 }

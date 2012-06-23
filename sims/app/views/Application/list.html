@@ -1,0 +1,34 @@
+#{extends 'main.html' /}
+#{set title:'Aplicaciones - SIMS' /}
+
+
+<div class="row">
+    <div class="span8 offset2">
+	    <div class="page-header"><h2>Aplicaciones</h2></div>
+	    <table id="appUserData" class="table">
+	        <thead>
+	            <tr>
+	                <th></th>
+	                <th>Nombre</th>
+	                <th>Usuario a cargo</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+			    #{list items:apps, as:'app'}
+			    <tr>
+			       <td>
+			         #{if app.owner.equals(user)}
+			             <a class="btn" href="@{Application.detail(app.name)}"><i class="icon-pencil"></i></a>
+			         #{/if}
+			       </td>
+			       <td>${app.name}</td>
+			       <td>${app.owner.username}</td>
+			    </tr>
+			    #{/list}
+	        </tbody>
+	    </table>
+	    #{secure.check 'CREATE_USER'}
+	    <a href="@{Application.create}" class="btn btn-primary">Alta aplicación</a>
+	    #{/secure.check}
+    </div>
+</div>

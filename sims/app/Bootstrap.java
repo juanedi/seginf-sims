@@ -24,6 +24,7 @@ public class Bootstrap extends Job {
         App sims = new App();
         sims.name = "sims";
         sims.hashType = Hash.SHA512;
+        sims.configured = true;
         
         Role createAppRole = new Role();
         createAppRole.app = sims;
@@ -64,11 +65,17 @@ public class Bootstrap extends Job {
         
         Role demoDbAmin = new Role();
         demoDbAmin.app = demodb;
-        demoDbAmin.name = "admin";
+        demoDbAmin.name = "ADMIN";
         
         demodb.roles.add(demoDbAmin);
         
+        /*------- OTRA APP -------*/
         
+        App prueba = new App();
+        prueba.name = "prueba";
+        prueba.hashType = Hash.MD5;
+        prueba.configured = false;
+
         /*------- USERS -------*/
         User admin = new User();
         admin.email = "admin@sims.com";
@@ -92,12 +99,14 @@ public class Bootstrap extends Job {
         sims.owner = admin;
         demoldap.owner = admin;
         demodb.owner = admin;
+        prueba.owner = admin;
         
         /*------- PERSIST -------*/
         
         sims.save();
         demoldap.save();
         demodb.save();
+        prueba.save();
         
         jedi.save();
         admin.save();

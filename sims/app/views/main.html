@@ -29,9 +29,7 @@
 						<div class="nav-collapse">
 						 <ul class="nav">
 						   <li id="nav-pwd"><a href="@{Password.info}">Mi clave</a></li>
-						   #{secure.check 'CREATE_APP'}
-						   <li id="nav-apps"><a href="@{Application.create}">Crear aplicación</a></li>
-						   #{/secure.check}
+						   <li id="nav-apps"><a href="@{Application.list}">Aplicaciones</a></li>
 						   #{secure.check 'CREATE_USER'}
 	                       <li id="nav-usr"><a href="@{Users.create}">Crear usuario</a></li>
 	                       #{/secure.check}
