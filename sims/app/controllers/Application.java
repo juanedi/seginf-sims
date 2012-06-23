@@ -68,6 +68,12 @@ public class Application extends SecureController {
             flash.error("Todos los roles marcados por defecto deben pertenecer a la primera lista");
             fail = true;
         }
+        for (String role : roles) {
+            if (!Role.NAME_PATTERN.matcher(role).matches()) {
+                flash.error("%s no es un nombre de rol válido", role);
+                fail = true;
+            }
+        }
         
         if (!rmqPass.equals(rmqPassConfirm)) {
             flash.error("Las claves no concuerdan");

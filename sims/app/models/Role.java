@@ -21,6 +21,8 @@ import play.db.jpa.Model;
 @Table(name = "roles")
 public class Role extends Model {
 
+    public static final Pattern NAME_PATTERN = Pattern.compile("[\\w]+");
+    
     /** Rol para quienes pueden crear aplicaciones */
     public static final String SIMS_CREATE_APP_ROLE = "CREATE_APP";
     
