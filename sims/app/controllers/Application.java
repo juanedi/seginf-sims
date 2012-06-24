@@ -12,6 +12,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 
+import controllers.dto.BaseAppConfig;
+
 import models.*;
 
 public class Application extends SecureController {
@@ -44,54 +46,22 @@ public class Application extends SecureController {
     }
     
     public static void configureApp(@Required final String appName,
-                                    @Required final String rmqPass,
-                                    @Required final String rmqPassConfirm,
-                                    @Required final String roleList,
-                                    final String defaultRoleList) {
+                                    final BaseAppConfig baseConfig) {
         User user = connectedUser();
         App app = App.forName(appName);
-        Set<String> roles = roleSet(roleList);
-        Set<String> defaultRoles = roleSet(defaultRoleList);
+        Set<String> roles = baseConfig.getRoles();
+        Set<String> defaultRoles = baseConfig.getDefaultRoles();
         
         if (!app.owner.username.equals(user.username)) {
             response.status = 403;
             return;
         }
         
-        boolean fail = false;
-        
-        if(roles.isEmpty()) {
-            flash.error("No se definieron roles válidos para la aplicación", appName);
-            fail = true;
-        }
-        if(!roles.containsAll(defaultRoles)) {
-            flash.error("Todos los roles marcados por defecto deben pertenecer a la primera lista");
-            fail = true;
-        }
-        for (String role : roles) {
-            if (!Role.NAME_PATTERN.matcher(role).matches()) {
-                flash.error("%s no es un nombre de rol válido", role);
-                fail = true;
-            }
-        }
-        
-        if (!rmqPass.equals(rmqPassConfirm)) {
-            flash.error("Las claves no concuerdan");
-            fail = true;            
-        }
-        
-        if (validation.hasErrors()) {
-            Set<String> missingFields = validation.errorsMap().keySet();
-            flash.error("Falta completar los campos: %s", missingFields);
-            fail = true;
-        }
-        
-        
-        if (fail) {
+        if (!baseConfig.validate(flash)) {
             detail(appName);
         } else {
             try {
-                rmqService.changeUserPassword(appName, rmqPass);
+                rmqService.changeUserPassword(appName, baseConfig.rmqPass);
                 for (String roleName : roles) {
                     Role role = new Role();
                     role.name = roleName;
@@ -166,12 +136,4 @@ public class Application extends SecureController {
         index();
     }
     
-    private static Set<String> roleSet(String rolesList) {
-        String[] splitted = StringUtils.split(rolesList, "\n");
-        Set<String> roles = new HashSet<String>();
-        for(int i = 0; i < splitted.length; i++) {
-            roles.add(splitted[i].trim());
-        }
-        return roles;
-    }
 }
