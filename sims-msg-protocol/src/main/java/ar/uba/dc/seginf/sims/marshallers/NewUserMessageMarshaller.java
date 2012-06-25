@@ -20,7 +20,15 @@ import ar.uba.dc.seginf.sims.messages.NewUserMessage;
  */
 public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMessage>{
 
-    private static final String PATTERN = "([\\w]+),([\\w]+),([\\w]+),([\\w]+),((?:[\\w]|\\+|/|=)+),\\[((?:[\\w],?)*)\\]";
+    private static final String PATTERN = "([\\w]+),"               // username
+                                        + "([\\w]+),"               // firstName
+                                        + "([\\w]+),"               // lastName
+                                        + "([\\w]+),"               // hashType
+                                        + "((?:[\\w]|\\+|/|=)+),"   // password hasheado
+                                        + "\\[((?:[\\w],?)*)\\]";   // listado de roles separados por coma
+                                                                    // se captura un grupo con todo el listado
+                                                                    // el '?' se usa para no capturar el \\w de
+                                                                    // adentro   
     
     /** Creates the NewUserMessageMarshaller. */
     public NewUserMessageMarshaller() {
