@@ -30,7 +30,7 @@ $(document).ready(function() {
 		
 		$.ajax({
 		    type: 'PUT',
-		    contentType: 'application/json',
+		    contentType: 'application/x-www-form-urlencoded',
 		    url: location.href + '?userConfigurations=' + JSON.stringify(userConfigurations),
 		    complete: function(xmlHttpRequest) {
 		    	var status = xmlHttpRequest.status;
