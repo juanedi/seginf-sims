@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Date;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,6 +58,9 @@ public class User extends Model {
     
     @Column(name = "password_sha_512", nullable = false)
     public String passwordSHA512;
+
+    @Column(name = "last_password_changed", nullable = false)
+    public Date lastPasswordChanged;
     
     @ManyToMany
     @JoinTable( name = "user_apps", 
@@ -88,12 +93,22 @@ public class User extends Model {
         this.passwordSHA1 = hashPassword(password, HashType.SHA1);
         this.passwordSHA256 = hashPassword(password, HashType.SHA256);
         this.passwordSHA512 = hashPassword(password, HashType.SHA512);
+        this.setlastPasswordChanged();
     }
     
     /** setea el email */
     public void setEmail(final String email) {
         validateEmail(email);
         this.email = email;
+    }
+    /** setea la fecha del último cambio de clave */
+
+    private void setlastPasswordChanged() {
+        this.lastPasswordChanged = new Date();
+    }
+
+    public Date getlastPasswordChanged() {
+        return this.lastPasswordChanged;
     }
     
     /** devuelve el password para determinado tipo de hash */
@@ -114,6 +129,7 @@ public class User extends Model {
         return null;
     }
     
+
     /** compara la password */
     public boolean comparePassword(final String password) {
         if (password == null || password.isEmpty()) {
