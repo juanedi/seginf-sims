@@ -1,8 +1,10 @@
 package services;
 
+import java.util.List;
 import java.util.SortedSet;
 
 import javax.naming.Name;
+import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
@@ -11,6 +13,7 @@ import models.User;
 
 import org.apache.commons.lang.Validate;
 import org.springframework.ldap.NameNotFoundException;
+import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
@@ -48,13 +51,18 @@ public class LDAPService {
         }
     }
 
-    /** agrega un usuario a un grupo. requiere que el grupo ya exista. */
-    private void addToGroup(final User user, String group) {
-        Name groupDN = groupDN(group);
-        DirContextOperations ctx = ldapTemplate.lookupContext(groupDN);
-        ctx.addAttributeValue("memberUid", user.username);
-        ldapTemplate.modifyAttributes(ctx);
+    public void updateRoles(final User user) {
+        List<String> userGroups = user.groups;
+        List<String> allGroups = allGroups();
+        for (String g : allGroups) {
+            if (userGroups.contains(g)) {
+                addToGroup(user, g);
+            } else {
+                removeFromGroup(user, g);
+            }
+        }
     }
+    
     
     /** autentica el usuario */
     public boolean authenticate(final String username, final String password) {
@@ -76,6 +84,34 @@ public class LDAPService {
             // el grupo no existe :(
             return false;
         }
+    }
+    
+    private List<String> allGroups() {
+        DistinguishedName groupsDN = new DistinguishedName();
+        groupsDN.add("ou", "groups");
+        return ldapTemplate.search(groupsDN, new EqualsFilter("objectclass", "posixGroup").encode(), new AttributesMapper() {
+            
+            @Override
+            public String mapFromAttributes(Attributes arg0) throws NamingException {
+                return String.valueOf(arg0.get("cn").get());
+            }
+        });
+    }
+    
+    /** agrega un usuario a un grupo. requiere que el grupo ya exista. */
+    private void addToGroup(final User user, String group) {
+        Name groupDN = groupDN(group);
+        DirContextOperations ctx = ldapTemplate.lookupContext(groupDN);
+        ctx.addAttributeValue("memberUid", user.username);
+        ldapTemplate.modifyAttributes(ctx);
+    }
+    
+    /** remueve un usuario de un grupo existente */
+    private void removeFromGroup(final User user, final String group) {
+        Name groupDN = groupDN(group);
+        DirContextOperations ctx = ldapTemplate.lookupContext(groupDN);
+        ctx.removeAttributeValue("memberUid", user.username);
+        ldapTemplate.modifyAttributes(ctx);        
     }
     
     /** construye el nombre calificado del usuario */
