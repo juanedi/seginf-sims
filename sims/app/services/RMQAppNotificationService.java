@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.Validate;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
@@ -11,6 +12,7 @@ import org.springframework.amqp.core.MessagePostProcessor;
 
 import ar.uba.dc.seginf.sims.MessageType;
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
+import ar.uba.dc.seginf.sims.messages.UserRolesChangedMessage;
 
 import models.App;
 import models.Role;
@@ -28,10 +30,15 @@ import models.User;
 public class RMQAppNotificationService implements AppNotificationService {
 
     private final AmqpTemplate newUserTemplate;
+    private final AmqpTemplate userRolesChangedTemplate;
     
     /** Creates the RMQAppNotificationService. */
-    public RMQAppNotificationService(final AmqpTemplate newUserTemplate) {
+    public RMQAppNotificationService(final AmqpTemplate newUserTemplate,
+                                     final AmqpTemplate userRolesChagedTemplate) {
+        Validate.notNull(newUserTemplate);
+        Validate.notNull(userRolesChagedTemplate);
         this.newUserTemplate = newUserTemplate;
+        this.userRolesChangedTemplate = userRolesChagedTemplate;
     }
     
     /** @see AppNotificationService#notifyNewUser(User, App) */
@@ -52,7 +59,9 @@ public class RMQAppNotificationService implements AppNotificationService {
     /** @see AppNotificationService#notifyRolesChanged(User, App) */
     @Override
     public void notifyRolesChanged(User user, App app) {
-        throw new NotImplementedException();
+        List<String> roles = roleNames(user.getRoles(app));
+        UserRolesChangedMessage msg = new UserRolesChangedMessage(user.username, roles);
+        userRolesChangedTemplate.convertAndSend(app.name, MessageType.CHANGE_ROLES.name(), msg, nullPostProcessor());
     }
 
     /** @see AppNotificationService#notifyUserRemove(User, App) */

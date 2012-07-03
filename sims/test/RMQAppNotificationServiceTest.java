@@ -40,4 +40,14 @@ public class RMQAppNotificationServiceTest extends UnitTest {
         assertNotNull(app);
         notificationService.notifyNewUser(user, app);
     }
+ 
+    @Test
+    public void testUserRolesChangedNotify() {
+        User user = User.find("byUsername", "jedi").first();
+        App app = App.find("byName", "demodb").first();
+
+        assertNotNull(user);
+        assertNotNull(app);
+        notificationService.notifyRolesChanged(user, app);
+    }
 }

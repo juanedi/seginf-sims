@@ -36,6 +36,18 @@
             </bean>
         </property>
     </bean>
+    
+    <bean id="rolesChangedRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <constructor-arg index="0" ref="rabbitConnectionFactory" />
+        <property name="routingKey" value="CHANGE_ROLES" />
+        <property name="messageConverter">
+            <bean class="services.SimsMessageConverter">
+                <constructor-arg index="0">
+                    <bean class="ar.uba.dc.seginf.sims.marshallers.UserRolesChangedMessageMarshaller" />
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
 
     <bean id="rmqService" class="services.RMQServiceImpl">
         <constructor-arg index="0" value="${rmq.broker.host}" />
@@ -48,6 +60,7 @@
 
     <bean id="appNotificationService" class="services.RMQAppNotificationService">
         <constructor-arg index="0" ref="newUserRabbitTemplate" />
+        <constructor-arg index="1" ref="rolesChangedRabbitTemplate" />
     </bean>
 
 </beans>
