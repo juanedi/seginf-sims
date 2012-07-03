@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -210,12 +211,17 @@ public class Application extends SecureController {
                             user.roles.add(role);
                         }
                     }
+                    
+                    // para evitar modificar al mismo momento que se itera.
+                    List<Role> toRemove = new ArrayList<Role>(user.roles.size());
                     for (Role role : user.roles) {
                         if (!roles.contains(role)) {
                             changed = true;
-                            user.roles.remove(role);
+                            toRemove.add(role);
                         }
                     }
+                    user.roles.removeAll(toRemove);
+                    
                     if (changed) {
                         modifiedUsers.add(user);
                     }
