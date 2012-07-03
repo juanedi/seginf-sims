@@ -89,7 +89,7 @@ public class LDAPService {
         Name groupDN = groupDN(group);
         try {
             DirContextOperations ctx = ldapTemplate.lookupContext(groupDN);
-            SortedSet groupUsers = ctx.getAttributeSortedStringSet("memberUid");
+            SortedSet groupUsers = ctx.getAttributeSortedStringSet("memberuid");
             return groupUsers != null && groupUsers.contains(username);
         } catch (NameNotFoundException e) {
             // el grupo no existe :(
@@ -113,7 +113,7 @@ public class LDAPService {
     private void addToGroup(final User user, String group) {
         Name groupDN = groupDN(group);
         DirContextOperations ctx = ldapTemplate.lookupContext(groupDN);
-        ctx.addAttributeValue("memberUid", user.username);
+        ctx.addAttributeValue("memberuid", user.username);
         ldapTemplate.modifyAttributes(ctx);
     }
     
@@ -121,7 +121,7 @@ public class LDAPService {
     private void removeFromGroup(final User user, final String group) {
         Name groupDN = groupDN(group);
         DirContextOperations ctx = ldapTemplate.lookupContext(groupDN);
-        ctx.removeAttributeValue("memberUid", user.username);
+        ctx.removeAttributeValue("memberuid", user.username);
         ldapTemplate.modifyAttributes(ctx);        
     }
     

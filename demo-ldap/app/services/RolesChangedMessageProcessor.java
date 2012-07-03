@@ -5,6 +5,8 @@ import models.User;
 import org.apache.commons.lang.Validate;
 import org.springframework.amqp.core.MessagePostProcessor;
 
+import play.Logger;
+
 import ar.uba.dc.seginf.sims.messages.UserRolesChangedMessage;
 import ar.uba.dc.seginf.sims.util.MessageProcessor;
 
@@ -29,6 +31,7 @@ public class RolesChangedMessageProcessor implements MessageProcessor<UserRolesC
     @Override
     public void process(UserRolesChangedMessage msg) {
         User user = new User();
+        user.username = msg.getUsername();
         user.groups = msg.getRoles();
         ldapService.updateRoles(user);
     }
