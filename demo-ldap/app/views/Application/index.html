@@ -5,7 +5,13 @@
     <div class="span8 offset2">
         <div class="hero-unit">
             <h1>Entraste!</h1>
-            <p>Acá estaría bueno que se muestren los roles del usuario</p>
+            <br>
+            <p>Actualmente pertenecés a los siguientes grupos:</p>
+            <ul>
+            #{list items:groups, as:'group'}
+                <li>${group}</li>
+            #{/list}
+            </ul>
             <br>
             <a class="logout btn btn-primary btn-large btn-danger" href="@{Secure.logout()}">Log out</a>
         </div>

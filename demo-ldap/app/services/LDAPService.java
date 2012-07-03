@@ -1,5 +1,6 @@
 package services;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -20,9 +21,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
-
-import play.libs.Crypto;
-import play.libs.Crypto.HashType;
 
 /**
  * Operaciones contra el LDAP
@@ -71,6 +69,19 @@ public class LDAPService {
                             .and(new EqualsFilter("uid", username));
         
         return ldapTemplate.authenticate("ou=users", filter.encode(), password);
+    }
+    
+    /** Listado de grupos del usuario. */
+    public List<String> listGroups(final String username) {
+        Validate.notEmpty(username);
+        List<String> allGroups = allGroups();
+        List<String> userGroups = new LinkedList<String>();
+        for (String group : allGroups) {
+            if (checkGroup(username, group)) {
+                userGroups.add(group);
+            }
+        }
+        return userGroups;
     }
     
     /** chequea si el usuario pertenece a un grupo */
