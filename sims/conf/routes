@@ -16,7 +16,8 @@ GET     /applications/{appName}/?               Application.detail
 PUT     /applications/{appName}/?               Application.configureApp
 
 # Users
-GET     /users                                  Users.create
+GET     /users/?                                Users.create
+POST    /users/?                                Users.postUser
 
 # Logs
 GET     /logs                                   Logs.logs

@@ -3,6 +3,41 @@
 
 <div class="row">
     <div class="span8 offset2">
-        <div class="alert alert-info">Volvé en un par de días :)</div>
+        #{form @Users.postUser(), class:'form-horizontal'}
+        <fieldset>
+            <legend>Alta de usuario</legend>
+            <div class="control-group">
+                <label class="control-label" for="date">Username</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="username">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Email</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="email">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Nombre</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="firstName">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Apellido</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" name="lastName">
+                </div>
+            </div>
+            <div class="alert alert-info">Se le enviará por email una clave generada al usuario para el login incial.</div>
+        </fieldset>
+        #{if flash.error}
+          <div class="alert alert-error">&{flash.error}</div>
+        #{/if}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Aceptar</button>
+        </div>
+        #{/form}
     </div>
 </div>
