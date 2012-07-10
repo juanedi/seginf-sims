@@ -50,6 +50,12 @@ public class User extends Model {
         this.password = hashPassword(password);
     }
     
+    /** setea la password que viene hasheada de la administración central*/
+    public void setPassword(final String password) {
+        Validate.notEmpty(password);
+        this.password = password;
+    }
+    
     /** compara la password */
     public boolean comparePassword(final String password) {
         if (password == null || password.isEmpty()) {

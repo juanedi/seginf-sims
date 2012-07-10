@@ -45,9 +45,19 @@
         </constructor-arg>
     </bean>
 
+    <bean id="passwordChangedListener" class="ar.uba.dc.seginf.sims.util.MessageListenerFactoryBean">
+        <constructor-arg index="0">
+            <bean class="services.PasswordChangedMessageProcessor" />
+        </constructor-arg>
+        <constructor-arg index="1">
+            <bean class="ar.uba.dc.seginf.sims.marshallers.PasswordChangedMessageMarshaller" />
+        </constructor-arg>
+    </bean>
+
     <rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="newUserListener" queue-names="${rmq.queues.newUser}" />
         <rabbit:listener ref="rolesChangedListener" queue-names="${rmq.queues.rolesChanged}" />
+        <rabbit:listener ref="passwordChangedListener" queue-names="${rmq.queues.passwordChanged}" />
         <!-- otros listener se agregan acá -->
     </rabbit:listener-container>
 
