@@ -13,6 +13,7 @@ import org.springframework.amqp.core.MessagePostProcessor;
 import ar.uba.dc.seginf.sims.MessageType;
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
 import ar.uba.dc.seginf.sims.messages.UserRolesChangedMessage;
+import ar.uba.dc.seginf.sims.messages.PasswordChangedMessage;
 
 import models.App;
 import models.Role;
@@ -31,14 +32,20 @@ public class RMQAppNotificationService implements AppNotificationService {
 
     private final AmqpTemplate newUserTemplate;
     private final AmqpTemplate userRolesChangedTemplate;
+    private final AmqpTemplate passwordChangedTemplate;
     
     /** Creates the RMQAppNotificationService. */
     public RMQAppNotificationService(final AmqpTemplate newUserTemplate,
-                                     final AmqpTemplate userRolesChagedTemplate) {
+                                     final AmqpTemplate userRolesChagedTemplate,
+                                     final AmqpTemplate passwordChangedTemplate) {
         Validate.notNull(newUserTemplate);
         Validate.notNull(userRolesChagedTemplate);
+        Validate.notNull(passwordChangedTemplate);
+
         this.newUserTemplate = newUserTemplate;
         this.userRolesChangedTemplate = userRolesChagedTemplate;
+        this.passwordChangedTemplate = passwordChangedTemplate;
+       
     }
     
     /** @see AppNotificationService#notifyNewUser(User, App) */
@@ -53,7 +60,8 @@ public class RMQAppNotificationService implements AppNotificationService {
     /** @see AppNotificationService#notifyPasswordChanged(User, App) */
     @Override
     public void notifyPasswordChanged(User user, App app) {
-        throw new NotImplementedException();
+    	PasswordChangedMessage msg = new PasswordChangedMessage(user.username, app.hashType.name(), user.getHashedPassword(app.hashType));    
+    	passwordChangedTemplate.convertAndSend(app.name, MessageType.CHANGE_PASSWORD.name(), msg, nullPostProcessor());
     }
 
     /** @see AppNotificationService#notifyRolesChanged(User, App) */

@@ -48,7 +48,19 @@
             </bean>
         </property>
     </bean>
-
+    
+    <bean id="passwordChangedRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <constructor-arg index="0" ref="rabbitConnectionFactory" />
+        <property name="routingKey" value="CHANGED_PASSWORD" />
+        <property name="messageConverter">
+            <bean class="services.SimsMessageConverter">
+                <constructor-arg index="0">
+                    <bean class="ar.uba.dc.seginf.sims.marshallers.PasswordChangedMessageMarshaller" />
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+ 
     <bean id="rmqService" class="services.RMQServiceImpl">
         <constructor-arg index="0" value="${rmq.broker.host}" />
         <constructor-arg index="1" value="${rmq.api.port}" />
@@ -61,6 +73,7 @@
     <bean id="appNotificationService" class="services.RMQAppNotificationService">
         <constructor-arg index="0" ref="newUserRabbitTemplate" />
         <constructor-arg index="1" ref="rolesChangedRabbitTemplate" />
+        <constructor-arg index="2" ref="passwordChangedRabbitTemplate" />
     </bean>
 
 </beans>
