@@ -1,0 +1,67 @@
+#{extends 'main.html' /}
+#{set title:'Políticas de Claves - SIMS' /}
+
+
+<div class="row">
+    <div class="span8 offset2">
+		#{form @PasswordPolicies.postPasswordPolicy(), class:'form-horizontal'}
+		<fieldset>
+			<legend>Nueva Política de Claves</legend>
+            <div class="control-group">
+                <label class="control-label" for="date">Nombre</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="name" name="name">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Longitud Mínima</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="passwordLength" name="passwordLength">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">A-Z</label>
+                <div class="controls">
+                    <input type="checkbox" id="useUpperCaseLetters" name="useUpperCaseLetters">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">a-z</label>
+                <div class="controls">
+                    <input type="checkbox" id="useLowerCaseLetters" name="useLowerCaseLetters">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">0-9</label>
+                <div class="controls">
+                    <input type="checkbox" id="useNumbers" name="useNumbers">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">especiales</label>
+                <div class="controls">
+                    <input type="checkbox" id="useSpecialCharsLetters" name="useSpecialCharsLetters">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">todos tipos de caracteres requeridos</label>
+                <div class="controls">
+                    <input type="checkbox" id="reqEveryType" name="reqEveryType">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Duración</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="duration" name="duration">
+                </div>
+            </div>
+		</fieldset>
+		#{if flash.error}
+		  <div class="alert alert-error">&{flash.error}</div>
+		#{/if}
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">Aceptar</button>
+		</div>
+		#{/form}
+    </div>
+</div>

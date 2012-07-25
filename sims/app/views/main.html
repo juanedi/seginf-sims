@@ -33,6 +33,9 @@
 						   #{secure.check 'CREATE_USER'}
 	                       <li id="nav-usr"><a href="@{Users.create}">Crear usuario</a></li>
 	                       #{/secure.check}
+
+	                       <li id="nav-usr"><a href="@{PasswordPolicies.list}">Politica de claves</a></li>
+
 	                       #{secure.check 'AUDIT'}
 	                       <li id="nav-logs"><a href="@{Logs.logs}">Logs</a></li>
 	                       #{/secure.check}

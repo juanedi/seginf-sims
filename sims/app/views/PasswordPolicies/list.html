@@ -1,0 +1,29 @@
+#{extends 'main.html' /}
+#{set title:'Política de Claves - SIMS' /}
+
+
+<div class="row">
+    <div class="span8 offset2">
+	    <div class="page-header"><h2>Política de Claves</h2></div>
+	    <table id="passPolicyData" class="table">
+	        <thead>
+	            <tr>
+	                <th></th>
+	                <th>Nombre</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+			    #{list passPolicy, as:'pp'} 
+			    <tr>
+			       <td>
+			       </td>
+			       <td>${pp.name}</td>
+			    </tr>
+			    #{/list}
+	        </tbody>
+	    </table>
+<!-- 	    #{secure.check 'CREATE_USER'} -->
+        <a href="@{PasswordPolicies.create}" class="btn btn-primary">Alta política</a>
+<!--	    #{/secure.check} -->
+    </div>
+</div>
