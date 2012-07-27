@@ -1,0 +1,85 @@
+% Informacion sobre el package para el sistema
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tps}[2004/04/06 v0.1 Para componer simbolitos frecuentemente usados]
+
+% Imprimir un mensajito al procesar un .tex que use este package
+\typeout{Cargando package 'tps' v0.1 (07/04/2004)}
+
+% Aseguremonos de cargar los packages de la AMS
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+
+% Paquete para la línea punteada, igual no me anda
+\RequirePackage{ulem}
+
+\newcommand{\flechita}{\:\leftarrow\:}
+\newcommand{\yLogico}{\; \wedge \;}
+
+\newcommand{\subindice}[2]{$#1_{#2}$}
+
+\newcommand{\asignar}[2]{$#1 \flechita #2$}
+
+\newcommand{\mientras}{\textbf{mientras}\:}
+
+\newcommand{\para}{\textbf{para}\:}
+
+\newcommand{\hacer}{\textbf{hacer}\:}
+
+\newcommand{\fin}{\textbf{fin}\:}
+
+\newcommand{\iif}{\textbf{if}\:}
+
+\newcommand{\sino}{\textbf{sino}\:}
+
+\newcommand{\finif}{\textbf{end if}\:}
+
+\newcommand{\devolver}{\textbf{devolver}\:}
+
+\newcommand{\nuevoAlgo}[2]{\textbf{#1:\:}#2}
+
+\newcommand{\sii}[2]{$#1 \: \Leftrightarrow \: #2$}
+
+
+% Complejidad
+\newcommand{\ode}[1]{\ensuremath{O(#1)}}
+\newcommand{\omegade}[1]{\ensuremath{\Omega(#1)}}
+\newcommand{\thetade}[1]{\ensuremath{\Theta(#1)}}
+
+% mr
+
+\def\mrcom#1#2{\begin{framed}#2\parindent=\mrmargen\vskip\mrtitskip\noindent%
+\hbox to \hsize{{\bf MR: } #1\hfil}\vskip0.3cm}
+\def\mrfin{\vskip\mrtitskip\par\noindent%
+\hbox to \hsize{{\bf Fin MR}\hfil}\vskip\mrtitskip\end{framed}}
+
+% ------- ENTORNO 'mr' ------------------------------------
+%
+% Uso:  \begin{mr}{nombre del MR}
+%          ...
+%       \end{mr}
+%
+\newenvironment{mr}[1]{\mrcom{#1}{}}{\mrfin}
+
+\def\mrenc#1#2{\dimen0=\mrmaxenc\advance\dimen0 by \mrmargen%
+\vskip\mrtitskip\par\hangindent=\dimen0\hangafter=1\hskip0pt%
+\hbox to \mrmaxenc{{\bf #1}\hfil}#2}
+
+
+\def\pk#1{\uline{#1}}
+\def\fk#1{\dashuline{#1}}
+\def\pfk#1{\uline{\dashuline{#1}}}
+
+% ------- Entidades ---------------------------------
+%
+% Uso:  \entidad{entidad}{parametros separados por ,} (se puede usar \pk \fk \pfk)
+%
+
+\def\entidad#1#2{\vskip0.4em{\bf #1: }({#2})}
+
+\def\entidadPK#1{\vskip0em{\bf PK: } \{#1\}}
+
+\def\entidadCK#1{\vskip0em{\bf CK: } \{#1\}}
+
+\def\entidadFK#1{\vskip0em{\bf FK: } \{#1\}}
+
+
