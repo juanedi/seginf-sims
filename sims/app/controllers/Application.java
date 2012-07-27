@@ -213,8 +213,9 @@ public class Application extends SecureController {
                     }
                     
                     // para evitar modificar al mismo momento que se itera.
-                    List<Role> toRemove = new ArrayList<Role>(user.roles.size());
-                    for (Role role : user.roles) {
+                    List<Role> rolesForApp = user.getRoles(app);
+                    List<Role> toRemove = new LinkedList<Role>();
+                    for (Role role : rolesForApp) {
                         if (!roles.contains(role)) {
                             changed = true;
                             toRemove.add(role);
