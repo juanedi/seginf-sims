@@ -20,6 +20,7 @@ public interface EventSearchService {
 	 * Búsqueda de eventos.
 	 * 
 	 * @param type			Tipo de evento. Null si se quiere cualquier tipo.
+	 * @param responsible	Usuario que originó el vento. Null si no se quiere filtrar.
 	 * @param applications	Aplicaciones relacionadas. Null si no se quiere filtrar por aplicación.
 	 * @param users			Usuarios relacionados. Null si no se quiere filtrar por usuarios.
 	 * @param since			Fecha a partir de buscar. Null si no se desea limita.
@@ -27,6 +28,7 @@ public interface EventSearchService {
 	 * 
 	 * @return	Lista de eventos encontrados.
 	 */
-	List<Event> search(EventType type, List<App> applications, List<User> users, Date since, Date to);
+	List<Event> search(EventType type, User responsible, List<App> applications, 
+					   List<User> users, Date since, Date to);
 	
 }

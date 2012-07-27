@@ -1,14 +1,17 @@
 package services;
 
+import java.util.Arrays;
 import java.util.Collections;
-
-import org.apache.commons.lang.NotImplementedException;
+import java.util.List;
 
 import models.App;
 import models.Event;
 import models.EventType;
 import models.Role;
 import models.User;
+
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.Validate;
 
 /**
  * Implementación de {@link AccountingLogger} 
@@ -19,47 +22,44 @@ import models.User;
  */
 public class DatabaseAccountingLogger implements AccountingLogger {
 
+	private final DateProvider dateProvider;
+	
+	public DatabaseAccountingLogger(final DateProvider dateProvider) {
+		Validate.notNull(dateProvider);
+		this.dateProvider = dateProvider;
+	}
+	
 	@Override
 	public void logPasswordChange(User user) {
-		new Event(EventType.PASSWORD_CHANGE, 
-				  Collections.<App>singletonList(App.sims()),
-				  Collections.<User>singletonList(user), 
-				  "El usuario " + user.username + " modificó su clave.").save();
+		log(EventType.PASSWORD_CHANGE, user, App.sims(), "El usuario " + user.username + " modificó su clave.");
 	}
 
 	@Override
-	public void logUserCreated(User newUser) {
-		new Event(EventType.USER_CREATED, 
-				  Collections.<App>singletonList(App.sims()),
-				  Collections.<User>singletonList(newUser), 
-				  "Nuevo usuario: " + newUser.username + ".").save();
+	public void logUserCreated(User currentUser, User newUser) {
+		String description = "Usuario creado: " + newUser.username + ".";
+		log(EventType.USER_CREATED, currentUser, App.sims(), description, newUser);
 	}
 
 	@Override
-	public void logAppCreated(App app) {
-		new Event(EventType.APP_CREATED, 
-				  Collections.<App>singletonList(App.sims()),
-				  Collections.<User>emptyList(), 
-				  "Nueva aplicación: " + app.name + ".").save();
+	public void logAppCreated(User currentUser, App app) {
+		String description = "Nueva aplicación: " + app.name + ".";
+		log(EventType.APP_CREATED, currentUser, Arrays.asList(app, App.sims()), description);
 	}
 
 	@Override
-	public void logAppAccessChanged(User user, App app) {
-		String msg;
+	public void logAppAccessChanged(User currentUser, User user, App app) {
+		String description;
 		if (user.apps.contains(app)) {
-			msg = "Acceso concedido a " + user.username + " para aplicación " + app.name;
+			description = "Acceso concedido a " + user.username + " para aplicación " + app.name;
 		} else {
-			msg = "Acceso revocado a " + user.username + " para aplicación " + app.name;
+			description = "Acceso revocado a " + user.username + " para aplicación " + app.name;
 		}
 		
-		new Event(EventType.APP_ACCESS_CHANGED, 
-				  Collections.<App>singletonList(app),
-				  Collections.<User>singletonList(user), 
-				  msg).save();
+		log(EventType.APP_ACCESS_CHANGED, currentUser, app, description, user);
 	}
 
 	@Override
-	public void logRoleChanged(User user, Role role) {
+	public void logRoleChanged(User currentUser, User user, Role role) {
 		String msg;
 		if (user.roles.contains(role)) {
 			msg = "Rol " + role.name + " concedido a " + user.username + " para aplicación " + role.app.name;
@@ -67,16 +67,23 @@ public class DatabaseAccountingLogger implements AccountingLogger {
 			msg = "Rol " + role.name + " revocado de " + user.username + " para aplicación " + role.app.name;
 		}
 		
-		new Event(EventType.ROLE_CHANGED, 
-				  Collections.<App>singletonList(role.app),
-				  Collections.<User>singletonList(user), 
-				  msg).save();
+		log(EventType.ROLE_CHANGED, currentUser, role.app, msg, user);
 	}
 
 	@Override
-	public void logPasswordPolicyChanged() {
+	public void logPasswordPolicyChanged(User currentUser) {
 		//FIXME: completar cuando esté terminado el tema de políticas de claves!
 		throw new NotImplementedException();
 	}
 
+	
+	private void log(EventType type, User responsible, App app, String description, User ... additionalRelatedUsers) {
+		log(type,responsible, Collections.<App>singletonList(app), description, additionalRelatedUsers);
+	}
+	
+	private void log(EventType type, User responsible, List<App> apps, String description, User ... additionalRelatedUsers) {
+		Event event = new Event(dateProvider.getDate(), type, responsible, apps, 
+				  				Arrays.asList(additionalRelatedUsers), description);
+		event.save();
+	}
 }

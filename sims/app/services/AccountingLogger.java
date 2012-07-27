@@ -14,13 +14,13 @@ public interface AccountingLogger {
 
 	void logPasswordChange(User user);
 	
-	void logUserCreated(User newUser);
+	void logUserCreated(User currentUser, User newUser);
 	
-	void logAppCreated(App app);
+	void logAppCreated(User currentUser, App app);
 
-	void logAppAccessChanged(User user, App app);
+	void logAppAccessChanged(User currentUser, User user, App app);
 
-	void logRoleChanged(User user, Role role);
+	void logRoleChanged(User currentUser, User user, Role role);
 	
-	void logPasswordPolicyChanged();
+	void logPasswordPolicyChanged(User currentUser);
 }
