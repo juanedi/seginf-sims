@@ -49,10 +49,13 @@ public class Event extends Model {
     }
     
     /** construye un evento nuevo */
-	public Event(final List<App> relatedApps, final List<User> relatedUsers, String description) {
+	public Event(final EventType type, final List<App> relatedApps, 
+				 final List<User> relatedUsers, final String description) {
+		Validate.notNull(type);
 		Validate.notNull(relatedApps);
 		Validate.notNull(relatedUsers);
 		Validate.notEmpty(description);
+		this.type = type;
 		this.date = new Date();
 		this.relatedApps = relatedApps;
 		this.relatedUsers = relatedUsers;
