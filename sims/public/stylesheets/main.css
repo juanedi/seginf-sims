@@ -47,7 +47,7 @@ form.light-submit .btn-primary{
 form .listInput ul {
 	float: left;
 	margin-right: 25px;
-	font-style: italic;
+	font-size: 12px;
 }
 
 .modal-body {

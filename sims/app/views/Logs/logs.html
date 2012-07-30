@@ -1,0 +1,109 @@
+#{extends 'main.html' /}
+#{set title:'Logs - SIMS' /}
+#{set 'moreScripts'}
+    #{script 'accounting.js'/}
+#{/set}
+
+<div class="row">
+    <div class="span8 offset2">
+        <form class="form-horizontal">
+        <fieldset>
+            <legend>Logs de auditoría</legend>
+            <div class="control-group">
+                <label class="control-label" for="date">Tipo de evento</label>
+                <div class="controls">
+                	<select>
+               			<option>Todos</option>
+				        #{list items:eventTypes, as:'type'}
+			        	<option>${type.description}</option>
+				        #{/list}
+                	</select>
+                </div>
+            </div>
+			<div class="control-group">
+				<label class="control-label" for="date">Desde</label>
+				<div class="controls">
+					<input type="text" class="input-small datePicker">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="date">Hasta</label>
+				<div class="controls">
+					<input type="text" class="input-small datePicker">
+				</div>
+			</div>
+            <div class="control-group">
+                <label class="control-label" for="date">Originado por</label>
+                <div class="controls">
+                	<select>
+               			<option>Cualquiera</option>
+				        #{list items:users, as:'user'}
+			        	<option>${user.username}</option>
+				        #{/list}
+                	</select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Aplicaciones relacionadas</label>
+                <div id="relatedApps" class="controls listInput">
+                	<ul style="display:none">
+                	</ul>
+                	<a class="btn" href="#">Editar</a>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="date">Otros usuarios relacionados</label>
+                <div id="relatedUsers" class="controls listInput">
+                	<ul style="display:none">
+                	</ul>
+                	<a class="btn" href="#">Editar</a>
+                </div>
+            </div>
+        </fieldset>
+        #{if flash.error}
+          <div class="alert alert-error">&{flash.error}</div>
+        #{/if}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Aceptar</button>
+        </div>
+        </form>
+        
+        <div id="modalApps" class="modal">
+			<div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <h4>Otros usuarios relacionados a los eventos buscados</h4>
+            </div>
+            <div class="modal-body">
+        	<ul class="unstyled">
+		        #{list items:apps, as:'app'}
+		        <li>
+		        	<label class="checkbox"><input id="${app.name}" type="checkbox">${app.name}</label>
+				</li>
+		        #{/list}
+        	</ul>
+        	</div>
+			<div class="modal-footer">
+              <a href="#" class="btn btn-primary">Aceptar</a>
+            </div>
+        </div>
+        
+        <div id="modalUsers" class="modal">
+			<div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">×</button>
+              <h4>Otros usuarios relacionados a los eventos buscados</h4>
+            </div>
+            <div class="modal-body">
+        	<ul class="unstyled">
+		        #{list items:users, as:'user'}
+		        <li>
+		        	<label class="checkbox"><input id="${user.username}" type="checkbox">${user.username}</label>
+				</li>
+		        #{/list}
+        	</ul>
+        	</div>
+			<div class="modal-footer">
+              <a href="#" class="btn btn-primary">Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
