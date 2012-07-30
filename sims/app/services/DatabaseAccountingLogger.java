@@ -31,18 +31,18 @@ public class DatabaseAccountingLogger implements AccountingLogger {
 	
 	@Override
 	public void logPasswordChange(User user) {
-		log(EventType.PASSWORD_CHANGE, user, App.sims(), "El usuario " + user.username + " modificó su clave.");
+		log(EventType.PASSWORD_CHANGE, user, App.sims(), "El usuario " + user.username + " modificó su clave");
 	}
 
 	@Override
 	public void logUserCreated(User currentUser, User newUser) {
-		String description = "Usuario creado: " + newUser.username + ".";
+		String description = "Usuario creado: " + newUser.username;
 		log(EventType.USER_CREATED, currentUser, App.sims(), description, newUser);
 	}
 
 	@Override
 	public void logAppCreated(User currentUser, App app) {
-		String description = "Nueva aplicación: " + app.name + ".";
+		String description = "Nueva aplicación: " + app.name;
 		log(EventType.APP_CREATED, currentUser, Arrays.asList(app, App.sims()), description);
 	}
 
