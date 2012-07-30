@@ -17,6 +17,7 @@ import controllers.dto.EventSearchResult;
 import models.App;
 import models.Event;
 import models.EventType;
+import models.Role;
 import models.User;
 
 /**
@@ -32,6 +33,7 @@ public class Accounting extends SecureController {
 	@Inject static EventSearchService searchService;
 	
     /** Sirve pantalla principal de consulta de logs */
+	@Check(Role.SIMS_AUDIT_ROLE)
     public static void search() {
     	List<EventType> eventTypes = Arrays.asList(EventType.values());
     	List<User> users = User.all().fetch();
@@ -40,6 +42,7 @@ public class Accounting extends SecureController {
     }
     
     /** efectúa la búsqueda de los eventos de auditoría */
+	@Check(Role.SIMS_AUDIT_ROLE)
     public static void results(String eventType, 
     						   String user, 
     						   String relatedUsers, 
