@@ -83,7 +83,8 @@ public class DatabaseEventSearchService implements EventSearchService {
 
 		// seteo los predicados
 		query.where(predicates.toArray(new Predicate[predicates.size()]));
-
+		query.orderBy(cb.asc(e.get("date")));
+		
 		return em.createQuery(query).getResultList();
 	}
 
