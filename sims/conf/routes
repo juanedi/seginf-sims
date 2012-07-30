@@ -20,7 +20,7 @@ GET     /users/?                                Users.create
 POST    /users/?                                Users.postUser
 
 # Logs
-GET     /logs/?                                 Logs.logs
+GET     /logs/?                                 Accounting.search
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

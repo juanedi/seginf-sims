@@ -15,10 +15,10 @@ import models.User;
  * @author Juan Edi
  * @since May 27, 2012
  */
-public class Logs extends SecureController {
+public class Accounting extends SecureController {
 
     /** Sirve pantalla principal de consulta de logs */
-    public static void logs() {
+    public static void search() {
     	List<EventType> eventTypes = Arrays.asList(EventType.values());
     	List<User> users = User.all().fetch();
     	List<App> apps = App.all().fetch();
@@ -26,7 +26,7 @@ public class Logs extends SecureController {
     }
     
     /** efectúa la búsqueda de los eventos de auditoría */
-    public static void search(final EventType eventType, 
+    public static void results(final EventType eventType, 
     						  final String user, 
     						  final List<String> relatedUsers, 
     						  final List<String> relatedApps,
