@@ -6,74 +6,9 @@ $(document).ready(function() {
 	    language: 'es'
 	});
 	
-	new ListSelectController($('#modalUsers'), $("#relatedUsers")).init();
-	new ListSelectController($('#modalApps'), $("#relatedApps")).init();
-
-	$('#submitBtn').bind('click', submit);
+	new SearchController($("form")).init();
+	new ResultsController($('#searchResults')).init();
 });
-
-
-var submit = function(e) {
-	e.preventDefault();
-	
-	$("#errorAlert").hide();
-	$("#infoAlert").hide();
-	
-	var eventType = $('#eventType').val();
-
-	var dateSince = $('#dateSince').val();
-	
-	var dateTo = $('#dateTo').val();
-	
-	var user = $('#user').val();
-
-	var relatedUsers = [];
-	$('#relatedUsers ul li').each(function(i, e) {
-		relatedUsers.push($(e).text());
-	});
-	
-	var relatedApps = [];
-	$('#relatedApps ul li').each(function(i, e) {
-		relatedApps.push($(e).text());
-	});
-	
-	var searchQuery = {
-			eventType: eventType != "ALL" ? eventType : null,
-			user: user != "ALL" ? user : null,
-			relatedUsers: relatedUsers.length > 0 ? relatedUsers.join(',') : null,
-			relatedApps: relatedApps.length > 0 ? relatedApps.join(',') : null,
-			since: dateSince? dateSince : null,
-			to: dateTo? dateTo : null
-	}
-	
-  $.get(doSearch(searchQuery), processSearchResults);
-	
-};
-
-var processSearchResults = function(result) {
-	if (result.errors && result.errors.length > 0) {
-		var errorMsg = $("#errorAlert");
-		errorMsg.empty();
-		for(var i = 0; i < result.errors.length; i++) {
-			var delim = i == 0 ? "" : "<br>";
-			errorMsg.html(errorMsg.html() + delim + result.errors[i]);
-		}
-		errorMsg.fadeIn("fast");
-	} else {
-		if (result.events && result.events.length > 0) {
-			infoMsg = $("#infoAlert");
-			infoMsg.empty();
-			infoMsg.text("Se encontraron " + result.events.length + " resultados. Todavía no los mostramos :P");
-			infoMsg.fadeIn("fast");
-		} else {
-			infoMsg = $("#infoAlert");
-			infoMsg.empty();
-			infoMsg.text("No se encontró ningún evento para su búsqueda");
-			infoMsg.fadeIn("fast");
-		}
-	}
-}
-
 
 /**
  * Controller para las listas que se editan con ventanas modales.
@@ -149,4 +84,109 @@ ListSelectController.prototype._updateItems = function(e) {
 	}
 	
 	this.$modalWindow.modal('hide');
+}
+
+SearchController = function($form) {
+	this.$form = $form;
+	this.$errorAlert = $("#errorAlert", $form);
+	this.$infoAlert = $("#infoAlert", $form);
+	this.$eventTypeInput = $('#eventType', $form);
+	this.$dateSinceInput = $('#dateSince', $form);
+	this.$dateToInput = $('#dateTo', $form);
+	this.$userInput = $('#user', $form);
+	this.$relatedUsers = $("#relatedUsers", $form);
+	this.$relatedApps = $("#relatedApps", $form);
+}
+
+SearchController.prototype.init = function() {
+	$(document).bind('newSearch', $.proxy(this._onNewSearch, this));
+	$('#submitBtn').bind('click', $.proxy(this._submit, this));
+	new ListSelectController($('#modalUsers'), this.$relatedUsers).init();
+	new ListSelectController($('#modalApps'), this.$relatedApps).init();
+}
+
+SearchController.prototype._onNewSearch = function() {
+	this.$form.show();
+}
+
+SearchController.prototype._submit = function(e) {
+	e.preventDefault();
+	
+	this.$errorAlert.hide();
+	this.$infoAlert.hide();
+	
+	var eventType = this.$eventTypeInput.val();
+	var dateSince = this.$dateSinceInput.val();
+	var dateTo = this.$dateToInput.val();
+	var user = this.$userInput.val();
+
+	var relatedUsers = [];
+	$('ul li', this.$relatedUsers).each(function(i, e) {
+		relatedUsers.push($(e).text());
+	});
+	
+	var relatedApps = [];
+	$('ul li', this.$relatedApps).each(function(i, e) {
+		relatedApps.push($(e).text());
+	});
+	
+	var searchQuery = {
+			eventType: eventType != "ALL" ? eventType : null,
+			user: user != "ALL" ? user : null,
+			relatedUsers: relatedUsers.length > 0 ? relatedUsers.join(',') : null,
+			relatedApps: relatedApps.length > 0 ? relatedApps.join(',') : null,
+			since: dateSince? dateSince : null,
+			to: dateTo? dateTo : null
+	}
+	
+  $.get(doSearch(searchQuery), $.proxy(this._processSearchResults, this));
+	
+};
+
+SearchController.prototype._processSearchResults = function(result) {
+	if (result.errors && result.errors.length > 0) {
+		this.$errorAlert.empty();
+		for(var i = 0; i < result.errors.length; i++) {
+			var delim = i == 0 ? "" : "<br>";
+			this.$errorAlert.html(this.$errorAlert.html() + delim + result.errors[i]);
+		}
+		this.$errorAlert.fadeIn("fast");
+	} else {
+		if (result.events && result.events.length > 0) {
+			$(document).trigger("newSearchReady", result);
+			this.$form.hide();
+		} else {
+			this.$infoAlert.empty();
+			this.$infoAlert.text("No se encontró ningún evento para su búsqueda");
+			this.$infoAlert.fadeIn("fast");
+		}
+	}
+}
+
+ResultsController = function($panel) {
+	this.$panel = $panel;
+	this.$table = $("table", $panel);
+}
+
+ResultsController.prototype.init = function() {
+	$(document).bind('newSearch', $.proxy(this._onNewSearch, this));
+	$(document).bind('newSearchReady', $.proxy(this._showResults, this));
+	
+	$('#searchAgain', this.$panel).bind('click', function(e) {
+		e.preventDefault();
+		$(document).trigger("newSearch");
+	});
+}
+
+ResultsController.prototype._showResults = function(e, result) {
+	for(var i = 0; i < result.events.length; i++) {
+		var event = result.events[i];
+		this.$table.append('<tr><td>' + event.date + '</td><td>' + event.responsible + '</td><td>' + event.description + '</td></tr>')
+	}
+	this.$panel.show();
+}
+
+ResultsController.prototype._onNewSearch = function() {
+	$("tr", this.$table).remove();
+	this.$panel.hide();
 }
