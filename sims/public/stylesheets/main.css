@@ -43,3 +43,13 @@ form.light-submit .btn-primary{
 .table tr td.userName {
     width: 100px;
 }
+
+form .listInput ul {
+	float: left;
+	margin-right: 25px;
+	font-style: italic;
+}
+
+.modal-body {
+	max-height: 400px;
+}
