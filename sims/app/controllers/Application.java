@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 
 import play.data.validation.Required;
 import play.data.validation.Valid;
+import services.AccountingLogger;
 import services.AppNotificationService;
 import services.RMQService;
 import controllers.dto.AppUserConfiguration;
@@ -30,6 +31,7 @@ public class Application extends SecureController {
 
     @Inject static RMQService rmqService; 
     @Inject static AppNotificationService appNotificationService;
+    @Inject static AccountingLogger accountingLogger;
     
     /** sirve página principal */
     public static void index() {
@@ -142,6 +144,7 @@ public class Application extends SecureController {
         app.hashType = hash;
         app.roles = new LinkedList<Role>();
         app.save();
+        accountingLogger.logAppCreated(connectedUser(), app);
         
         flash.success(String.format("Aplicación %s creada exitosamente", name));
         index();
@@ -209,6 +212,7 @@ public class Application extends SecureController {
                         if (!user.roles.contains(role)) {
                             changed = true;
                             user.roles.add(role);
+                            accountingLogger.logRoleChanged(connectedUser(), user, role);
                         }
                     }
                     
@@ -219,6 +223,7 @@ public class Application extends SecureController {
                         if (!roles.contains(role)) {
                             changed = true;
                             toRemove.add(role);
+                            accountingLogger.logRoleChanged(connectedUser(), user, role);
                         }
                     }
                     user.roles.removeAll(toRemove);
@@ -249,6 +254,7 @@ public class Application extends SecureController {
         for (User user : newUsers) {
             user.save();
             appNotificationService.notifyNewUser(user, app);
+            accountingLogger.logAppAccessChanged(connectedUser(), user, app);
         }
         for (User user : modifiedUsers) {
             user.save();
@@ -257,6 +263,7 @@ public class Application extends SecureController {
         for (User user : removedUsers) {
             user.save();
             appNotificationService.notifyUserRemove(user, app);
+            accountingLogger.logAppAccessChanged(connectedUser(), user, app);
         }
         
         response.status = 204;

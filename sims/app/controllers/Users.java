@@ -2,6 +2,8 @@ package controllers;
 
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import models.Role;
 import models.User;
 import notifiers.Mailer;
@@ -11,6 +13,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import play.data.validation.Required;
 import play.mvc.Controller;
 import play.mvc.With;
+import services.AccountingLogger;
 
 /**
  * Controller para alta de usuarios.
@@ -22,6 +25,8 @@ import play.mvc.With;
 @Check(Role.SIMS_CREATE_USER_ROLE)
 public class Users extends SecureController {
 
+	@Inject static AccountingLogger accountingLogger;
+	
     public static void create() {
         render();
     }
@@ -55,6 +60,7 @@ public class Users extends SecureController {
         Mailer.welcome(user, randomPassword);
         
         user.save();
+        accountingLogger.logUserCreated(connectedUser(), user);
         
         if (hasErrors) {
             create();

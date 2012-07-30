@@ -13,6 +13,7 @@ import models.App;
 import models.User;
 import play.data.validation.Required;
 import play.mvc.Controller;
+import services.AccountingLogger;
 import services.AppNotificationService;
 
 /**
@@ -24,6 +25,7 @@ import services.AppNotificationService;
  */
 public class Password extends SecureController {
     
+	@Inject static AccountingLogger accountingLogger;
     @Inject static AppNotificationService appNotificationService;
 
     /** sirve pantalla de cambio de password */
@@ -57,7 +59,8 @@ public class Password extends SecureController {
 
         user.setPassword(newPasswordConfirmation);
         user.save();
-
+        accountingLogger.logPasswordChange(user);
+        
         for (App app : user.apps) {
             //horrible
             if (!app.name.equals("sims"))
