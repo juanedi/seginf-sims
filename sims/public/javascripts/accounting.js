@@ -9,7 +9,47 @@ $(document).ready(function() {
 	new ListSelectController($('#modalUsers'), $("#relatedUsers")).init();
 	new ListSelectController($('#modalApps'), $("#relatedApps")).init();
 
+	$('#submitBtn').bind('click', submit);
 });
+
+
+var submit = function(e) {
+	e.preventDefault();
+
+	var eventType = $('#eventType').val();
+
+	var dateSince = $('#dateSince').val();
+	
+	var dateTo = $('#dateTo').val();
+	
+	var user = $('#user').val();
+
+	var relatedUsers = [];
+	$('#relatedUsers ul li').each(function(i, e) {
+		relatedUsers.push($(e).text());
+	});
+	
+	var relatedApps = [];
+	$('#relatedApps ul li').each(function(i, e) {
+		relatedApps.push($(e).text());
+	});
+	
+	var searchQuery = {
+			eventType: eventType != "ALL" ? eventType : null,
+			user: user != "ALL" ? user : null,
+			relatedUsers: relatedUsers.length > 0 ? relatedUsers.join(',') : null,
+			relatedApps: relatedApps.length > 0 ? relatedApps.join(',') : null,
+			since: dateSince? dateSince : null,
+			to: dateTo? dateTo : null
+	}
+	
+  $.get(doSearch(searchQuery), processSearchResults);
+	
+};
+
+var processSearchResults = function(results) {
+	console.log(results);
+}
 
 
 /**

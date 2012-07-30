@@ -21,6 +21,7 @@ POST    /users/?                                Users.postUser
 
 # Logs
 GET     /logs/?                                 Accounting.search
+GET     /logs/results                           Accounting.results
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

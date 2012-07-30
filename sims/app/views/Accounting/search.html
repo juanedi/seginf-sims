@@ -4,6 +4,10 @@
     #{script 'accounting.js'/}
 #{/set}
 
+<script type="text/javascript">
+   var doSearch = #{jsAction @results(':eventType', ':user', ':relatedUsers', ':relatedApps', ':since', ':to') /}
+</script>
+
 <div class="row">
     <div class="span8 offset2">
         <form class="form-horizontal">
@@ -12,10 +16,10 @@
             <div class="control-group">
                 <label class="control-label" for="date">Tipo de evento</label>
                 <div class="controls">
-                	<select>
-               			<option>Todos</option>
+                	<select id="eventType">
+               			<option value="ALL">Todos</option>
 				        #{list items:eventTypes, as:'type'}
-			        	<option>${type.description}</option>
+			        	<option value="${type}">${type.description}</option>
 				        #{/list}
                 	</select>
                 </div>
@@ -23,20 +27,20 @@
 			<div class="control-group">
 				<label class="control-label" for="date">Desde</label>
 				<div class="controls">
-					<input type="text" class="input-small datePicker">
+					<input id="dateSince" type="text" class="input-small datePicker">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="date">Hasta</label>
 				<div class="controls">
-					<input type="text" class="input-small datePicker">
+					<input id="dateTo" type="text" class="input-small datePicker">
 				</div>
 			</div>
             <div class="control-group">
                 <label class="control-label" for="date">Originado por</label>
                 <div class="controls">
-                	<select>
-               			<option>Cualquiera</option>
+                	<select id="user">
+               			<option value="ALL">Cualquiera</option>
 				        #{list items:users, as:'user'}
 			        	<option>${user.username}</option>
 				        #{/list}
@@ -64,7 +68,7 @@
           <div class="alert alert-error">&{flash.error}</div>
         #{/if}
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Aceptar</button>
+            <button id="submitBtn" type="submit" class="btn btn-primary">Aceptar</button>
         </div>
         </form>
         
