@@ -15,7 +15,10 @@ $(document).ready(function() {
 
 var submit = function(e) {
 	e.preventDefault();
-
+	
+	$("#errorAlert").hide();
+	$("#infoAlert").hide();
+	
 	var eventType = $('#eventType').val();
 
 	var dateSince = $('#dateSince').val();
@@ -47,8 +50,28 @@ var submit = function(e) {
 	
 };
 
-var processSearchResults = function(results) {
-	console.log(results);
+var processSearchResults = function(result) {
+	if (result.errors && result.errors.length > 0) {
+		var errorMsg = $("#errorAlert");
+		errorMsg.empty();
+		for(var i = 0; i < result.errors.length; i++) {
+			var delim = i == 0 ? "" : "<br>";
+			errorMsg.html(errorMsg.html() + delim + result.errors[i]);
+		}
+		errorMsg.fadeIn("fast");
+	} else {
+		if (result.events && result.events.length > 0) {
+			infoMsg = $("#infoAlert");
+			infoMsg.empty();
+			infoMsg.text("Se encontraron " + result.events.length + " resultados. Todavía no los mostramos :P");
+			infoMsg.fadeIn("fast");
+		} else {
+			infoMsg = $("#infoAlert");
+			infoMsg.empty();
+			infoMsg.text("No se encontró ningún evento para su búsqueda");
+			infoMsg.fadeIn("fast");
+		}
+	}
 }
 
 

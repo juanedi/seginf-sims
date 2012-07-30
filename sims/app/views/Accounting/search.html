@@ -40,7 +40,7 @@
                 <label class="control-label" for="date">Originado por</label>
                 <div class="controls">
                 	<select id="user">
-               			<option value="ALL">Cualquiera</option>
+               			<option value="ALL">Cualquier usuario</option>
 				        #{list items:users, as:'user'}
 			        	<option>${user.username}</option>
 				        #{/list}
@@ -64,9 +64,8 @@
                 </div>
             </div>
         </fieldset>
-        #{if flash.error}
-          <div class="alert alert-error">&{flash.error}</div>
-        #{/if}
+        <div id="errorAlert" class="alert alert-error" style="display: none"></div>
+        <div id="infoAlert" class="alert alert-info" style="display: none"></div>
         <div class="form-actions">
             <button id="submitBtn" type="submit" class="btn btn-primary">Aceptar</button>
         </div>
