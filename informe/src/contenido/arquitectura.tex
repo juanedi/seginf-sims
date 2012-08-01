@@ -51,3 +51,54 @@ Observamos de todos modos dos desventajas en la alternativa elegida:
  		elegida, no es trivial agregar un nuevo algoritmo (requerirá necesariamente resetear las claves de
  		todos los usuarios).
 \end{itemize}
+
+
+
+\subsection{Comunicación con el resto de las aplicaciones}
+
+Otro tema a definir era cómo se iba a implementar la comunicación entre el administrador y las distintas
+aplicaciones. Por un lado se tenía el requerimiento de que una aplicación podía no encontrarse en línea al 
+momento de efectuarse un cambio en el administrador, lo que imponía persistir en algún punto los datos a
+transmitir. Aparte de esto, había que definir cómo se notificaba a las aplicaciones la presencia de cambios en
+los datos. Cualquier decisión debía tomarse teniendo en cuenta que las aplicaciones posiblemente se encontrarían
+en lugares distintos, comunicándose seguramente a través de Internet.
+
+Se consideró la posibilidad de que sean las mismas aplicaciones las encargadas de consultar periódicamente al
+administrador por cambios que le sean relevantes, pero se descartó rápidamente. En primer lugar, sería deseable
+que la misma infraestructura garantize la inmediatez de los cambios: si una aplicación no está configurada para
+consultar los cambios muy frecuentemente, se podría dar que pase un tiempo demasiado prolongado entre que se
+modifica un dato en el administrador y el mismo se ve impactado en una aplicación cliente.
+
+Más allá de esto, la mayor desventaja de este esquema era que requería implementar dentro de nuestra aplicación
+el estado de los cambios ya efectuados por cada aplicación (con la información asociada a os mismo), y ofrecer
+una interfaz común hacia el exterior de consulta.
+
+La alternativa obvia era que sea el administrador quien envíe a las aplicaciones los cambios apenas son efectuados.
+Sin embargo, una primera implementación de esta opción tampoco escapa de la necesidad de incluir dentro de nuestra
+aplicación el estado de \textit{actualización} de cada aplicación, ya que en caso de que una aplicación no esté
+en condiciones de aplicar los cambios el dato deberá almacenarse hasta que pueda ser consumido.
+
+%
+%	INCLUIR DIAGRAMA DE CÓMO CON ESTOS DOS ESQUEMAS SE NECESITA QUE
+%	EL ADMINISTRADOR CONOZCA EL ESTADO DE LAS APLICACIONES CLIENTE.
+%
+
+Se optó finalmente por resolver la comunicación utilizando un broker de mensajes. Al agregarse una aplicación
+al administrador se definiría su set de colas de mensajes asociadas (una por cada tipo de actualización), que
+pueden pensarse como casillas donde  se almacenan los datos que deberá procesar. Gran parte de los brokers
+disponibles brindan la posibilidad de establecer una conexión persistence para comunicar a un suscriptor de una
+cola la presencia de nuevos mensajes, con lo que sólo debería definirse en el cliente un suscriptor para cada
+cola, con la lógica propia de cada aplicación para procesar los distintos tipos de mensajes.
+
+Aparte de esto, los principales brokers brindan facilidades tanto para la configuración de permisos por usuario
+para leer distintas colas (con lo cuál se podrían aislar fácilmente las aplicaciones entre sí) como para la
+comunicación vía SSL a través de internet.
+
+
+
+
+
+
+
+
+
