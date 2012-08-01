@@ -1,2 +1,53 @@
-\section{Arquitectura}
+\section{Diseño y arquitectura}
 
+Se detalla a continuación las decisiones que se tomaron para solucionar los aspectos más importantes de diseño
+y la arquitectura de comunicación con el resto de las aplicaciones.
+
+Como criterio general, se intentó siempre permitir el mayor grado de independencia posible entre el administrador
+y cada aplicación. Esto significa no sólo que cada aplicación pudiera escoger su propia forma de almacenar los
+datos, sino que también se pudiera implementar la comunicación con el administrador de identidades en una aplicación
+cualquiera de forma sencilla, sin imponer restricciones excesivas sobre nuevas tecnologías a integrar.
+
+\subsection{Almacenamiento de claves}
+
+Posiblemente el principal problema a resolver fue el de cómo se iban a almacenar las claves. La primera restricción
+surgía del requerimiento de que cada aplicación debía poder utilizar un mecanismo de autenticación propio.
+
+Inicalmente, la solución más sencilla parecía ser que, al registrarse un usuario o cambiar su clave, se enviara
+la misma a través de un canal seguro en texto plano. Al recibir una nueva clave, cada aplicación cliente podría
+almacenarla en el formato que prefiera. De esta forma, el administrador sólo debería guardar la clave de una forma
+(la que se eligiera utilizar para la autenticación al mismo administrador).
+
+Siempre y cuando se pudiese confiar en el canal de transmisión, esta alternativa parecía bastane acertada:
+brindaba independencia total entre el administrador y la forma de almacenar las claves de cada aplicación.
+Sin embargo, se tiene el problema de que al agregar una nueva aplicación al administrador no habría forma de
+informarle las credenciales de los usuarios previamente existentes. Dado que en esta situación no es viable
+forzar a todos los usuarios a cambiar sus claves, se descartó esta posibilidad.
+
+Una modificación ingenua sobre lo anterior hubiese sido seguir enviando las claves a las otras aplicaciones 
+en texto plano, pero esta vez guardándolas también en el administrador utilizando algún tipo de cifrado reversible.
+De esta forma, se podría obtener las claves de los usuarios en cualquier momento con el fin de enviarlos a
+otras aplicaciones. Aparte de las consideraciones adicionales de implementación que representaría, la principal
+desventaja de esta opción es que en caso de comprometerse la clave de cifrado se estarían conociendo inmediatamente
+las claves de todos los usuarios.
+
+Finalmente se terminó optando por almacenar utilizando varios mecanismos de hash distintos. En primer lugar,
+esto requiere definir previamente cuáles son los algortimos soportados. También necesariamente el administrador
+de identidades debera conocer qué mecanismo de almacenamiento de claves utiliza cada aplicación. Si bien esto
+es una pérdia de independencia con respecto a la implementación de las aplicaciones, soluciona el problema 
+anterior: siempre se cuenta con la clave en el \textit{formato}.
+
+Observamos de todos modos dos desventajas en la alternativa elegida:
+\begin{itemize}
+ \item  En cierto modo, nuestra forma de almacenar las claves será tan débil como el mínimo que se ofrezca al
+ 		resto de las aplicaciones. De todos modos, si bien es cierto que se impone un techo sobre la seguridad
+ 		del mecanismo de almacenamiento, consideramos razonable asumir que el sistema se implementaría en
+ 		organizaciones donde se determina un nivel de seguridad mínimo para el tratamiento de datos sensibles,
+ 		por lo cuál este techo del que hablábamos antes no debería ser muy bajo: no se deberían ofrecer opciones
+ 		que se consideren inseguras.
+ \item  La opción inicial tenía la ventaja de que el administrador no necesitaba conocer cómo las aplicaciones
+ 		almacenaban sus claves. Esto permitía que no hiciera falta hacer ningún cambio en caso de de agregarse
+ 		una aplicación con un mecanismo de almacenamiento no conocido hasta el momento. Con la alternativa
+ 		elegida, no es trivial agregar un nuevo algoritmo (requerirá necesariamente resetear las claves de
+ 		todos los usuarios).
+\end{itemize}
