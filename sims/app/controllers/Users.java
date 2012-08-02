@@ -1,16 +1,16 @@
 package controllers;
 
+import java.util.Date;
 import java.util.Set;
 
 import models.Role;
 import models.User;
+import models.Password;
 import notifiers.Mailer;
 
 import org.apache.commons.lang.RandomStringUtils;
 
 import play.data.validation.Required;
-import play.mvc.Controller;
-import play.mvc.With;
 
 /**
  * Controller para alta de usuarios.
@@ -51,6 +51,8 @@ public class Users extends SecureController {
         
         String randomPassword = RandomStringUtils.randomAlphanumeric(10);
         user.setPassword(randomPassword);
+        user.passwords.add(new Password(user,randomPassword,new Date()));
+        
         
         Mailer.welcome(user, randomPassword);
         

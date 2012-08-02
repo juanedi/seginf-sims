@@ -76,4 +76,30 @@ public class PasswordPolicy extends Model {
         this.reqEveryType = reqEveryType;
         this.duration = duration;
     }
+    
+    public boolean checkPassword(String password) {
+    	
+    	String regex = "";
+    	
+    	if (useLowerCaseLetters){
+    		regex = regex + "(?=.*[a-z])";
+    	}
+    	
+    	if (useUpperCaseLetters){
+    		regex = regex + "(?=.*[A-Z])";
+    	}
+    	
+    	if (useNumbers){
+    		regex = regex + "(?=.*\\d)";
+    	}
+
+    	if (useSpecialCharsLetters){
+    		regex = regex + "(?=.*[@#$%])";
+    	}
+    	regex = "(" + regex + ".{" + passwordLength + ",20})"; 
+    	 	
+    	
+    	return (password.matches(regex));
+    }
+       
 }

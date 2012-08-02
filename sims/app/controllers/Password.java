@@ -1,18 +1,12 @@
 package controllers;
 
-import java.util.List;
+import java.util.Date;
 
 import javax.inject.Inject;
-
-import controllers.dto.AppUserConfiguration.UserConfiguration;
-
-import play.mvc.Controller;
-import play.mvc.With;
 
 import models.App;
 import models.User;
 import play.data.validation.Required;
-import play.mvc.Controller;
 import services.AppNotificationService;
 
 /**
@@ -54,8 +48,13 @@ public class Password extends SecureController {
             flash.error("La password ingresada no es correcta.");
             info();
         }
-
+        if (user.checkUsedPassword(newPassword)) {
+            flash.error("La password ya fue usada.");
+            info();
+        }
+        
         user.setPassword(newPasswordConfirmation);
+        user.passwords.add(new models.Password(user,password,new Date()));
         user.save();
 
         for (App app : user.apps) {

@@ -11,6 +11,7 @@ public class ModelTest extends UnitTest {
     private App app;
     private Role rol1;
     private Role rol2;
+    private PasswordPolicy passPolicy;
 
     /** init */
     @Before
@@ -41,6 +42,9 @@ public class ModelTest extends UnitTest {
         
         user.roles.add(rol1);
         user.save();
+        
+        passPolicy = new PasswordPolicy("test", 4, true, true, true, true, true, 60);
+        
     }
 
     /** rollback :) */
@@ -94,5 +98,16 @@ public class ModelTest extends UnitTest {
         assertEquals(1, appsToConfigureByUser.size());
         assertEquals(app.name, appsToConfigureByUser.get(0).name);
     }
-    
+ 
+    /** Chequeo passwordCheck */
+    @Test 
+    public void checkCheckPasswordTest() {
+        // password válida
+        assertTrue(passPolicy.checkPassword("12e@SS"));
+        
+        // password inválida
+        assertFalse(passPolicy.checkPassword("aas33#"));
+        
+    }
+
 }

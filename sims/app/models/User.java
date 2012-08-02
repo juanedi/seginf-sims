@@ -1,22 +1,26 @@
 package models;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Date;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.Validate;
 
+import play.db.jpa.JPA;
 import play.db.jpa.Model;
 import play.libs.Crypto;
 import play.libs.Crypto.HashType;
@@ -74,10 +78,17 @@ public class User extends Model {
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
     public List<Role> roles;
     
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OrderBy("dateModified DESC")
+//    @BatchSize()
+    public List<Password> passwords;
+    
+    
     /** Creates the User. */
     public User() {
         this.apps = new LinkedList<App>();
         this.roles = new LinkedList<Role>();
+        this.passwords = new LinkedList<Password>();
     }
     
     /** setea el username */
@@ -139,6 +150,19 @@ public class User extends Model {
         
     }
 
+    
+    public boolean checkUsedPassword(final String password) {
+        //TODO Cambiar 3 por el de la política de claves
+    	for (Password p : getLastPassword(3)){
+    		if (p.password.equals(hashPassword(password, HashType.SHA512))){
+    			return true;
+    		}
+        }
+        return false;
+        
+    }
+
+    
     public boolean hasRole(final String appName, final String roleName) {
         long count = User.count("from User u join u.roles r" 
                              + " where u = ?1 and r.app.name = ?2 and r.name = ?3",
@@ -157,7 +181,21 @@ public class User extends Model {
     public List<Role> getRoles(final App application) {
         return getRoles(application.name);
     }
-    
+
+    public List<Password> getLastPassword(int n) {
+    	//TODO trae todo, ver de traer solo n
+        //return passwords.subList(0, n);
+    	Query query = JPA.em().createQuery("select p from User u join u.passwords p where u = ?1 order by p.dateModified DESC"
+    			,Password.class);
+    	query.setFirstResult(0);
+    	query.setMaxResults(n);
+    	return query.setParameter(1, this).getResultList();
+    	
+    	// return User.find("select p from User u join u.passwords p where u = ?1 order by p.dateModified DESC", 
+        //         this).fetch();
+        
+    }
+
     public static User forUsername(final String username) {
         return User.find("byUsername", username).first();
     }
@@ -175,4 +213,5 @@ public class User extends Model {
              throw new IllegalArgumentException("email inválido");
         }
     }
+
 }
