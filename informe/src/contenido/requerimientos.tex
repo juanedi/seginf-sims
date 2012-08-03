@@ -1,0 +1,39 @@
+\section{Requerimientos}
+
+Se describe a continuación el desarrollo de una aplicación web para ser utilizada con el fin de
+unificar el ABM de usuarios a distintos sistemas. La aplicación brinda credenciales de login unificada,
+cambio de clave, y un registro detallado de actividad accesible para auditoría. También permite modificar
+el criterio de complejidad y período de validez de las claves.
+
+La comuncación con el resto de las aplicaciones puede realizarse en forma diferida. Es decir, la información
+llega desde el adminsitrador al resto de las aplicaciones recién en el momento que éstas están en línea
+y en condiciones de operar. En caso contrario, los cambios se almacenarán en el administrador hasta
+que puedan ser enviados.
+
+Era requerimiento que haya una copia master de la información guardada en una base de datos, y que cada
+aplicación tenga su propia copia de los datos (almacenada en el formato que se prefiera). De esta forma,
+nuestra aplicación haría sólo de ABM de estos datos, pero cada \textit{aplicación cliente} estaría a cargo 
+de la autenticación utilizando su copia. A su vez, cada aplicación debería poder utilizar un mecanismo distinto
+de almacenamiento de claves.
+
+Sobre los requerimientos iniciales presentados anteriormente, se tomaron algunas decisiones adicionales,
+validándose en su momento.
+
+En primer lugar, se decidió modelar un esquema de roles no jerárquico para todas las aplicaciones. Esto no
+significa que una aplicación no pueda implementar una jerarquía de roles por su parte, sino que esa jerarquía
+lógica no será mantenida en los datos por el administrador: el administrador no conocerá esta jerarquía, y los
+roles se asignarán aisladamente a los usuarios sin tener en cuenta su relación con otros roles.
+
+Por otra parte, todos los cambios en los datos se realizan a través del administrador. Éste no deberá encargarse
+de sincronizar ningún otro tipo de dato entre las aplicaciones, y cualquier modificación en los datos fluye
+desde el administrador hacia las aplicaciones, nunca al revés.
+
+Por último, cuando previamente hablamos de \textit{login unificado} nos referimos a que se utilizarán las mismas
+credenciales para autenticarse a todas las aplicaciones manejadas por el administrador, pero no que se sincronizará
+ningún estado relacionado a las sesiones de un usuario en las aplicaciones. Tanto la autenticación como el manejo
+de sesión es realizada de forma completamente independiente por cada aplicación.
+
+Junto con el administrador de identidades, se presentan dos aplicaciones \textit{demo}, configuradas para 
+comunicarse con el mismo. Para mostrar la independencia entre las \textit{aplicación cliente} y el administrador,
+estas aplicaciones utilizan distintos \textit{stores} para la información: una usa una base de datos distinta,
+mientras que la otra autentica contra un árbol \textit{LDAP}.
