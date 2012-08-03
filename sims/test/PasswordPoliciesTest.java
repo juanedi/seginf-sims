@@ -16,7 +16,7 @@ public class PasswordPoliciesTest extends UnitTest {
 	
 	@Before
 	public final void init() {
-		this.policy = new PasswordPolicy("una", 4, true, true, true, true, 60);
+		this.policy = new PasswordPolicy("una", 4, true, true, true, true, 60,2);
 		this.policy.activate();
 		this.policy.save();
 	}
@@ -41,7 +41,7 @@ public class PasswordPoliciesTest extends UnitTest {
     /** Obtención de la política actual */
     @Test
     public final void getCurrentTest() throws InterruptedException {
-    	PasswordPolicy other = new PasswordPolicy("otra", 2, false, false, false, false, 10);
+    	PasswordPolicy other = new PasswordPolicy("otra", 2, false, false, false, false, 10,1);
     	other.save();
     	
     	PasswordPolicy current = PasswordPolicy.getCurrent();

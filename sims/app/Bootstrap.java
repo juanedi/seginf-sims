@@ -109,7 +109,7 @@ public class Bootstrap extends Job {
         prueba.owner = admin;
         
         /*------- PASSWORD POLICY -------*/
-        PasswordPolicy policy = new PasswordPolicy("default", 1, false, false, false, false, 90);
+        PasswordPolicy policy = new PasswordPolicy("default", 1, false, false, false, false, 90, 3);
         policy.activate();
         
         /*------- PERSIST -------*/

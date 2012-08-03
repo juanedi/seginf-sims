@@ -65,13 +65,18 @@ public class PasswordPolicy extends Model {
     @Column(name = "duration", nullable = false)
     public int duration;
 
+    /** Cantidad de passwords pasadas que deben ser distintas */
+    @Column(name = "last_different", nullable = false)
+    public int differentToLast;
+    
     public PasswordPolicy (String name,
     	   int passwordLength,
            boolean useLowerCaseLetters,
            boolean useUpperCaseLetters,
            boolean useSpecialCharsLetters,
            boolean useNumbers,
-           int duration) {
+           int duration,
+           int differentToLast) {
 
         this.name = name;
         this.passwordLength = passwordLength;
@@ -80,6 +85,7 @@ public class PasswordPolicy extends Model {
         this.useSpecialCharsLetters = useSpecialCharsLetters;
         this.useNumbers = useNumbers;
         this.duration = duration;
+        this.differentToLast = differentToLast;
     }
     
     public boolean checkPassword(String password) {

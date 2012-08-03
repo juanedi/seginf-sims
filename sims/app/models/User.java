@@ -151,9 +151,8 @@ public class User extends Model {
     }
 
     
-    public boolean checkUsedPassword(final String password) {
-        //TODO Cambiar 3 por el de la política de claves
-    	for (Password p : getLastPassword(3)){
+    public boolean checkRepeatedPassword(final String password, final Integer amountToCompare) {
+    	for (Password p : getLastPassword(amountToCompare)){
     		if (p.password.equals(hashPassword(password, HashType.SHA512))){
     			return true;
     		}

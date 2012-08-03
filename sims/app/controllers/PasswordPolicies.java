@@ -75,7 +75,8 @@ public class PasswordPolicies extends SecureController {
            @Required final boolean useUpperCaseLetters,
            @Required final boolean useSpecialCharsLetters,
            @Required final boolean useNumbers,
-           @Required final Integer duration) {
+           @Required final Integer duration,
+           @Required final Integer differentToLast) {
 
         try {
         	
@@ -96,13 +97,18 @@ public class PasswordPolicies extends SecureController {
         		throw new IllegalArgumentException("La duración de clave debe ser positiva");
         	}
         	
+        	if (differentToLast <= 0) {
+        		throw new IllegalArgumentException("La cantidad de claves pasadas a comparar debe ser positiva");
+        	}
+        	
         	PasswordPolicy passPolicy = new PasswordPolicy(name,
         			passwordLength,
         			useLowerCaseLetters,
         			useUpperCaseLetters,
         			useSpecialCharsLetters,
         			useNumbers,
-        			duration);
+        			duration,
+        			differentToLast);
         	
         	passPolicy.save();
         	

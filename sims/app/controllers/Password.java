@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import models.App;
+import models.PasswordPolicy;
 import models.User;
 import play.data.validation.Required;
 import play.mvc.Controller;
@@ -51,9 +52,13 @@ public class Password extends SecureController {
             flash.error("La password ingresada no es correcta.");
             info();
         }
-        if (user.checkUsedPassword(newPassword)) {
-            flash.error("La password ya fue usada.");
-            info();
+        
+        PasswordPolicy currentPolicy = PasswordPolicy.getCurrent();
+        if (currentPolicy != null) {
+        	if (user.checkRepeatedPassword(newPassword, currentPolicy.differentToLast)) {
+        		flash.error("La password ya fue usada.");
+        		info();
+        	}
         }
         
         user.setPassword(newPasswordConfirmation);
