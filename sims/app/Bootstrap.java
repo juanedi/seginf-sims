@@ -1,5 +1,6 @@
 import models.App;
 import models.Hash;
+import models.PasswordPolicy;
 import models.Role;
 import models.User;
 import play.db.jpa.JPAPlugin;
@@ -107,6 +108,10 @@ public class Bootstrap extends Job {
         demodb.owner = admin;
         prueba.owner = admin;
         
+        /*------- PASSWORD POLICY -------*/
+        PasswordPolicy policy = new PasswordPolicy("default", 1, false, false, false, false, 90);
+        policy.activate();
+        
         /*------- PERSIST -------*/
         
         sims.save();
@@ -116,6 +121,8 @@ public class Bootstrap extends Job {
         
         jedi.save();
         admin.save();
+        
+        policy.save();
     }
     
 }

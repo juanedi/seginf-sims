@@ -17,9 +17,10 @@ GET		/password/?								Password.info
 POST	/password/?								Password.changePassword
 
 # Password Policies
-GET		/policies/?								PasswordPolicies.list
 GET		/policies/new/?							PasswordPolicies.create
-POST	/policies/?							PasswordPolicies.postPasswordPolicy
+GET		/policies/?								PasswordPolicies.list
+PUT		/policies/?								PasswordPolicies.setActive
+POST	/policies/?								PasswordPolicies.postPasswordPolicy
 
 # Users
 GET     /users/?                                Users.create

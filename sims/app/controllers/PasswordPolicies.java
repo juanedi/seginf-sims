@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import notifiers.Mailer;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import play.data.validation.Required;
 
@@ -31,13 +32,37 @@ public class PasswordPolicies extends SecureController {
 
     /** sirve pantalla de cambio de password */
     public static void list() {
-        List<PasswordPolicy> passPolicy = PasswordPolicy.all().fetch();
-        render(passPolicy);
+        List<PasswordPolicy> policies = PasswordPolicy.all().fetch();
+        PasswordPolicy currentPolicy = PasswordPolicy.getCurrent();
+        render(policies, currentPolicy);
     }
     
     public static void create() {
         render();
     }    
+    
+    public static void setActive(@Required final String policyName) {
+    	try {
+    		if (StringUtils.isEmpty(policyName)) {
+    			throw new IllegalArgumentException("No se especificó política");
+    		}
+    		
+    		PasswordPolicy policy = PasswordPolicy.find("byName", policyName).first();
+    		if (policy == null) {
+    			throw new IllegalArgumentException("No se encontró la política " + policyName);
+    		}
+    		
+    		policy.activate();
+    		policy.save();
+    		
+    		flash.success("Política de claves actualizada");
+    		list();
+    		
+    	} catch (IllegalArgumentException e) {
+        	flash.error(e.getMessage());
+        	create();
+    	}
+    }
     
     @Check(Role.SIMS_PASSWORD_POLICY_ROLE)
     public static void postPasswordPolicy(@Required final String name,

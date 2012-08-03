@@ -5,25 +5,36 @@
 <div class="row">
     <div class="span8 offset2">
 	    <div class="page-header"><h2>Política de Claves</h2></div>
+	    #{form @PasswordPolicies.setActive()}
 	    <table id="passPolicyData" class="table">
 	        <thead>
 	            <tr>
-	                <th></th>
+	                <th>Activa</th>
 	                <th>Nombre</th>
 	            </tr>
 	        </thead>
 	        <tbody>
-			    #{list passPolicy, as:'pp'} 
+			    #{list policies, as:'pp'} 
 			    <tr>
-			       <td>
-			       </td>
+			       <td><input type="radio" name="policyName" value="${pp.name}"
+			       		#{if currentPolicy != null
+			       			&& pp.id == currentPolicy.id} 
+			       			checked="checked"
+			       		#{/if}
+			       		>
+		       		</td>
 			       <td>${pp.name}</td>
 			    </tr>
 			    #{/list}
 	        </tbody>
 	    </table>
-<!-- 	    #{secure.check 'CREATE_USER'} -->
-        <a href="@{PasswordPolicies.create}" class="btn btn-primary">Alta política</a>
-<!--	    #{/secure.check} -->
+	    <div class="form-actions">
+	        <button type="submit" class="btn btn-primary">Guardar</button>
+	        <a href="@{PasswordPolicies.create}" class="btn">Nueva política</a>
+        </div>
+	    #{/form}
+		#{if flash.success}
+	      <div class="alert alert-success">${flash.success}</div>
+	    #{/if}
     </div>
 </div>

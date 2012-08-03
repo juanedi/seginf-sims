@@ -3,6 +3,7 @@ package models;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.Validate;
@@ -31,6 +34,15 @@ import org.apache.commons.lang.Validate;
 		uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 public class PasswordPolicy extends Model {
 
+	/**
+	 * Se guarda este para saber cuál es la política actual.
+	 * No se usa un boolean para evitar problemas de concurrencia al modificar
+	 * (via JPA la única forma de setear sería desactivar todos primero y activar uno después por separado).
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "active", nullable = true)
+	public Date lastActivationDate;
+	
     @Column(name = "name", nullable = false)
     public String name;
 
@@ -94,5 +106,14 @@ public class PasswordPolicy extends Model {
     	
     	return (password.matches(regex));
     }
-       
+
+    public void activate() {
+    	this.lastActivationDate = new Date();
+    }
+    
+    public static PasswordPolicy getCurrent() {
+    	return PasswordPolicy.find(
+    			"select p1 from PasswordPolicy p1 where p1.lastActivationDate = " 
+				+ "(select max(p2.lastActivationDate) from PasswordPolicy p2)").first();
+    }
 }
