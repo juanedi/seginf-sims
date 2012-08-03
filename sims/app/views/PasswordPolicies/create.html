@@ -8,7 +8,7 @@
 		<fieldset>
 			<legend>Nueva Política de Claves</legend>
             <div class="control-group">
-                <label class="control-label" for="date">Nombre</label>
+                <label class="control-label" for="date">Descripción</label>
                 <div class="controls">
                     <input type="text" class="input-xlarge" id="name" name="name">
                 </div>
@@ -16,37 +16,34 @@
             <div class="control-group">
                 <label class="control-label" for="date">Longitud Mínima</label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" id="passwordLength" name="passwordLength">
+                    <input type="text" class="input-mini" id="passwordLength" name="passwordLength"> caracteres
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="date">A-Z</label>
+                <label class="control-label" for="date">Período de validez</label>
                 <div class="controls">
-                    <input type="checkbox" id="useUpperCaseLetters" name="useUpperCaseLetters">
+                    <input type="text" class="input-mini" id="duration" name="duration"> días
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="date">a-z</label>
+                <label class="control-label" for="date">Requisitos</label>
                 <div class="controls">
-                    <input type="checkbox" id="useLowerCaseLetters" name="useLowerCaseLetters">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="date">0-9</label>
-                <div class="controls">
-                    <input type="checkbox" id="useNumbers" name="useNumbers">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="date">especiales</label>
-                <div class="controls">
-                    <input type="checkbox" id="useSpecialCharsLetters" name="useSpecialCharsLetters">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="date">Duración</label>
-                <div class="controls">
-                    <input type="text" class="input-xlarge" id="duration" name="duration">
+                	<label class="checkbox">
+                		<input type="checkbox" id="useUpperCaseLetters" name="useUpperCaseLetters">
+                		A-Z
+               		</label>
+                	<label class="checkbox">
+                		<input type="checkbox" id="useLowerCaseLetters" name="useLowerCaseLetters">
+                		a-z
+               		</label>
+                	<label class="checkbox">
+                		<input type="checkbox" id="useNumbers" name="useNumbers">
+                		0-9
+               		</label>
+                	<label class="checkbox">
+                		<input type="checkbox" id="useSpecialCharsLetters" name="useSpecialCharsLetters">
+                		caracteres especiales
+               		</label>
                 </div>
             </div>
 		</fieldset>
