@@ -41,37 +41,50 @@ public class PasswordPolicies extends SecureController {
     
     @Check(Role.SIMS_PASSWORD_POLICY_ROLE)
     public static void postPasswordPolicy(@Required final String name,
-           @Required final int passwordLength,
+           @Required final Integer passwordLength,
            @Required final boolean useLowerCaseLetters,
            @Required final boolean useUpperCaseLetters,
            @Required final boolean useSpecialCharsLetters,
            @Required final boolean useNumbers,
-           @Required final int duration) {
+           @Required final Integer duration) {
 
-        boolean hasErrors = false;
-
-        if(validation.hasErrors()) {
-            Set<String> missingFields = validation.errorsMap().keySet();
-            flash.error("Falta completar los campos: %s", missingFields);
-            hasErrors = true;
-        }
-        
-        PasswordPolicy passPolicy = new PasswordPolicy(name,
-        		                           passwordLength,
-        		                           useLowerCaseLetters,
-        		                           useUpperCaseLetters,
-        		                           useSpecialCharsLetters,
-        		                           useNumbers,
-        		                           duration);
-        
-        passPolicy.save();
-        
-        if (hasErrors) {
-            create();
-        } else {
+        try {
+        	
+        	if(validation.hasErrors()) {
+        		Set<String> missingFields = validation.errorsMap().keySet();
+        		throw new IllegalArgumentException(String.format("Falta completar los campos: %s", missingFields));
+        	}
+        	
+        	if (PasswordPolicy.find("byName", name).first() != null) {
+        		throw new IllegalArgumentException("Ya existe una política con ese nombre");
+        	}
+        	
+        	if (passwordLength <= 0) {
+        		throw new IllegalArgumentException("La longitud de clave debe ser positiva");
+        	}
+        	
+        	if (duration <= 0) {
+        		throw new IllegalArgumentException("La duración de clave debe ser positiva");
+        	}
+        	
+        	PasswordPolicy passPolicy = new PasswordPolicy(name,
+        			passwordLength,
+        			useLowerCaseLetters,
+        			useUpperCaseLetters,
+        			useSpecialCharsLetters,
+        			useNumbers,
+        			duration);
+        	
+        	passPolicy.save();
+        	
             flash.success("Política de claves creada exitosamente.");
-            PasswordPolicies.list();    
+            PasswordPolicies.list();
+        	
+        } catch (IllegalArgumentException e) {
+        	flash.error(e.getMessage());
+        	create();
         }
+        
     }
 
 }

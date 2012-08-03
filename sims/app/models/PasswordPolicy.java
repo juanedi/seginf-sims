@@ -27,7 +27,8 @@ import org.apache.commons.lang.Validate;
  */
 
 @Entity
-@Table( name = "password_policies")
+@Table(	name = "password_policies", 
+		uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 public class PasswordPolicy extends Model {
 
     @Column(name = "name", nullable = false)
