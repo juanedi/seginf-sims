@@ -5,23 +5,29 @@
 # Home page
 GET     /                                       Application.index
 
-# Password management
-GET     /password                               Password.info
-
 # Applications
-GET     /applications/new                       Application.create
+GET     /applications/new/?                     Application.create
 GET     /applications/?                         Application.list
 POST    /applications/?                         Application.postApp
 GET     /applications/{appName}/?               Application.detail
 PUT     /applications/{appName}/?               Application.configureApp
+
+# Change Password
+GET		/password/?								Password.info
+POST	/password/?								Password.changePassword
+
+# Password Policies
+GET		/policies/?								PasswordPolicies.list
+GET		/policies/new/?							PasswordPolicies.create
+POST	/policies/?							PasswordPolicies.postPasswordPolicy
 
 # Users
 GET     /users/?                                Users.create
 POST    /users/?                                Users.postUser
 
 # Logs
-GET     /logs/?                                 Accounting.search
-GET     /logs/results                           Accounting.results
+GET     /logs/search/?                          Accounting.search
+GET     /logs/?		                            Accounting.results
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -29,5 +35,8 @@ GET     /favicon.ico                            404
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
+# Secure
+*		/Secure/{action}						Secure.{action}
+
 # Catch all
-*       /{controller}/{action}                  {controller}.{action}
+#*       /{controller}/{action}                  {controller}.{action}
