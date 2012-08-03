@@ -1,6 +1,7 @@
 package services;
 
 import models.App;
+import models.PasswordPolicy;
 import models.Role;
 import models.User;
 
@@ -22,5 +23,7 @@ public interface AccountingLogger {
 
 	void logRoleChanged(User currentUser, User user, Role role);
 	
-	void logPasswordPolicyChanged(User currentUser);
+	void logPasswordPolicyCreated(User currentUser, PasswordPolicy policy);
+	
+	void logPasswordPolicyActivated(User currentUser, PasswordPolicy policy);
 }

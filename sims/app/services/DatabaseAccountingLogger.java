@@ -7,6 +7,7 @@ import java.util.List;
 import models.App;
 import models.Event;
 import models.EventType;
+import models.PasswordPolicy;
 import models.Role;
 import models.User;
 
@@ -69,11 +70,17 @@ public class DatabaseAccountingLogger implements AccountingLogger {
 		
 		log(EventType.ROLE_CHANGED, currentUser, role.app, msg, user);
 	}
+	
+	@Override
+	public void logPasswordPolicyCreated(User currentUser, PasswordPolicy policy) {
+		log(EventType.PASSWORD_POLICY_CREATED, currentUser, Collections.<App>emptyList(), 
+			"Nueva política de passwords creada: " + policy.name);
+	}
 
 	@Override
-	public void logPasswordPolicyChanged(User currentUser) {
-		//FIXME: completar cuando esté terminado el tema de políticas de claves!
-		throw new NotImplementedException();
+	public void logPasswordPolicyActivated(User currentUser, PasswordPolicy policy) {
+		log(EventType.PASSWORD_POLICY_CHANGE, currentUser, Collections.<App>emptyList(), 
+			"Política de passwords activada: " + policy.name);
 	}
 
 	

@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 import play.data.validation.Required;
 
+import services.AccountingLogger;
 import services.AppNotificationService;
 import models.App;
 import models.PasswordPolicy;
@@ -29,6 +30,7 @@ import models.User;
 public class PasswordPolicies extends SecureController {
 	
     @Inject static AppNotificationService appNotificationService;
+    @Inject static AccountingLogger accountingLogger;
 
     /** sirve pantalla de cambio de password */
     public static void list() {
@@ -54,6 +56,8 @@ public class PasswordPolicies extends SecureController {
     		
     		policy.activate();
     		policy.save();
+    		
+    		accountingLogger.logPasswordPolicyActivated(connectedUser(), policy);
     		
     		flash.success("Política de claves actualizada");
     		list();
@@ -101,6 +105,8 @@ public class PasswordPolicies extends SecureController {
         			duration);
         	
         	passPolicy.save();
+        	
+        	accountingLogger.logPasswordPolicyCreated(connectedUser(), passPolicy);
         	
             flash.success("Política de claves creada exitosamente.");
             PasswordPolicies.list();

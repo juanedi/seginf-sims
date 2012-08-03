@@ -18,7 +18,9 @@ public enum EventType {
 	
 	ROLE_CHANGED("Asignación o revocación de un rol a un usuario"),
 	
-	PASSWORD_POLICY_CHANGE("Cambio de la política de privacidad");
+	PASSWORD_POLICY_CREATED("Nueva política de complejidad de claves"),
+	
+	PASSWORD_POLICY_CHANGE("Cambio de la política de complejidad de claves");
 	
 	private final String description;
 	
