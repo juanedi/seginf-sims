@@ -10,8 +10,8 @@ GET     /password                               Password.info
 
 # Applications
 GET     /applications/new                       Application.create
-GET     /applications                           Application.list
-POST    /applications                           Application.postApp
+GET     /applications/?                         Application.list
+POST    /applications/?                         Application.postApp
 GET     /applications/{appName}/?               Application.detail
 PUT     /applications/{appName}/?               Application.configureApp
 
@@ -20,7 +20,8 @@ GET     /users/?                                Users.create
 POST    /users/?                                Users.postUser
 
 # Logs
-GET     /logs                                   Logs.logs
+GET     /logs/?                                 Accounting.search
+GET     /logs/results                           Accounting.results
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

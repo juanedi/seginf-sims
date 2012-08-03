@@ -63,5 +63,9 @@ public class App extends Model {
     public static List<App> toConfigureBy(final User user) {
         return App.find("configured = 0 and owner = ?1 and name != ?2", user, SIMS_APP_NAME).fetch();
     }
-    
+
+    /** el administador de identidades */
+    public static App sims() {
+    	return App.forName(SIMS_APP_NAME);
+    }
 }

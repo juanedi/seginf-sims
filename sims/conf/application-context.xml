@@ -76,4 +76,12 @@
         <constructor-arg index="2" ref="passwordChangedRabbitTemplate" />
     </bean>
 
+	<bean id="accountingLogger" class="services.DatabaseAccountingLogger">
+		<constructor-arg index="0">
+			<bean class="services.CurrentDateProvider" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="logSearchService" class="services.DatabaseEventSearchService" />
+
 </beans>

@@ -1,0 +1,129 @@
+#{extends 'main.html' /}
+#{set title:'Logs - SIMS' /}
+#{set 'moreScripts'}
+    #{script 'accounting.js'/}
+#{/set}
+
+<script type="text/javascript">
+   var doSearch = #{jsAction @results(':eventType', ':user', ':relatedUsers', ':relatedApps', ':since', ':to') /}
+</script>
+
+<div class="row">
+    <div class="span8 offset2">
+	    <div class="page-header">
+	    	<h3>Logs de auditoría</h3>
+	   	</div>
+        <form class="form-horizontal">
+	        <fieldset>
+	            <div class="control-group">
+	                <label class="control-label" for="date">Tipo de evento</label>
+	                <div class="controls">
+	                	<select id="eventType">
+	               			<option value="ALL">Todos</option>
+					        #{list items:eventTypes, as:'type'}
+				        	<option value="${type}">${type.description}</option>
+					        #{/list}
+	                	</select>
+	                </div>
+	            </div>
+				<div class="control-group">
+					<label class="control-label" for="date">Desde</label>
+					<div class="controls">
+						<input id="dateSince" type="text" class="input-small datePicker">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="date">Hasta</label>
+					<div class="controls">
+						<input id="dateTo" type="text" class="input-small datePicker">
+					</div>
+				</div>
+	            <div class="control-group">
+	                <label class="control-label" for="date">Originado por</label>
+	                <div class="controls">
+	                	<select id="user">
+	               			<option value="ALL">Cualquier usuario</option>
+					        #{list items:users, as:'user'}
+				        	<option>${user.username}</option>
+					        #{/list}
+	                	</select>
+	                </div>
+	            </div>
+	            <div class="control-group">
+	                <label class="control-label" for="date">Aplicaciones relacionadas</label>
+	                <div id="relatedApps" class="controls listInput">
+	                	<ul style="display:none">
+	                	</ul>
+	                	<a class="btn" href="#">Editar</a>
+	                </div>
+	            </div>
+	            <div class="control-group">
+	                <label class="control-label" for="date">Otros usuarios relacionados</label>
+	                <div id="relatedUsers" class="controls listInput">
+	                	<ul style="display:none">
+	                	</ul>
+	                	<a class="btn" href="#">Editar</a>
+	                </div>
+	            </div>
+	        </fieldset>
+	        <div id="errorAlert" class="alert alert-error" style="display: none"></div>
+	        <div id="infoAlert" class="alert alert-info" style="display: none"></div>
+	        <div class="form-actions">
+	            <button id="submitBtn" type="submit" class="btn btn-primary">Aceptar</button>
+	        </div>
+	        
+	        <div id="modalApps" class="modal">
+				<div class="modal-header">
+	              <button type="button" class="close" data-dismiss="modal">×</button>
+	              <h4>Otros usuarios relacionados a los eventos buscados</h4>
+	            </div>
+	            <div class="modal-body">
+	        	<ul class="unstyled">
+			        #{list items:apps, as:'app'}
+			        <li>
+			        	<label class="checkbox"><input id="${app.name}" type="checkbox">${app.name}</label>
+					</li>
+			        #{/list}
+	        	</ul>
+	        	</div>
+				<div class="modal-footer">
+	              <a href="#" class="btn btn-primary">Aceptar</a>
+	            </div>
+	        </div>
+	        
+	        <div id="modalUsers" class="modal">
+				<div class="modal-header">
+	              <button type="button" class="close" data-dismiss="modal">×</button>
+	              <h4>Otros usuarios relacionados a los eventos buscados</h4>
+	            </div>
+	            <div class="modal-body">
+	        	<ul class="unstyled">
+			        #{list items:users, as:'user'}
+			        <li>
+			        	<label class="checkbox"><input id="${user.username}" type="checkbox">${user.username}</label>
+					</li>
+			        #{/list}
+	        	</ul>
+	        	</div>
+				<div class="modal-footer">
+	              <a href="#" class="btn btn-primary">Aceptar</a>
+	            </div>
+	        </div>
+        </form>
+        
+        <div id="searchResults" style="display:none">
+        	<table class="table">
+        		<thead>
+        			<tr>
+        				<th>Fecha</th>
+        				<th>Usuario</th>
+        				<th>Descripción</th>
+        			</tr>
+        		</thead>
+        	</table>
+        	<div class="form-actions" style="text-align: right;">
+        		<a id="searchAgain" href="#" class="btn btn-primary">Refinar búsqueda</a>
+        	</div>
+        </div>
+    </div>
+</div>
