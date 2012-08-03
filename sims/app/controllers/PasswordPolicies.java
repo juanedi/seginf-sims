@@ -46,7 +46,6 @@ public class PasswordPolicies extends SecureController {
            @Required final boolean useUpperCaseLetters,
            @Required final boolean useSpecialCharsLetters,
            @Required final boolean useNumbers,
-           @Required final boolean reqEveryType,
            @Required final int duration) {
 
         boolean hasErrors = false;
@@ -63,7 +62,6 @@ public class PasswordPolicies extends SecureController {
         		                           useUpperCaseLetters,
         		                           useSpecialCharsLetters,
         		                           useNumbers,
-        		                           reqEveryType,
         		                           duration);
         
         passPolicy.save();

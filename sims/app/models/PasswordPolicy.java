@@ -27,10 +27,7 @@ import org.apache.commons.lang.Validate;
  */
 
 @Entity
-
 @Table( name = "password_policies")
-
-
 public class PasswordPolicy extends Model {
 
     @Column(name = "name", nullable = false)
@@ -51,9 +48,6 @@ public class PasswordPolicy extends Model {
     @Column(name = "use_numbers", nullable = false)
     public boolean useNumbers;
     
-    @Column(name = "req_every_type", nullable = false)
-    public boolean reqEveryType;
-    
     /** Cantidad de Días*/
     @Column(name = "duration", nullable = false)
     public int duration;
@@ -64,7 +58,6 @@ public class PasswordPolicy extends Model {
            boolean useUpperCaseLetters,
            boolean useSpecialCharsLetters,
            boolean useNumbers,
-           boolean reqEveryType,
            int duration) {
 
         this.name = name;
@@ -73,7 +66,6 @@ public class PasswordPolicy extends Model {
         this.useUpperCaseLetters = useUpperCaseLetters;
         this.useSpecialCharsLetters = useSpecialCharsLetters;
         this.useNumbers = useNumbers;
-        this.reqEveryType = reqEveryType;
         this.duration = duration;
     }
     

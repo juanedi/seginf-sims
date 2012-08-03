@@ -43,7 +43,7 @@ public class ModelTest extends UnitTest {
         user.roles.add(rol1);
         user.save();
         
-        passPolicy = new PasswordPolicy("test", 4, true, true, true, true, true, 60);
+        passPolicy = new PasswordPolicy("test", 4, true, true, true, true, 60);
         
     }
 
