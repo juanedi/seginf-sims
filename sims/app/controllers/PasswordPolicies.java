@@ -14,6 +14,7 @@ import play.data.validation.Required;
 import services.AppNotificationService;
 import models.App;
 import models.PasswordPolicy;
+import models.Role;
 import models.User;
 
 /**
@@ -38,6 +39,7 @@ public class PasswordPolicies extends SecureController {
         render();
     }    
     
+    @Check(Role.SIMS_PASSWORD_POLICY_ROLE)
     public static void postPasswordPolicy(@Required final String name,
            @Required final int passwordLength,
            @Required final boolean useLowerCaseLetters,

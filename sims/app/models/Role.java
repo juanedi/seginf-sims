@@ -29,6 +29,9 @@ public class Role extends Model {
     
     /** Rol para quienes pueden crear usuarios */
     public static final String SIMS_CREATE_USER_ROLE = "CREATE_USER";
+
+    /** Rol del perfil de auditoría del administrador de identidades */
+    public static final String SIMS_PASSWORD_POLICY_ROLE = "PASSWORD_POLICY";
     
     /** Rol del perfil de auditoría del administrador de identidades */
     public static final String SIMS_AUDIT_ROLE = "AUDIT";

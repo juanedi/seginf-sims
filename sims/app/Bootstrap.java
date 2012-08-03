@@ -38,9 +38,14 @@ public class Bootstrap extends Job {
         auditRole.app = sims;
         auditRole.name = Role.SIMS_AUDIT_ROLE;
         
+        Role passwordPolicyRole = new Role();
+        passwordPolicyRole.app = sims;
+        passwordPolicyRole.name = Role.SIMS_PASSWORD_POLICY_ROLE;
+        
         sims.roles.add(createAppRole);
         sims.roles.add(createUserRole);
         sims.roles.add(auditRole);
+        sims.roles.add(passwordPolicyRole);
         
         /*------- DEMO LDAP -------*/
         
@@ -87,6 +92,7 @@ public class Bootstrap extends Job {
         admin.roles.add(createAppRole);
         admin.roles.add(createUserRole);
         admin.roles.add(auditRole);
+        admin.roles.add(passwordPolicyRole);
         
         User jedi = new User();
         jedi.email = "jedi@dc.uba.ar";
