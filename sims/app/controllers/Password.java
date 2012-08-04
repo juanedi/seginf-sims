@@ -66,11 +66,7 @@ public class Password extends SecureController {
         user.save();
         accountingLogger.logPasswordChange(user);
         
-        for (App app : user.apps) {
-            //horrible
-            if (!app.name.equals("sims"))
-                appNotificationService.notifyPasswordChanged(user, app);        
-        }
+        appNotificationService.broadcastPasswordChanged(user);        
         
         flash.success("Se ha actualizado su clave");
         Application.index();

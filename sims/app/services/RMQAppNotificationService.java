@@ -57,11 +57,16 @@ public class RMQAppNotificationService implements AppNotificationService {
         newUserTemplate.convertAndSend(app.name, MessageType.NEW_USER.name(), msg, nullPostProcessor());
     }
 
-    /** @see AppNotificationService#notifyPasswordChanged(User, App) */
+    /** @see AppNotificationService#broadcastPasswordChanged(User, App) */
     @Override
-    public void notifyPasswordChanged(User user, App app) {
-    	PasswordChangedMessage msg = new PasswordChangedMessage(user.username, app.hashType.name(), user.getHashedPassword(app.hashType));    
-    	passwordChangedTemplate.convertAndSend(app.name, MessageType.CHANGE_PASSWORD.name(), msg, nullPostProcessor());
+    public void broadcastPasswordChanged(User user) {
+    	// TODO: Esto se podría hacer via un exchange de RMQ.
+        for (App app : user.apps) {
+            if (!app.name.equals(App.SIMS_APP_NAME)) {
+            	PasswordChangedMessage msg = new PasswordChangedMessage(user.username, app.hashType.name(), user.getHashedPassword(app.hashType));    
+            	passwordChangedTemplate.convertAndSend(app.name, MessageType.CHANGE_PASSWORD.name(), msg, nullPostProcessor());
+            }
+        }
     }
 
     /** @see AppNotificationService#notifyRolesChanged(User, App) */

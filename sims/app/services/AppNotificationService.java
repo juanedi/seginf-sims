@@ -14,9 +14,9 @@ public interface AppNotificationService {
 
     void notifyNewUser(User user, App app);
     
-    void notifyPasswordChanged(User user, App app);
-    
     void notifyRolesChanged(User user, App app);
     
     void notifyUserRemove(User user, App app);
+
+    void broadcastPasswordChanged(User user);
 }
