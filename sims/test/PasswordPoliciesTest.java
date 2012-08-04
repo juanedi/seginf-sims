@@ -21,12 +21,21 @@ import play.test.UnitTest;
 
 public class PasswordPoliciesTest extends UnitTest {
 
+	private User user;
 	private PasswordPolicy aPolicy;
 	
 	@Before
 	public final void init() {
-		this.aPolicy = new PasswordPolicy("una", 4, true, true, true, true, 5,2);
+		// mayúsculas
+		// minúsculas
+		// caracteres especials
+		// números
+		// expira en 5 días
+		// tiene que ser distinta a la anterior
+		this.aPolicy = new PasswordPolicy("una", 4, true, true, true, true, 5, 2);
 		this.aPolicy.save();
+		
+		user = User.forUsername("admin");
 	}
 	
     /** rollback :) */
@@ -34,18 +43,40 @@ public class PasswordPoliciesTest extends UnitTest {
     public void rollBack() {
         JPA.setRollbackOnly();
     }
-	
-    /** Chequeo passwordCheck */
-    @Test 
-    public void checkCheckPasswordTest() {
-        // password válida
-        assertTrue(aPolicy.checkPassword("12e@SS"));
-        
-        // password inválida
-        assertFalse(aPolicy.checkPassword("aas33#"));
-        
-    }
 
+    @Test
+    /** se valida formato de la clave*/
+    public void validatFormat() {
+    	// formato inválida
+    	assertFalse(aPolicy.validate(user, "aas33#"));
+
+    	// formato válido
+		assertTrue(aPolicy.validate(user, "12e@SS"));
+    }
+    
+    @Test
+    /** se chequea que sea distinta a las N anteriores */
+    public void checkDifferentToLast() throws ParseException {
+    	String validPass = "12e@SS";
+    	
+		// simulo que la clave anterior es igual a la nueva.
+        user.passwords.add(new models.Password(user, validPass, ISODateUtils.parse("2010-01-01")));
+        user.save();
+        assertFalse(aPolicy.validate(user, validPass));
+        
+		// ahora la anteúltima es igual a la nueva.
+        // también falla porque la política pide chequear 2.
+        user.passwords.add(new models.Password(user, "22e@SS", ISODateUtils.parse("2010-01-02")));
+        user.save();
+        assertFalse(aPolicy.validate(user, validPass));
+        
+		// ahora la que es igual es la antepenúltima.
+        // la validación es exitosa.
+        user.passwords.add(new models.Password(user, "33e@SS", ISODateUtils.parse("2010-01-03")));
+        user.save();
+        assertTrue(aPolicy.validate(user, validPass));
+    }
+    
     /** Obtención de la política actual */
     @Test
     public final void getCurrentTest() throws InterruptedException {

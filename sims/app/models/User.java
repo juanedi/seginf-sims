@@ -150,18 +150,6 @@ public class User extends Model {
         
     }
 
-    
-    public boolean checkRepeatedPassword(final String password, final Integer amountToCompare) {
-    	for (Password p : getLastPassword(amountToCompare)){
-    		if (p.password.equals(hashPassword(password, HashType.SHA512))){
-    			return true;
-    		}
-        }
-        return false;
-        
-    }
-
-    
     public boolean hasRole(final String appName, final String roleName) {
         long count = User.count("from User u join u.roles r" 
                              + " where u = ?1 and r.app.name = ?2 and r.name = ?3",
@@ -179,20 +167,6 @@ public class User extends Model {
     /** devuelve los roles que el usuario posee para cierta aplicación */
     public List<Role> getRoles(final App application) {
         return getRoles(application.name);
-    }
-
-    public List<Password> getLastPassword(int n) {
-    	//TODO trae todo, ver de traer solo n
-        //return passwords.subList(0, n);
-    	Query query = JPA.em().createQuery("select p from User u join u.passwords p where u = ?1 order by p.dateModified DESC"
-    			,Password.class);
-    	query.setFirstResult(0);
-    	query.setMaxResults(n);
-    	return query.setParameter(1, this).getResultList();
-    	
-    	// return User.find("select p from User u join u.passwords p where u = ?1 order by p.dateModified DESC", 
-        //         this).fetch();
-        
     }
 
     public static User forUsername(final String username) {

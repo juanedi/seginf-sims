@@ -55,9 +55,10 @@ public class Password extends SecureController {
         
         PasswordPolicy currentPolicy = PasswordPolicy.current();
         if (currentPolicy != null) {
-        	if (user.checkRepeatedPassword(newPassword, currentPolicy.differentToLast)) {
-        		flash.error("La password ya fue usada.");
-        		info();
+        	boolean compliesToPolicy = currentPolicy.validate(user, newPassword);
+        	if (!compliesToPolicy) {
+                flash.error("La clave no cumple con la política.");
+                info();        		
         	}
         }
         

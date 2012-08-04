@@ -1,7 +1,10 @@
 package models;
 
 import play.data.validation.Required;
+import play.db.jpa.JPA;
 import play.db.jpa.Model;
+import play.libs.Crypto;
+import play.libs.Crypto.HashType;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -90,7 +94,7 @@ public class PasswordPolicy extends Model {
         this.differentToLast = differentToLast;
     }
     
-    public boolean checkPassword(String password) {
+    private boolean checkFormat(String password) {
     	
     	String regex = "";
     	
@@ -119,6 +123,24 @@ public class PasswordPolicy extends Model {
     	this.lastActivationDate = new Date();
     }
     
+    /** Valida que la una nueva clave sea válida con respecto a la política */
+    public boolean validate(User user, String newPassword) {
+    	// chequeo formato
+    	boolean ret = checkFormat(newPassword);
+    	
+    	// chequeo que no coincida con las últimas N
+    	String passwordHash = Crypto.passwordHash(newPassword, HashType.SHA512);
+    	List<Password> lastPasswords = getLastPasswords(user, differentToLast);
+    	
+		for (Password p : lastPasswords){
+			if (p.password.equals(passwordHash)){
+    			ret = false;
+    		}
+        }
+    	
+        return ret;
+    }
+    
     public static PasswordPolicy current() {
     	return PasswordPolicy.find(
     			"select p1 from PasswordPolicy p1 where p1.lastActivationDate = " 
@@ -133,5 +155,13 @@ public class PasswordPolicy extends Model {
 		Calendar limitDate = Calendar.getInstance();
 		limitDate.add(Calendar.DATE, (-1) * policy.duration);
 		return DateUtils.truncate(limitDate, Calendar.DATE).getTime();
+	}
+	
+	private static List<Password> getLastPasswords(User user, int amount) {
+    	Query query = JPA.em().createQuery("select p from User u join u.passwords p where u = ?1 order by p.dateModified DESC"
+    			,Password.class);
+    	query.setFirstResult(0);
+    	query.setMaxResults(amount);
+    	return query.setParameter(1, user).getResultList();
 	}
 }
