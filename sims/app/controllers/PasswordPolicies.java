@@ -35,7 +35,7 @@ public class PasswordPolicies extends SecureController {
     /** sirve pantalla de cambio de password */
     public static void list() {
         List<PasswordPolicy> policies = PasswordPolicy.all().fetch();
-        PasswordPolicy currentPolicy = PasswordPolicy.getCurrent();
+        PasswordPolicy currentPolicy = PasswordPolicy.current();
         render(policies, currentPolicy);
     }
     

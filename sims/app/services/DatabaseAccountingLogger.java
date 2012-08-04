@@ -36,6 +36,12 @@ public class DatabaseAccountingLogger implements AccountingLogger {
 	}
 
 	@Override
+	public void logPasswordExpired(User user) {
+		List<App> apps = App.all().fetch();
+		log(EventType.PASSWORD_EXPIRED, user, apps, "Expiró la clave del usuario " + user.username);
+	}
+	
+	@Override
 	public void logUserCreated(User currentUser, User newUser) {
 		String description = "Usuario creado: " + newUser.username;
 		log(EventType.USER_CREATED, currentUser, App.sims(), description, newUser);
@@ -93,4 +99,5 @@ public class DatabaseAccountingLogger implements AccountingLogger {
 				  				Arrays.asList(additionalRelatedUsers), description);
 		event.save();
 	}
+
 }

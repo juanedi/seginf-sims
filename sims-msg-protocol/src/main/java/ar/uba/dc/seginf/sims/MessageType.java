@@ -12,6 +12,7 @@ public enum MessageType {
     NEW_USER,
     DELETE_USER,
     CHANGE_PASSWORD,
-    CHANGE_ROLES;
+    CHANGE_ROLES,
+    PASSWORD_EXPIRED;
     
 }

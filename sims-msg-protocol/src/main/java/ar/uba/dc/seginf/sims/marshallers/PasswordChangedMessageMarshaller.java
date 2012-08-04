@@ -1,16 +1,15 @@
 package ar.uba.dc.seginf.sims.marshallers;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 
+import ar.uba.dc.seginf.sims.messages.Message;
 import ar.uba.dc.seginf.sims.messages.PasswordChangedMessage;
+import ar.uba.dc.seginf.sims.util.ISODateUtils;
 
 public class PasswordChangedMessageMarshaller extends RegexpMessageMarshaller<PasswordChangedMessage>{
     
-	private static final String DATE_FORMAT = "yyyy-MM-dd";
-	
     private static final String PATTERN = "([\\w]+),"  				// username
             							+ "([\\w]+),"               // hashType
             							+ "((?:[\\w]|\\+|/|=)+),"    // password hasheado
@@ -40,21 +39,18 @@ public class PasswordChangedMessageMarshaller extends RegexpMessageMarshaller<Pa
                 msg.getUsername(),
                 msg.getHashType(), 
                 msg.getPassword(),
-                serializeDate(msg.getServerDate()),
+                ISODateUtils.format(msg.getServerDate()),
                 String.valueOf(msg.getDaysValid()));
     }
     
     private static Date parseDate(final String dateStr) {
     	try {
-			return new SimpleDateFormat(DATE_FORMAT).parse(dateStr);
+			return ISODateUtils.parse(dateStr);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException(e);
 		}
     }
     
-    private static String serializeDate(final Date date) {
-    	return new SimpleDateFormat(DATE_FORMAT).format(date);
-    }
 }
 
 

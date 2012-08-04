@@ -1,3 +1,4 @@
+package util;
 import models.App;
 import models.Hash;
 import models.PasswordPolicy;

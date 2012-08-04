@@ -61,6 +61,18 @@
         </property>
     </bean>
  
+     <bean id="passwordExpiredRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <constructor-arg index="0" ref="rabbitConnectionFactory" />
+        <property name="routingKey" value="PASSWORD_EXPIRED" />
+        <property name="messageConverter">
+            <bean class="services.SimsMessageConverter">
+                <constructor-arg index="0">
+                    <bean class="ar.uba.dc.seginf.sims.marshallers.PasswordExpiredMessageMarshaller" />
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+ 
     <bean id="rmqService" class="services.RMQServiceImpl">
         <constructor-arg index="0" value="${rmq.broker.host}" />
         <constructor-arg index="1" value="${rmq.api.port}" />
@@ -74,6 +86,7 @@
         <constructor-arg index="0" ref="newUserRabbitTemplate" />
         <constructor-arg index="1" ref="rolesChangedRabbitTemplate" />
         <constructor-arg index="2" ref="passwordChangedRabbitTemplate" />
+        <constructor-arg index="3" ref="passwordExpiredRabbitTemplate" />
     </bean>
 
 	<bean id="accountingLogger" class="services.DatabaseAccountingLogger">

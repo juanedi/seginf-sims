@@ -13,6 +13,7 @@ import org.springframework.amqp.core.MessagePostProcessor;
 
 import ar.uba.dc.seginf.sims.MessageType;
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
+import ar.uba.dc.seginf.sims.messages.PasswordExpiredMessage;
 import ar.uba.dc.seginf.sims.messages.UserRolesChangedMessage;
 import ar.uba.dc.seginf.sims.messages.PasswordChangedMessage;
 
@@ -35,19 +36,22 @@ public class RMQAppNotificationService implements AppNotificationService {
     private final AmqpTemplate newUserTemplate;
     private final AmqpTemplate userRolesChangedTemplate;
     private final AmqpTemplate passwordChangedTemplate;
+    private final AmqpTemplate passwordExpiredTemplate;
     
     /** Creates the RMQAppNotificationService. */
     public RMQAppNotificationService(final AmqpTemplate newUserTemplate,
                                      final AmqpTemplate userRolesChagedTemplate,
-                                     final AmqpTemplate passwordChangedTemplate) {
+                                     final AmqpTemplate passwordChangedTemplate,
+                                     final AmqpTemplate passwordExpiredTemplate) {
         Validate.notNull(newUserTemplate);
         Validate.notNull(userRolesChagedTemplate);
         Validate.notNull(passwordChangedTemplate);
+        Validate.notNull(passwordExpiredTemplate);
 
         this.newUserTemplate = newUserTemplate;
         this.userRolesChangedTemplate = userRolesChagedTemplate;
         this.passwordChangedTemplate = passwordChangedTemplate;
-       
+        this.passwordExpiredTemplate = passwordExpiredTemplate;
     }
     
     /** @see AppNotificationService#notifyNewUser(User, App) */
@@ -67,12 +71,24 @@ public class RMQAppNotificationService implements AppNotificationService {
             if (!app.name.equals(App.SIMS_APP_NAME)) {
             	PasswordChangedMessage msg = new PasswordChangedMessage(user.username, app.hashType.name(), 
         																user.getHashedPassword(app.hashType),
-        																new Date(), PasswordPolicy.getCurrent().duration);    
+        																new Date(), PasswordPolicy.current().duration);    
             	passwordChangedTemplate.convertAndSend(app.name, MessageType.CHANGE_PASSWORD.name(), msg, nullPostProcessor());
             }
         }
     }
 
+	@Override
+	public void broadcastPasswordExpired(User user) {
+    	// TODO: Esto se podría hacer via un exchange de RMQ.
+        for (App app : user.apps) {
+            if (!app.name.equals(App.SIMS_APP_NAME)) {
+            	PasswordExpiredMessage msg = new PasswordExpiredMessage(user.username, app.hashType.name(), 
+        																user.getHashedPassword(app.hashType));    
+            	passwordExpiredTemplate.convertAndSend(app.name, MessageType.PASSWORD_EXPIRED.name(), msg, nullPostProcessor());
+            }
+        }
+	}
+    
     /** @see AppNotificationService#notifyRolesChanged(User, App) */
     @Override
     public void notifyRolesChanged(User user, App app) {
@@ -105,4 +121,5 @@ public class RMQAppNotificationService implements AppNotificationService {
             }
         };
     }
+    
 }

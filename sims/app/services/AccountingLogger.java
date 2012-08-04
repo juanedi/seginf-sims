@@ -14,6 +14,8 @@ import models.User;
 public interface AccountingLogger {
 
 	void logPasswordChange(User user);
+
+	void logPasswordExpired(User user);
 	
 	void logUserCreated(User currentUser, User newUser);
 	

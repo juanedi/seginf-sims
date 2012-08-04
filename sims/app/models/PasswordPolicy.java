@@ -3,6 +3,7 @@ package models;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +21,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.time.DateUtils;
 
 /**
  * Usuario del administrador de identidades.
@@ -117,9 +119,19 @@ public class PasswordPolicy extends Model {
     	this.lastActivationDate = new Date();
     }
     
-    public static PasswordPolicy getCurrent() {
+    public static PasswordPolicy current() {
     	return PasswordPolicy.find(
     			"select p1 from PasswordPolicy p1 where p1.lastActivationDate = " 
 				+ "(select max(p2.lastActivationDate) from PasswordPolicy p2)").first();
     }
+    
+    public static List<User> usersWithExpiredPasswords() {
+		return User.find("lastPasswordChanged < ?1", limitDate(current())).fetch();	
+    }
+    
+	private static Date limitDate(PasswordPolicy policy) {
+		Calendar limitDate = Calendar.getInstance();
+		limitDate.add(Calendar.DATE, (-1) * policy.duration);
+		return DateUtils.truncate(limitDate, Calendar.DATE).getTime();
+	}
 }

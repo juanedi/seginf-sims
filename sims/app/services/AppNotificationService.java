@@ -19,4 +19,6 @@ public interface AppNotificationService {
     void notifyUserRemove(User user, App app);
 
     void broadcastPasswordChanged(User user);
+    
+    void broadcastPasswordExpired(User user);
 }

@@ -10,6 +10,8 @@ public enum EventType {
 
 	PASSWORD_CHANGE("Cambio de clave"),
 	
+	PASSWORD_EXPIRED("Clave expirada"),
+	
 	USER_CREATED("Creación de un usuario"),
 	
 	APP_CREATED("Creación de una aplicación"),
