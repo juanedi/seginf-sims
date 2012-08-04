@@ -32,7 +32,7 @@ public abstract class RegexpMessageMarshaller<T extends Message> implements Mess
     public String marshall(T object) {
         String msg = doMarshall(object);
         if (!pattern.matcher(msg).matches()) {
-            throw new IllegalStateException("Se serializó incorrectamente un mensaje");
+            throw new IllegalStateException("Se serializó incorrectamente un mensaje: " + msg);
         }
         return msg;
     }
@@ -44,7 +44,7 @@ public abstract class RegexpMessageMarshaller<T extends Message> implements Mess
         if (matcher.matches()) {
             return doUnMarshall(msg, matcher);
         } else {
-           throw new IllegalArgumentException("Mensaje con formato inválido"); 
+           throw new IllegalArgumentException("Mensaje con formato inv‡lido: " + msg); 
         }
     }
 

@@ -1,5 +1,6 @@
 package services;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import ar.uba.dc.seginf.sims.messages.UserRolesChangedMessage;
 import ar.uba.dc.seginf.sims.messages.PasswordChangedMessage;
 
 import models.App;
+import models.PasswordPolicy;
 import models.Role;
 import models.User;
 
@@ -63,7 +65,9 @@ public class RMQAppNotificationService implements AppNotificationService {
     	// TODO: Esto se podría hacer via un exchange de RMQ.
         for (App app : user.apps) {
             if (!app.name.equals(App.SIMS_APP_NAME)) {
-            	PasswordChangedMessage msg = new PasswordChangedMessage(user.username, app.hashType.name(), user.getHashedPassword(app.hashType));    
+            	PasswordChangedMessage msg = new PasswordChangedMessage(user.username, app.hashType.name(), 
+        																user.getHashedPassword(app.hashType),
+        																new Date(), PasswordPolicy.getCurrent().duration);    
             	passwordChangedTemplate.convertAndSend(app.name, MessageType.CHANGE_PASSWORD.name(), msg, nullPostProcessor());
             }
         }
