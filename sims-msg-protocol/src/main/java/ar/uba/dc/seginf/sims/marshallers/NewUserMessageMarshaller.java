@@ -24,8 +24,8 @@ import ar.uba.dc.seginf.sims.util.ISODateUtils;
 public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMessage>{
 
     private static final String PATTERN = "([\\w]+),"               // username
-                                        + "([\\w]+),"               // firstName
-                                        + "([\\w]+),"               // lastName
+                                        + "((?:[\\w]|[\\s])+),"               // firstName
+                                        + "((?:[\\w]|[\\s])+),"               // lastName
                                         + "([\\w]+),"               // hashType
                                         + "((?:[\\w]|\\+|/|=)+),"   // password hasheado
                                         + "((?:[\\d]|\\-)+),"		// fecha de vencimiento de clave

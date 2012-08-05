@@ -31,6 +31,14 @@ public class NewUserMessageMashallerTest {
     }
     
     @Test
+    public final void whitespaceOnNameMarshallTest() throws ParseException {
+        NewUserMessage msg = new NewUserMessage("juanedi", "Juan Ignacio", "Edi Batistuta", "MD5", "123", 
+												ISODateUtils.parse("2010-01-01"), Collections.<String>emptyList());
+			String str = marshaller.marshall(msg);
+			assertEquals("juanedi,Juan Ignacio,Edi Batistuta,MD5,123,2010-01-01,[]", str);    	
+    }
+    
+    @Test
     public final void singleRoleMarshallTest() throws ParseException {
         NewUserMessage msg = new NewUserMessage("juanedi", "Juan", "Edi", "MD5", "123", 
 												ISODateUtils.parse("2010-01-01"), Arrays.asList("ROL1"));
