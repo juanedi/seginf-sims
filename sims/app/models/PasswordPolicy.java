@@ -40,6 +40,9 @@ import org.apache.commons.lang.time.DateUtils;
 		uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 public class PasswordPolicy extends Model {
 
+	private static final String _SPECIAL_CHARS = "@#$%";
+	public static final char[] SPECIAL_CHARS = _SPECIAL_CHARS.toCharArray();
+	
 	/**
 	 * Se guarda este para saber cuál es la política actual.
 	 * No se usa un boolean para evitar problemas de concurrencia al modificar
@@ -94,7 +97,8 @@ public class PasswordPolicy extends Model {
         this.differentToLast = differentToLast;
     }
     
-    private boolean checkFormat(String password) {
+    public boolean checkFormat(String password) {
+    	if (password == null) return false;
     	
     	String regex = "";
     	
@@ -111,9 +115,9 @@ public class PasswordPolicy extends Model {
     	}
 
     	if (useSpecialCharsLetters){
-    		regex = regex + "(?=.*[@#$%])";
+    		regex = regex + "(?=.*[" + _SPECIAL_CHARS + "])";
     	}
-    	regex = "(" + regex + ".{" + passwordLength + ",20})"; 
+    	regex = "(" + regex + ".{" + passwordLength + ",})"; 
     	 	
     	
     	return (password.matches(regex));

@@ -5,17 +5,14 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import models.Password;
+import models.PasswordPolicy;
 import models.Role;
 import models.User;
-import models.Password;
 import notifiers.Mailer;
-
-import org.apache.commons.lang.RandomStringUtils;
-
 import play.data.validation.Required;
-import play.mvc.Controller;
-import play.mvc.With;
 import services.AccountingLogger;
+import services.RandomPasswordUtils;
 
 /**
  * Controller para alta de usuarios.
@@ -56,7 +53,7 @@ public class Users extends SecureController {
         user.lastName = lastName;
         user.email = email;
         
-        String randomPassword = RandomStringUtils.randomAlphanumeric(10);
+        String randomPassword = RandomPasswordUtils.generateRandomPassword(PasswordPolicy.current());
         user.setPassword(randomPassword);
         user.passwords.add(new Password(user,randomPassword,new Date()));
         
