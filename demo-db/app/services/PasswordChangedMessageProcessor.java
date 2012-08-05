@@ -19,9 +19,7 @@ public class PasswordChangedMessageProcessor  extends TransactionalMessageProces
     /** @see services.TransactionalMessageProcessor#doProcess(Message) */
     @Override
     protected void doProcess(PasswordChangedMessage msg) {
-        
         User user = User.find("byUsername", msg.getUsername()).first();
-        // hay que validar que no sea null?        
         user.setPassword(msg.getPassword());
         user.save();
     }

@@ -35,25 +35,24 @@ public class User extends Model {
     @Column(name = "is_admin", nullable = false)
     public Boolean isAdmin;
     
+    @Column(name = "pass_expired", nullable = false)
+    public Boolean passwordExpired;
+    
     /** Creates the User. */
     public User(final String username, final String password, final Boolean isAdmin) {
-        // TODO: Validar formatos.
         Validate.notEmpty(username);
+        Validate.notNull(password);
+        Validate.notNull(isAdmin);
         this.username = username;
         this.isAdmin = isAdmin;
-        this.password = password;
-//        setPassword(password);
-    }
-    
-    public void setPlainPassword(final String password) {
-        Validate.notEmpty(password);
-        this.password = hashPassword(password);
+        setPassword(password);
     }
     
     /** setea la password que viene hasheada de la administración central*/
     public void setPassword(final String password) {
-        Validate.notEmpty(password);
+        Validate.notNull(password);
         this.password = password;
+        this.passwordExpired = false;
     }
     
     /** compara la password */
@@ -65,9 +64,13 @@ public class User extends Model {
         
     }
 
+    public void passwordExpired() {
+    	this.passwordExpired = true;
+    }
+    
     /** hash de las passwords */
     private static String hashPassword(final String password) {
         return Crypto.passwordHash(password, HashType.SHA256);
     }
-    
+ 
 }
