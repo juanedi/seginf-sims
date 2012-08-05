@@ -50,8 +50,14 @@ public class AccountingTest extends UnitTest {
 		searchService = new DatabaseEventSearchService();
 		
 		admin = User.forUsername("admin");
-		jedi = User.forUsername("jedi");
-
+		jedi = new User();
+        jedi.email = "jedi@dc.uba.ar";
+        jedi.firstName = "Juan";
+        jedi.lastName = "Edi";
+        jedi.username = "jedi";
+        jedi.setPassword("jedi");
+		jedi.save();
+		
 		sims = App.sims();
 		demodb = App.forName("demodb");
 		

@@ -1,16 +1,18 @@
 package jobs;
+import java.util.Calendar;
+import java.util.Date;
+
 import models.App;
 import models.Hash;
 import models.PasswordPolicy;
 import models.Role;
 import models.User;
-import play.db.jpa.JPAPlugin;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.test.Fixtures;
 
 /**
- * Carga los datos de data.yml
+ * Carga datos iniciales que requiere la aplicación.
  * 
  * 
  * @author Juan Edi
@@ -20,9 +22,15 @@ import play.test.Fixtures;
 public class Bootstrap extends Job {
 
     public void doJob() {
-        Fixtures.deleteDatabase();
-        
-        /*------- SIMS APP -------*/
+    	if (App.count() == 0L) {  // si no hay aplicaciones es porque la base de datos está vacía.
+    		Fixtures.deleteDatabase();
+    		System.out.println("Configurando por primera vez la aplicación. Las credenciales de login son admin/admin");
+    		setupSIMS();
+    	}
+    }
+
+    public final void setupSIMS() {
+    	/*------- SIMS APP -------*/
         App sims = new App();
         sims.name = "sims";
         sims.hashType = Hash.SHA512;
@@ -49,45 +57,12 @@ public class Bootstrap extends Job {
         sims.roles.add(auditRole);
         sims.roles.add(passwordPolicyRole);
         
-        /*------- DEMO LDAP -------*/
-        
-        App demoldap = new App();
-        demoldap.name = "demoldap";
-        demoldap.hashType = Hash.MD5;
-        demoldap.configured = true;
-        
-        Role demoLdapBase = new Role();
-        demoLdapBase.app = demoldap;
-        demoLdapBase.name = "base";
-        
-        demoldap.roles.add(demoLdapBase);
-        
-        
-        /*------- DEMO DB -------*/
-        
-        App demodb = new App();
-        demodb.name = "demodb";
-        demodb.hashType = Hash.SHA256;
-        demodb.configured = true;
-        
-        Role demoDbAmin = new Role();
-        demoDbAmin.app = demodb;
-        demoDbAmin.name = "ADMIN";
-        
-        demodb.roles.add(demoDbAmin);
-        
-        /*------- OTRA APP -------*/
-        
-        App prueba = new App();
-        prueba.name = "prueba";
-        prueba.hashType = Hash.MD5;
-        prueba.configured = false;
 
         /*------- USERS -------*/
         User admin = new User();
-        admin.email = "admin@sims.com";
-        admin.firstName = "Pedro";
-        admin.lastName = "Administrador";
+        admin.email = "seginfadmistrador@gmail.com";
+        admin.firstName = "Administrador";
+        admin.lastName = "de Identidades";
         admin.username = "admin";
         admin.setPassword("admin");
         admin.apps.add(sims);
@@ -95,35 +70,24 @@ public class Bootstrap extends Job {
         admin.roles.add(createUserRole);
         admin.roles.add(auditRole);
         admin.roles.add(passwordPolicyRole);
-        
-        User jedi = new User();
-        jedi.email = "jedi@dc.uba.ar";
-        jedi.firstName = "Juan";
-        jedi.lastName = "Edi";
-        jedi.username = "jedi";
-        jedi.setPassword("jedi");
-        jedi.apps.add(sims);
+        admin.lastPasswordChanged = aboutToExpire(); // para que vea la notificación de cambio de clave 
         
         sims.owner = admin;
-        demoldap.owner = admin;
-        demodb.owner = admin;
-        prueba.owner = admin;
         
         /*------- PASSWORD POLICY -------*/
-        PasswordPolicy policy = new PasswordPolicy("default", 1, false, false, false, false, 90, 3);
+        PasswordPolicy policy = new PasswordPolicy("default", 6, false, false, false, false, 90, 1);
         policy.activate();
         
         /*------- PERSIST -------*/
-        
         sims.save();
-        demoldap.save();
-        demodb.save();
-        prueba.save();
-        
-        jedi.save();
         admin.save();
-        
-        policy.save();
+        policy.save();    	
     }
     
+    /** provee una fecha tal que la clave esté cerca de expirar */
+    private Date aboutToExpire() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.add(Calendar.DAY_OF_YEAR, -80);
+    	return cal.getTime();
+    }
 }
