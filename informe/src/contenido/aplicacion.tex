@@ -24,10 +24,16 @@ En el sistema de administración de identidades están definidos los siguientes 
 \begin{itemize}
 \item Base: Permite a cualquier usuario cambiar su clave, si bien no es un rol persistido cualquier usuario creado tiene permiso de cambiar su clave
 \item Creación de usuarios
-\item Creación de aplicaciones: Permite el alta de la aplicación, alta de roles y la asignación de usuarios a aplicaciones asociándolo a los roles que tiene definidos.	
+\item Creación de aplicaciones: Permite el alta de la aplicación, asignándole un usuario encargado de su configuración
+y administración.
+\item Administración de aplicación: Este rol de otorga \textit{sobre aplicaciones} al momento de crearlas, y 
+define qué usuario tiene permiso para otorgar/revocar acceso y roles específicos a otros usuarios sobre esa 
+aplicación. Además, el usuario con este permiso será el encargado de realizar la configuración inicial de la
+aplicación (credenciales para el broker de mensajes, configurar esquema de roles de la aplicación, etc.).
 \item Politica de Claves: Permite dar de alta o modificar políticas de claves
 \item Auditoria: Permite consultar los eventos registrados para la auditoría
 \end{itemize}
+
 
 \subsection{Creación de Usuarios}
 
@@ -35,19 +41,35 @@ Para el alta de usuarios se ingresa usuario, email, nombre y apellido.
 El sistema envía un mail al usuario con los datos ingresados más una clave generada aleatoriamente. El rol asociado al usuario para el sistema administrador es el base. 
 
 \subsection{Alta de aplicaciones}
-Al dar de alta una nueva aplicación es necesario el alta de la misma en el administrador, la creación de las queues en el broker de mensajes y la configuración en las aplicaciones cliente.
+Al dar de alta una nueva aplicación es necesario el alta de la misma en el administrador, la creación de un nuevo
+usuario y queues en el broker de mensajes y la configuración en las aplicaciones cliente.
  
 \subsubsection{Configuración en el administrador}
-En primer lugar le damos el alta ingresando nombre, usuario a cargo y el método de encriptación de clave.
+En primer lugar le damos el alta ingresando nombre, usuario a cargo y el método de encriptación de clave. Esto
+da de alta la aplicación dentro del administrador, y realiza la configuración del broker de mensajes (creación
+de queues, usuario, configuración de permisos, etc). Desde este momento, cualquier mensaje que sea generado
+para la aplicación será enviado al broker y quedará almacenado a la espera de ser consumido.
 
-En esta instancia estamos en condiciones de pasar a la configuración de la aplicación donde se crean los roles que son únicos por aplicación y se configura la clave para acceder al broker de mensajes.
+En esta instancia el usuario asignado como responsable de la aplicación debe configurar la misma, eligiendo la
+clave con la que se conectará al broker de mensajes y cargando el esquema de roles de la aplicación.
 
-Se brinda la posibilidad de setear roles por defecto, estos roles serán aplicados automáticamente cuando se asignen usuarios a la aplicación. 
-
-Al confirmar la configuración se crean las queues en el broker de mensajes utilizando la clave ingresada y como nombre de usuario el nombre dado a la aplicación. Desde este momento cualquier mensaje que sea generado para la aplicación será enviado al broker y quedará almacenado a la espera de ser consumido.
+En caso de que sea conveniente, se pueden setear roles por defecto, los cuáles son sugeridos automáticamente
+cuando se asignan nuevos usuarios a la aplicación.
 
 \subsubsection{Configuración de aplicación cliente}
-En cada aplicación cliente hay que escribir los listeners por cada mensaje que se quiera implementar y se debe configurar el acceso a cada queue en un archivo de propiedades. 
+Cada aplicación debe ahora conectarse con el broker de mensajes, utilizando como nombre de usuario el nombre de
+la aplicación tal como se cargó en el administrador, y como contraseña la definida al momento de la configuración
+inicial.
+
+El broker debería estar configurado para recibir conexiones seguras en el puerto estándar 5671. Depende de la
+implemetación de cada cliente de RabbitMQ cómo se definen los certificados en que se confían. Para aplicaciones
+Java, se provee junto con la distribución de la aplicación una biblioteca para facilitar la conexión con el
+administrador. En el caso de usar la misma, sólo hace falta especificar en un archivo de propiedades la ruta
+a un \textit{trustore jks} que tenga la información del certificado del servidor. Para más detalles ver la
+configuración de las aplicaciones demo provistas.
+
+Por convención, los nombres de las queues son del tipo: \texttt{NOMBRE\_APLICACION/TIPO\_MENSAJE}. Los distintos
+tipos de mensaje se pueden ver en la especificación del protocolo de mensajes, en las siguientes secciones.
 
 \subsection{Política de Claves}
 La política de claves nos permite definir
