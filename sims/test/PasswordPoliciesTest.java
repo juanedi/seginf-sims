@@ -18,7 +18,12 @@ import ar.uba.dc.seginf.sims.util.ISODateUtils;
 import play.db.jpa.JPA;
 import play.test.UnitTest;
 
-
+/**
+ * Testeo de verificación de formatos de claves y chequeo de usuarios con clave vencida.
+ * 
+ * @author jedi
+ *
+ */
 public class PasswordPoliciesTest extends UnitTest {
 
 	private User user;

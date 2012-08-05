@@ -1,6 +1,7 @@
 import java.text.ParseException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ar.uba.dc.seginf.sims.messages.PasswordChangedMessage;
@@ -16,7 +17,10 @@ import services.PasswordChangedMessageProcessor;
 /**
  * Test para {@link PasswordChangedMessageProcessor}
  * 
+ * IMPORTANTE: Se deja ignorado porque interactúa contra LDAP.
+ * 
  */
+@Ignore
 public class PasswordChangedMessageProcessorTest extends UnitTest {
 
 	private LDAPService ldapService;

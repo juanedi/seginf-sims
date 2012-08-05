@@ -13,8 +13,9 @@ import services.RMQServiceImpl;
 
 /**
  * Pruebas sobre {@link RMQService}.
- * Se deja ignorado para no ejecutar automáticamente (interactúa contra RMQ).
  * 
+ * 
+ * IMPORTANTE: Se deja ignorado porque se comunica con RMQ.
  * 
  * @author Juan Edi
  * @since May 28, 2012

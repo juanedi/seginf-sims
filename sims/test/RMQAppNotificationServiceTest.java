@@ -14,8 +14,9 @@ import services.AppNotificationService;
 
 /**
  * Para probar las notificaciones a las applicaciones.
- * Se deja en ignore porque se comunica con RMQ.
  * 
+ * 
+ * IMPORTANTE: Se deja ignorado porque se comunica con RMQ.
  * Levanta datos de data.yxml.
  * 
  * @author Juan Edi

@@ -1,6 +1,7 @@
 import java.text.ParseException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ar.uba.dc.seginf.sims.messages.PasswordChangedMessage;
@@ -15,6 +16,16 @@ import services.PasswordChangedMessageProcessor;
 import services.PasswordExpiredMessageProcessor;
 
 
+/**
+ * Test para {@link PasswordExpiredMessageProcessor}
+ * 
+ * 
+ * IMPORTANTE: Se deja ignorado porque interactúa contra LDAP.
+ * 
+ * @author jedi
+ *
+ */
+@Ignore
 public class PasswordExpiredMessageProcessorTest extends UnitTest {
 	
 	private LDAPService ldapService;

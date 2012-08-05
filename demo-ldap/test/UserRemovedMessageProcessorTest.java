@@ -2,6 +2,7 @@ import java.text.ParseException;
 import java.util.Collections;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
@@ -17,7 +18,15 @@ import services.NewUserMessageProcessor;
 import services.PasswordExpiredMessageProcessor;
 import services.UserRemovedMessageProcessor;
 
-
+/**
+ * Test para {@link UserRemovedMessageProcessor}
+ * 
+ * IMPORTANTE: Se deja ignorado porque interactúa contra LDAP.
+ * 
+ * @author jedi
+ *
+ */
+@Ignore
 public class UserRemovedMessageProcessorTest extends UnitTest {
 
 	private LDAPService ldapService;

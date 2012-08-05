@@ -5,6 +5,13 @@ import play.db.jpa.JPA;
 import play.test.*;
 import models.*;
 
+/**
+ * Test de la base del modelo.
+ * 
+ * 
+ * @author jedi
+ *
+ */
 public class ModelTest extends UnitTest {
 
     private User user;
