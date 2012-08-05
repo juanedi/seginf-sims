@@ -2,6 +2,8 @@ package controllers;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
+
 
 import play.modules.spring.Spring;
 import services.LDAPService;
@@ -16,10 +18,10 @@ import services.LDAPService;
  */
 public class Security extends controllers.Secure.Security {
 
-    @Inject private static LDAPService auth;
+    @Inject private static LDAPService ldapService;
     
     static boolean authenticate(final String username, final String password) {
-        return auth.authenticate(username, password);
+        return !StringUtils.isEmpty(password) && ldapService.authenticate(username, password);
     }
     
 }

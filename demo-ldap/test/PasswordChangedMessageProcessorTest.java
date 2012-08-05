@@ -40,5 +40,4 @@ public class PasswordChangedMessageProcessorTest extends UnitTest {
 		assertTrue(ldapService.authenticate("rfestini", plainPass));
 	}
 	
-	
 }

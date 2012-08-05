@@ -105,6 +105,13 @@ public class LDAPService {
         }
     }
     
+    /** borra la clave del usuario */
+    public void invalidatePassword(final User user) {
+    	// para invalidar se deja la clave vacía (el autenticador falla si es vacía) 
+    	user.password = "";
+        changePassword(user);
+    }
+    
     private List<String> allGroups() {
         DistinguishedName groupsDN = new DistinguishedName();
         groupsDN.add("ou", "groups");
