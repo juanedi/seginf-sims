@@ -4,7 +4,7 @@
   <groupId>ar.uba.dc.seginf</groupId>
   <artifactId>sims-msg-converters</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>SIMS Message Converters</name>
   <description>Common converters defining message protocol for seginf-sims </description>
   
