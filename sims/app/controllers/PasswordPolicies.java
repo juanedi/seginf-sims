@@ -40,7 +40,8 @@ public class PasswordPolicies extends SecureController {
     }
     
     public static void create() {
-        render();
+    	char[] specialChars = PasswordPolicy.SPECIAL_CHARS;
+        render(specialChars);
     }    
     
     public static void setActive(@Required final String policyName) {

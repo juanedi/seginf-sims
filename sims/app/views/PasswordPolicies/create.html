@@ -48,7 +48,10 @@
                		</label>
                 	<label class="checkbox">
                 		<input type="checkbox" id="useSpecialCharsLetters" name="useSpecialCharsLetters">
-                		caracteres especiales
+                		caracteres especiales (
+                		#{list items:specialChars, as:'charr'}
+                			${charr}
+                		#{/list})
                		</label>
                 </div>
             </div>
