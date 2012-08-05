@@ -6,6 +6,13 @@
         <div class="hero-unit">
             <h1>Bienvenido al administrador de identidades.</h1>
         </div>
+        #{if passwordNearExpiration}
+        	<a href="@{Password.info}">
+	        <div class="alert">
+	            Su clave está próxima a vencer.
+	        </div>
+	        </a>
+        #{/if}
 		#{list items:appsToConfigure, as:'app'}
 		    <a href="@{Application.detail(app.name)} ">
             <div class="alert alert-info">

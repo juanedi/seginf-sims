@@ -27,7 +27,7 @@ public class PasswordNearExpirationNotificationsJob extends Job {
 	
 	/** notifica los usuarios cuya clave vence en N días */
 	private void notifyUsersWithPasswordExpiring(int days) {
-		List<User> toNotify = PasswordPolicy.usersWithPasswordsNearExpiration(days);
+		List<User> toNotify = PasswordPolicy.usersWithPasswordsExpiringIn(days);
 		for (User user : toNotify) {
 			Mailer.passwordNearExpiration(user, days);
 		}

@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import models.App;
 import models.Hash;
+import models.PasswordPolicy;
 import models.Role;
 import models.User;
 
@@ -35,8 +36,9 @@ public class Application extends SecureController {
     
     /** sirve página principal */
     public static void index() {
+    	Boolean passwordNearExpiration = PasswordPolicy.usersWithPasswordsNearExpiration(15).contains(connectedUser());
         List<App> appsToConfigure = App.toConfigureBy(connectedUser());
-        render(appsToConfigure);
+        render(appsToConfigure, passwordNearExpiration);
     }
 
     public static void list() {

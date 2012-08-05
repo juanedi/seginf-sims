@@ -153,12 +153,17 @@ public class PasswordPolicy extends Model {
     
     /** lista de usuarios con clave expirada */
     public static List<User> usersWithPasswordsExpiringToday() {
-		return usersWithPasswordsNearExpiration(0);	
+		return usersWithPasswordsExpiringIn(0);	
     }
     
     /** lista de usuarios con clave a N días de vencer */
-    public static List<User> usersWithPasswordsNearExpiration(int daysUntilExpiration) {
+    public static List<User> usersWithPasswordsExpiringIn(int daysUntilExpiration) {
     	return User.find("lastPasswordChanged = ?1", limitDate(current(), daysUntilExpiration)).fetch();
+    }
+    
+    /** lista de usuarios con clave a N o menos días de vencer */
+    public static List<User> usersWithPasswordsNearExpiration(int daysUntilExpiration) {
+    	return User.find("lastPasswordChanged < ?1", limitDate(current(), daysUntilExpiration)).fetch();
     }
     
     /** retorna la fecha de expiración para nuevas claves. es decir, hoy + tiempo_expiracion */
