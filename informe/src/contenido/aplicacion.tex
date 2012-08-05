@@ -7,11 +7,15 @@ Para el acceso a estas funcionalidades el sistema tiene definido un esquema de r
 
 El sistema cuenta en un comienzo con un usuario administrador (admin), el mismo tiene asociado todos los roles.
 
-Respecto a la seguridad la aplicación de administración chequea su clave utilizando como hash SHA512, pero al igual que el resto de las aplicaciones, la clave está persistida en la base en todos los Hash definidos.
+Respecto a la seguridad la aplicación de administración chequea su clave utilizando como hash SHA512, pero al igual que el resto de las aplicaciones, la clave está persistida en la base en todos los hash definidos.
 
-Los usuarios no son deshabilitados pero no se pueden loguear si su clave ha expirado, la clave del administrador no expira, pero se recomienda que cumpla con las medidas de seguridad dada la importancia de su rol.
+Al expirar una clave se notifica a todas las aplicaciones para que éstas dejen de permitir el acceso a la aplicación
+para el usuario. Sin embargo, se sigue permitiendo acceder al administrador para que el usuario pueda cambiar
+su clave.
 
-El sistema envía un mail a cada usuario 15 y 7 días antes del vencimiento de la clave y el día de vencimiento, y además, cuando faltan 15 días al momento del login muestra un mensaje recordándole el vencimiento de su clave.  
+Adicionalmente, se notifica al usuario a los 15 y 7 días de que caduque su clave, asi como también se muestra
+una alerta visual en el administrador durante los 15 días antes del vencimiento, con el objetivo de recordar
+al usuario que renueve su clave con tiempo.
 
 \subsection{Esquema de roles}
 

@@ -4,10 +4,10 @@ A continuación se presentan las principales herramientas utilizadas, el criteri
 
 \subsection{Play! Framework}
 
-Una vez tomada la decisión de que la aplicación fuera web nos decidimos por el framework Play, principalmente por que se puede
-escribir código Java que es el lenguaje mayormente manejado por el grupo, otro de los motivos fue por la rapidez que se logra en el desarrollo de aplicaciones web.
+Como framework web elegimos Play! Framework, una herramienta Java (el lenguaje mayormente manejado por el grupo),
+que busca proveer agilidad en el desarrollo (a diferencia de la mayoría de los frameworks de esta plataforma).
 
-Play es un framework open source escrito en Java y Scala basado en el patrón de diseño model view controller y similar a Ruby on Rails o Django. Entre sus principales características se encuentran:
+Play es un framework open source escrito en Java basado en el patrón de diseño model view controller y similar a Ruby on Rails o Django. Entre sus principales características se encuentran:
 
 \begin{itemize}
 \item Stateless
@@ -16,7 +16,11 @@ Play es un framework open source escrito en Java y Scala basado en el patrón de
 \item Se integra fácilmente con los principales IDE (Eclipse, Netbeans o IntelliJ).
 \end{itemize}
 
-\subsection{Rabbitmq}
+Cabe destacar que Play tiene dos ramas, conocidas como Play1 y Play2. Esta última provee soporte para funciones
+más avanzadas (entre las que se encuentra procesamiento asincrónico de pedidos y un robusto modelo de programación 
+paralela), pero al momento de elección todavía no estaba muy probado, y tampoco se requerían estas funcionalidades.
+
+\subsection{RabbitMQ}
 
 Al momento de la elección del broker de mensajes nos decidimos por RabbitMQ que es un broker de mensajes open source que implementa el estándard AMQP (Advanced Message Queuing Protocol), se integra perfectamente con Play y es multi plataforma. 
 Otra de sus ventajas para nuestro proyecto es la fácil configuración de canales SSL para la transmisión de mensajes que era vital para tener una comunicación segura con las distintas aplicaciones.
