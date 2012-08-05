@@ -33,44 +33,50 @@ public class Password extends SecureController {
             @Required final String newPassword,
             @Required final String newPasswordConfirmation) {
 
-        User user = connectedUser();
-        
-        if (validation.hasErrors()) {
-            flash.error("Todos los campos son obligatorios");
-            info();
-        }
+    	try {
+            User user = connectedUser();
+            
+            if (validation.hasErrors()) {
+            	throw new IllegalArgumentException("Todos los campos son obligatorios");
+            }
 
-        if (!newPassword.equals(newPasswordConfirmation)) {
-            flash.error("Las passwords no coinciden.");
-            info();
-        }
-        if (newPassword.equals(password)) {
-            flash.error("La nueva password es igual a la anterior.");
-            info();
-        }
-        if (!user.comparePassword(password)) {
-            flash.error("La password ingresada no es correcta.");
-            info();
-        }
-        
-        PasswordPolicy currentPolicy = PasswordPolicy.current();
-        if (currentPolicy != null) {
-        	boolean compliesToPolicy = currentPolicy.validate(user, newPassword);
-        	if (!compliesToPolicy) {
-                flash.error("La clave no cumple con la política.");
-                info();        		
-        	}
-        }
-        
-        user.setPassword(newPasswordConfirmation);
-        user.passwords.add(new models.Password(user,password,new Date()));
-        user.save();
-        accountingLogger.logPasswordChange(user);
-        
-        appNotificationService.broadcastPasswordChanged(user);        
-        
-        flash.success("Se ha actualizado su clave");
-        Application.index();
+            if (!newPassword.equals(newPasswordConfirmation)) {
+            	throw new IllegalArgumentException("Las passwords no coinciden.");
+            }
+            
+            if (newPassword.equals(password)) {
+            	throw new IllegalArgumentException("La nueva password es igual a la anterior.");
+            }
+            if (!user.comparePassword(password)) {
+            	throw new IllegalArgumentException("La password ingresada no es correcta.");
+            }
+            
+            PasswordPolicy currentPolicy = PasswordPolicy.current();
+            if (currentPolicy != null) {
+            	boolean compliesToPolicy = currentPolicy.validate(user, newPassword);
+            	if (!compliesToPolicy) {
+            		throw new IllegalArgumentException("La clave no cumple con la política.");
+            	}
+            }
+            
+            user.setPassword(newPasswordConfirmation);
+            user.passwords.add(new models.Password(user,password,new Date()));
+            user.save();
+            
+            accountingLogger.logPasswordChange(user);
+            appNotificationService.broadcastPasswordChanged(user);        
+            
+            flash.success("Se ha actualizado su clave");
+            Application.index();    		
+            
+    	} catch (IllegalArgumentException e) {
+    		flash.error(e.getMessage());
+    		info();
+    	} catch (Exception e) {
+    		flash.error("Error desconocido.");
+    		info();    		
+    	}
+    	
     }
 
 }
