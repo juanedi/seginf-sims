@@ -152,8 +152,8 @@ public class PasswordPolicy extends Model {
     }
     
     /** lista de usuarios con clave expirada */
-    public static List<User> usersWithExpiredPasswords() {
-		return User.find("lastPasswordChanged < ?1", limitDate(current(), 0)).fetch();	
+    public static List<User> usersWithPasswordsExpiringToday() {
+		return usersWithPasswordsNearExpiration(0);	
     }
     
     /** lista de usuarios con clave a N días de vencer */
@@ -171,10 +171,10 @@ public class PasswordPolicy extends Model {
     
 	/** retorna la fecha de actualización que tendría que tener una clave para vencer dentro de N días.
 	 * si se pasa un "0", retorna las que tienen fecha de actualización para vencer hoy. */
-	private static Date limitDate(PasswordPolicy policy, int daysInAdvance) {
+	private static Date limitDate(PasswordPolicy policy, int daysUntilExpiration) {
 		Calendar limitDate = Calendar.getInstance();
 		limitDate.add(Calendar.DATE, (-1) * policy.duration);
-		limitDate.add(Calendar.DAY_OF_YEAR, daysInAdvance);
+		limitDate.add(Calendar.DAY_OF_YEAR, daysUntilExpiration);
 		return DateUtils.truncate(limitDate, Calendar.DATE).getTime();
 	}
 	

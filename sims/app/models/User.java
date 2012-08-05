@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Query;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.Validate;
@@ -64,6 +66,7 @@ public class User extends Model {
     public String passwordSHA512;
 
     @Column(name = "last_password_changed", nullable = false)
+    @Temporal(TemporalType.DATE)
     public Date lastPasswordChanged;
     
     @ManyToMany

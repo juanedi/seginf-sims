@@ -103,18 +103,18 @@ public class PasswordPoliciesTest extends UnitTest {
     @Test
     public final void getExpiredUsersTest() throws ParseException {
     	// Todos los usuarios se crean con clave nueva.
-    	assertTrue(PasswordPolicy.usersWithExpiredPasswords().isEmpty());
+    	assertTrue(PasswordPolicy.usersWithPasswordsExpiringToday().isEmpty());
     	
     	// Dejo uno al borde dela expiración.
 		User user = User.forUsername("admin");
-		user.lastPasswordChanged = substract(new Date(), PasswordPolicy.current().duration);
+		user.lastPasswordChanged = substract(new Date(), PasswordPolicy.current().duration - 1);
 		user.save();
-		assertTrue(PasswordPolicy.usersWithExpiredPasswords().isEmpty());
+		assertTrue(PasswordPolicy.usersWithPasswordsExpiringToday().isEmpty());
 		
 		// Un día más y expira.
 		user.lastPasswordChanged = substract(user.lastPasswordChanged, 1);
 		user.save();
-		assertFalse(PasswordPolicy.usersWithExpiredPasswords().isEmpty());
+		assertFalse(PasswordPolicy.usersWithPasswordsExpiringToday().isEmpty());
     }
     
     /** espera un momento para que cambie el timestamp y activa una policy */

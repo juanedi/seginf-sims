@@ -32,7 +32,7 @@ public class PasswordExpiredNotificationsJob extends Job {
 	
 	public void doJob() {
 		if (PasswordPolicy.current() != null) {
-			List<User> expiredUsers = PasswordPolicy.usersWithExpiredPasswords();
+			List<User> expiredUsers = PasswordPolicy.usersWithPasswordsExpiringToday();
 			for (User user : expiredUsers) {
 				accountingLogger.logPasswordExpired(user);
 				notificationService.broadcastPasswordExpired(user);
