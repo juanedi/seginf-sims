@@ -27,8 +27,9 @@ public class Password extends Model {
     @JoinColumn(name="user_id", nullable = false)
     public User user;
     
-    @Column(name = "password", nullable = false)
-    public String password;
+    /** guardamos los hash sha512 */
+    @Column(name = "password_hash", nullable = false)
+    public String passwordHash;
     
     @Column(name = "date_modified", nullable = false)
     public Date dateModified;
@@ -38,9 +39,13 @@ public class Password extends Model {
             Date dateModified) {
 
          this.user = user;
-         this.password = Crypto.passwordHash(password, HashType.SHA512);
+         this.passwordHash = Crypto.passwordHash(password, HashType.SHA512);
          this.dateModified = dateModified;
      }
-
+    
+    /** hashea para comparación con el valor de una clave histórica */
+    public static String hash(final String password) {
+    	return Crypto.passwordHash(password, HashType.SHA512);
+    }
     
 }

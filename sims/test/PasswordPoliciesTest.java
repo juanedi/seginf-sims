@@ -60,19 +60,19 @@ public class PasswordPoliciesTest extends UnitTest {
     	String validPass = "12e@SS";
     	
 		// simulo que la clave anterior es igual a la nueva.
-        user.passwords.add(new models.Password(user, validPass, ISODateUtils.parse("2010-01-01")));
+        user.oldPasswords.add(new models.Password(user, validPass, ISODateUtils.parse("2010-01-01")));
         user.save();
         assertFalse(aPolicy.validate(user, validPass));
         
 		// ahora la anteúltima es igual a la nueva.
         // también falla porque la política pide chequear 2.
-        user.passwords.add(new models.Password(user, "22e@SS", ISODateUtils.parse("2010-01-02")));
+        user.oldPasswords.add(new models.Password(user, "22e@SS", ISODateUtils.parse("2010-01-02")));
         user.save();
         assertFalse(aPolicy.validate(user, validPass));
         
 		// ahora la que es igual es la antepenúltima.
         // la validación es exitosa.
-        user.passwords.add(new models.Password(user, "33e@SS", ISODateUtils.parse("2010-01-03")));
+        user.oldPasswords.add(new models.Password(user, "33e@SS", ISODateUtils.parse("2010-01-03")));
         user.save();
         assertTrue(aPolicy.validate(user, validPass));
     }

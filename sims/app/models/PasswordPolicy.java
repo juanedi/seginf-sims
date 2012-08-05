@@ -133,11 +133,11 @@ public class PasswordPolicy extends Model {
     	boolean ret = checkFormat(newPassword);
     	
     	// chequeo que no coincida con las últimas N
-    	String passwordHash = Crypto.passwordHash(newPassword, HashType.SHA512);
+    	String passwordHash = Password.hash(newPassword);
     	List<Password> lastPasswords = getLastPasswords(user, differentToLast);
     	
 		for (Password p : lastPasswords){
-			if (p.password.equals(passwordHash)){
+			if (p.passwordHash.equals(passwordHash)){
     			ret = false;
     		}
         }
@@ -162,7 +162,7 @@ public class PasswordPolicy extends Model {
 	}
 	
 	private static List<Password> getLastPasswords(User user, int amount) {
-    	Query query = JPA.em().createQuery("select p from User u join u.passwords p where u = ?1 order by p.dateModified DESC"
+    	Query query = JPA.em().createQuery("select p from User u join u.oldPasswords p where u = ?1 order by p.dateModified DESC"
     			,Password.class);
     	query.setFirstResult(0);
     	query.setMaxResults(amount);

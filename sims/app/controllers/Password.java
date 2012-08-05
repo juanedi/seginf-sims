@@ -29,7 +29,7 @@ public class Password extends SecureController {
         render();
     }
 
-    public static void changePassword(@Required final String password,
+    public static void changePassword(@Required final String oldPassword,
             @Required final String newPassword,
             @Required final String newPasswordConfirmation) {
 
@@ -44,10 +44,10 @@ public class Password extends SecureController {
             	throw new IllegalArgumentException("Las passwords no coinciden.");
             }
             
-            if (newPassword.equals(password)) {
+            if (newPassword.equals(oldPassword)) {
             	throw new IllegalArgumentException("La nueva password es igual a la anterior.");
             }
-            if (!user.comparePassword(password)) {
+            if (!user.comparePassword(oldPassword)) {
             	throw new IllegalArgumentException("La password ingresada no es correcta.");
             }
             
@@ -60,7 +60,7 @@ public class Password extends SecureController {
             }
             
             user.setPassword(newPasswordConfirmation);
-            user.passwords.add(new models.Password(user,password,new Date()));
+            user.oldPasswords.add(new models.Password(user, oldPassword, new Date()));
             user.save();
             
             accountingLogger.logPasswordChange(user);

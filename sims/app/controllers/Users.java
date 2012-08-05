@@ -55,7 +55,7 @@ public class Users extends SecureController {
         
         String randomPassword = RandomPasswordUtils.generateRandomPassword(PasswordPolicy.current());
         user.setPassword(randomPassword);
-        user.passwords.add(new Password(user,randomPassword,new Date()));
+        user.oldPasswords.add(new Password(user,randomPassword,new Date()));
         
         
         Mailer.welcome(user, randomPassword);

@@ -80,15 +80,14 @@ public class User extends Model {
     
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("dateModified DESC")
-//    @BatchSize()
-    public List<Password> passwords;
+    public List<Password> oldPasswords;
     
     
     /** Creates the User. */
     public User() {
         this.apps = new LinkedList<App>();
         this.roles = new LinkedList<Role>();
-        this.passwords = new LinkedList<Password>();
+        this.oldPasswords = new LinkedList<Password>();
     }
     
     /** setea el username */
