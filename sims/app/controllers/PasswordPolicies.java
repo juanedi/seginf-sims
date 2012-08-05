@@ -44,6 +44,7 @@ public class PasswordPolicies extends SecureController {
         render(specialChars);
     }    
     
+    @Check(Role.SIMS_PASSWORD_POLICY_ROLE)
     public static void setActive(@Required final String policyName) {
     	try {
     		if (StringUtils.isEmpty(policyName)) {
