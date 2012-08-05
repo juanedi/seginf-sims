@@ -1,0 +1,76 @@
+\section{Protocolo de comunicación con aplicaciones}
+
+La comunicación con las aplicaciones cliente se realiza a través del broker de mensajes. El sistema envía mensajes
+por cada evento relacionado a una aplicación. La aplicación cliente, que escucha por medio de un listener, debe
+interpretar el mensaje e impactar los cambios como corresponda.
+Los mensajes se serializan es strings encodeado en UTF-8 formado por una lista de campos separados
+por comas. A su vez, hay campos que son listados entre corchetes de elementos separados por comas. Las fechas
+se escriben en formato ISO (yyyy-MM-dd). Se detalla a continuación la composición de los distintos tipos
+de mensajes enviados a las aplicaciones, y el nombre de las queues en donde se envían:
+
+\subsection{Nuevo Usuario}
+\begin{description}
+  \item[Queue asociada] \texttt{NOMBRE\_APP/NEW\_USER}
+  \item[Descripción del evento] se otorgó acceso a un usuario a la aplicación
+  \item[Campos] \ 
+    \begin{description}
+      \item[username] nombre de usuario
+      \item[firstName] primer nombre
+      \item[lastName] apellido
+      \item[hashType] tipo de hash utilizado para la clave (a modo de control, es el mismo de la aplicación)
+      \item[password] clave hasheada
+      \item[passwordExpiration] fecha de expiración de la clave
+      \item[roles] listado de roles del usuario para la aplicación
+    \end{description}
+  \item[Ejemplo] \texttt{mtinelli,Marcelo,Tinelli,SHA1,0DPiKuNIrrVmD8IUCuw1hQxNqZc=,2012-11-01,[ROL1]}
+\end{description}
+
+\subsection{Cambio de Clave}
+\begin{description}
+  \item[Queue asociada] \texttt{NOMBRE\_APP/CHANGE\_PASSWORD}
+  \item[Descripción del evento] cambió la clave de un usuario
+  \item[Campos] \ 
+    \begin{description}
+      \item[username] nombre de usuario
+      \item[hashType] tipo de hash utilizado para la clave (a modo de control, es el mismo de la aplicación)
+      \item[password] nueva clave hasheada
+      \item[passwordExpiration] fecha de expiración de la nueva clave
+    \end{description}
+  \item[Ejemplo] \texttt{dmaradona,SHA256,jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=,2013-02-01}
+\end{description}
+
+\subsection{Vencimiento de clave}
+\begin{description}
+  \item[Queue asociada] \texttt{NOMBRE\_APP/PASSWORD\_EXPIRED}
+  \item[Descripción del evento] expiró la clave de un usuario
+  \item[Campos] \ 
+    \begin{description}
+      \item[username] nombre de usuario
+      \item[hashType] tipo de hash utilizado para la clave (a modo de control, es el mismo de la aplicación)
+      \item[password] hash de la clave expirada (a modo de control, la aplicación ya lo posee)
+    \end{description}
+  \item[Ejemplo] \texttt{dmaradona,SHA256,jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=}
+\end{description}
+
+
+\subsection{Remoción de usuario}
+\begin{description}
+  \item[Queue asociada] \texttt{NOMBRE\_APP/DELETE\_USER}
+  \item[Descripción del evento] se revocó acceso a un usuario para la aplicación
+  \item[Campos] \ 
+    \begin{description}
+      \item[username] nombre de usuario
+    \end{description}
+  \item[Ejemplo] \texttt{mtinelli}
+\end{description}
+
+\subsection{Cambio de roles}
+\begin{description}
+  \item[Queue asociada] \texttt{NOMBRE\_APP/CHANGE\_ROLES}
+  \item[Descripción del evento] se modificaron los roles de un usuario en la aplicación
+  \item[Campos] \ 
+    \begin{description}
+      \item[roles] listado completo de roles actualizados. incluye los que mantiene y los nuevos.
+    \end{description}
+  \item[Ejemplo] \texttt{dmaradona,[ROL1,ROL3]}
+\end{description}
