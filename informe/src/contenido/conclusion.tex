@@ -2,18 +2,23 @@
 
 Respecto a la elección de la tecnología creemos que fueron adecuadas las decisiones tomadas, el uso del framework play nos dio velocidad de desarrollo y nos permitió preocuparnos simplemente de la lógica del sistema, asistiéndonos en lograr una aplicación portable a distintos sistemas operativos y a distintos motores de base de datos.
 
-El Broker de mensajes también fue una buena elección pudimos resolver fácilmente el requerimiento de poder enviar mensajes a las aplicaciones sin necesidad de que estén disponibles. Se pudo implementar una comunicación segura entre las aplicaciones gracias al soporte SSL que brinda RabbitMQ y además queda abierta la posibilidad de integración con clientes desarrollados con otros lenguajes gracias a su gran integración.
+Creemos que el broker de mensajes también fue una buena elección: pudimos resolver fácilmente el requerimiento de poder enviar mensajes a las aplicaciones sin necesidad de que estén disponibles. Se pudo implementar una comunicación segura entre las aplicaciones gracias al soporte SSL que brinda RabbitMQ y además queda abierta la posibilidad de integración con clientes desarrollados con otros lenguajes gracias a su gran integración.
 
-Uno de los temas que más nos preocupó al momento del análisis fue la necesidad, dado los requerimientos, de guardar las claves sin importar el método de almacenamiento de cada aplicación. Eso nos llevo a tomar la decisión de diseño de guardar las claves de múltiples maneras. Si bien, en un principio lo vimos como una debilidad, dado que la seguridad de la solución está dada por la peor complejidad de almacenamiento, entendemos que al ser una solución pensada para centralizar los usuarios que acceden a sistemas de una empresa la misma tiene que tener políticas que no permitan el guardado débil de las claves. 
+Uno de los temas que más nos preocupó al momento del análisis fue la necesidad, dado los requerimientos, de guardar las claves sin importar el método de almacenamiento de cada aplicación. Eso nos llevo a tomar la decisión de diseño de guardar las claves de múltiples maneras. En un principio lo vimos como una debilidad, dado que la seguridad de la solución está dada por la peor complejidad de almacenamiento. De todos modos, entendemos que al ser una solución pensada para centralizar los usuarios que acceden a sistemas de una organización, se supone que la misma tiene debería tener políticas que no permitan el guardado débil de las claves.
 
-Igualmente nos parece una mejor solución brindar la autenticación desde el sistema central en lugar de replicar los datos del usuario a cada aplicación. Una de las desventajas que vemos del sistema centralizado e que se aumentan los puntos de ataque dado que si un atacante logra vulnerar alguna de las aplicaciones tiene acceso al resto. 
+Igualmente nos parece una mejor solución brindar la autenticación desde el sistema central en lugar de replicar los datos del usuario a cada aplicación. Una de las desventajas que vemos en la solución actual es que se aumentan los puntos de ataque dado que si un atacante logra vulnerar alguna de las aplicaciones podría obtener acceso al resto (incluso el administrador). Esto implicaría, de todas formas, un cambio importante el la lógica de autenticación de las aplicaciones.
 
+En resumen, dentro de las oportunidades de mejora que observamos podemos destacar:
 
+\begin{itemize}
+  \item Agregar la posibilidad de modificar y agregar roles una vez que la aplicación fue configurada.
+  \item Desarrollar un artefacto \textit{stand-alone} para desplegar fuera de las aplicaciones cliente, que se
+  		encargue de recibir los mensajes del broker, para minimizar los cambios sobre cada aplicación.
+  \item Autenticación centralizada a través del administrador. Podría brindarse una biblioteca para facilitar
+  		la implementación de un protocolo de autenticación a través de la aplicación central.
+\end{itemize}
 
-
-Mejoras
-Agregar la posibilidad de modificar agregar roles una vez que la aplicación fue 
-
-
-
-
+% Dentro de las oportunidades de mejora que vemos para la solución podemos destacar:
+% Agregar la posibilidad de modificar/agregar roles una vez que la aplicación fue configurada.
+% El manejo centralizado de Login para achicar el frente de ataque.
+% La creación de una aplicación para instalar en los clientes que sea capaz de recibir mensajes del broker y que sepa comunicarse con diferentes motores de base de datos para evitar tener que modificar las aplicaciones clientes.
