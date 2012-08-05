@@ -61,13 +61,25 @@
         </property>
     </bean>
  
-     <bean id="passwordExpiredRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+    <bean id="passwordExpiredRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
         <constructor-arg index="0" ref="rabbitConnectionFactory" />
         <property name="routingKey" value="PASSWORD_EXPIRED" />
         <property name="messageConverter">
             <bean class="services.SimsMessageConverter">
                 <constructor-arg index="0">
                     <bean class="ar.uba.dc.seginf.sims.marshallers.PasswordExpiredMessageMarshaller" />
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+ 
+    <bean id="userRemovedRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <constructor-arg index="0" ref="rabbitConnectionFactory" />
+        <property name="routingKey" value="DELETE_USER" />
+        <property name="messageConverter">
+            <bean class="services.SimsMessageConverter">
+                <constructor-arg index="0">
+                    <bean class="ar.uba.dc.seginf.sims.marshallers.UserRemovedMessageMarshaller" />
                 </constructor-arg>
             </bean>
         </property>
@@ -87,6 +99,7 @@
         <constructor-arg index="1" ref="rolesChangedRabbitTemplate" />
         <constructor-arg index="2" ref="passwordChangedRabbitTemplate" />
         <constructor-arg index="3" ref="passwordExpiredRabbitTemplate" />
+        <constructor-arg index="4" ref="userRemovedRabbitTemplate" />
     </bean>
 
 	<bean id="accountingLogger" class="services.DatabaseAccountingLogger">

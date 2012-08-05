@@ -14,6 +14,7 @@ import org.springframework.amqp.core.MessagePostProcessor;
 import ar.uba.dc.seginf.sims.MessageType;
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
 import ar.uba.dc.seginf.sims.messages.PasswordExpiredMessage;
+import ar.uba.dc.seginf.sims.messages.UserRemovedMessage;
 import ar.uba.dc.seginf.sims.messages.UserRolesChangedMessage;
 import ar.uba.dc.seginf.sims.messages.PasswordChangedMessage;
 
@@ -37,21 +38,25 @@ public class RMQAppNotificationService implements AppNotificationService {
     private final AmqpTemplate userRolesChangedTemplate;
     private final AmqpTemplate passwordChangedTemplate;
     private final AmqpTemplate passwordExpiredTemplate;
+    private final AmqpTemplate userRemovedTemplate;
     
     /** Creates the RMQAppNotificationService. */
     public RMQAppNotificationService(final AmqpTemplate newUserTemplate,
                                      final AmqpTemplate userRolesChagedTemplate,
                                      final AmqpTemplate passwordChangedTemplate,
-                                     final AmqpTemplate passwordExpiredTemplate) {
+                                     final AmqpTemplate passwordExpiredTemplate,
+                                     final AmqpTemplate userRemovedTemplate) {
         Validate.notNull(newUserTemplate);
         Validate.notNull(userRolesChagedTemplate);
         Validate.notNull(passwordChangedTemplate);
         Validate.notNull(passwordExpiredTemplate);
+        Validate.notNull(userRemovedTemplate);
 
         this.newUserTemplate = newUserTemplate;
         this.userRolesChangedTemplate = userRolesChagedTemplate;
         this.passwordChangedTemplate = passwordChangedTemplate;
         this.passwordExpiredTemplate = passwordExpiredTemplate;
+        this.userRemovedTemplate = userRemovedTemplate;
     }
     
     /** @see AppNotificationService#notifyNewUser(User, App) */
@@ -101,7 +106,8 @@ public class RMQAppNotificationService implements AppNotificationService {
     /** @see AppNotificationService#notifyUserRemove(User, App) */
     @Override
     public void notifyUserRemove(User user, App app) {
-        throw new NotImplementedException();
+    	UserRemovedMessage msg = new UserRemovedMessage(user.username);
+		userRemovedTemplate.convertAndSend(app.name, MessageType.DELETE_USER.name(), msg, nullPostProcessor());
     }
 
     private static List<String> roleNames(final List<Role> roles) {
