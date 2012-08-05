@@ -16,21 +16,18 @@ public class PasswordChangedMessage implements Message {
     private String username;
     private String hashType;    
     private String password;
-    private Date serverDate;
-    private Integer daysValid;
+    private Date passwordExpiration;
     
     public PasswordChangedMessage(final String username, final String hashType, final String password, 
-    							  final Date serverDate, final Integer daysValid) {
+    							  final Date serverDate) {
 		Validate.notEmpty(username);
 		Validate.notNull(hashType);
 		Validate.notNull(password);
 		Validate.notNull(serverDate);
-		Validate.notNull(daysValid);
 		this.username = username;
 		this.hashType = hashType;
 		this.password = password;
-		this.serverDate = serverDate;
-		this.daysValid = daysValid;
+		this.passwordExpiration = serverDate;
     }
 
     /** Returns the username. */
@@ -48,13 +45,9 @@ public class PasswordChangedMessage implements Message {
         return password;
     }
     
-    /** Moment in which the password was changed */
-    public Date getServerDate() {
-    	return serverDate;
+    /** Date the new password expires */
+    public Date getPasswordExpiration() {
+    	return passwordExpiration;
     }
     
-    /** */
-    public Integer getDaysValid() {
-    	return daysValid;
-    }
 }

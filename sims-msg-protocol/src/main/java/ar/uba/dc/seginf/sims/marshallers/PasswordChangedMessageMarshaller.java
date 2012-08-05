@@ -13,8 +13,7 @@ public class PasswordChangedMessageMarshaller extends RegexpMessageMarshaller<Pa
     private static final String PATTERN = "([\\w]+),"  				// username
             							+ "([\\w]+),"               // hashType
             							+ "((?:[\\w]|\\+|/|=)+),"    // password hasheado
-            							+ "((?:[\\d]|\\-)+),"				// fecha de cambio
-            							+ "([\\w]+)";   			// d’as de validez
+            							+ "((?:[\\d]|\\-)+)";		// fecha de expiraci—n
 
     /** Creates the NewUserMessageMarshaller. */
     public PasswordChangedMessageMarshaller() {
@@ -28,8 +27,7 @@ public class PasswordChangedMessageMarshaller extends RegexpMessageMarshaller<Pa
         String hashType = matcher.group(2);
         String password = matcher.group(3);
         Date date = parseDate(matcher.group(4));
-        Integer daysValid = Integer.valueOf(matcher.group(5));
-        return new PasswordChangedMessage(username, hashType, password, date, daysValid);
+        return new PasswordChangedMessage(username, hashType, password, date);
     }
 
     /** @see RegexpMessageMarshaller#doMarshall(Message) */
@@ -39,8 +37,7 @@ public class PasswordChangedMessageMarshaller extends RegexpMessageMarshaller<Pa
                 msg.getUsername(),
                 msg.getHashType(), 
                 msg.getPassword(),
-                ISODateUtils.format(msg.getServerDate()),
-                String.valueOf(msg.getDaysValid()));
+                ISODateUtils.format(msg.getPasswordExpiration()));
     }
     
     private static Date parseDate(final String dateStr) {

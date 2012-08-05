@@ -72,7 +72,7 @@ public class RMQAppNotificationService implements AppNotificationService {
             if (!app.name.equals(App.SIMS_APP_NAME)) {
             	PasswordChangedMessage msg = new PasswordChangedMessage(user.username, app.hashType.name(), 
         																user.getHashedPassword(app.hashType),
-        																new Date(), PasswordPolicy.current().duration);    
+        																PasswordPolicy.current().expirationDateForNewPassword());    
             	passwordChangedTemplate.convertAndSend(app.name, MessageType.CHANGE_PASSWORD.name(), msg, nullPostProcessor());
             }
         }

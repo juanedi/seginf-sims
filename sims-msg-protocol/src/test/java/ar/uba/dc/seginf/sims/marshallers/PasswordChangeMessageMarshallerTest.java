@@ -23,20 +23,19 @@ public class PasswordChangeMessageMarshallerTest {
 	
 	@Test
 	public final void testMarshall() {
-		PasswordChangedMessage msg = new PasswordChangedMessage("pepe", "SHA512", "123", sampleDate(), 2);
+		PasswordChangedMessage msg = new PasswordChangedMessage("pepe", "SHA512", "123", sampleDate());
 		String str = marshaller.marshall(msg);
-		assertEquals("pepe,SHA512,123,1989-01-06,2", str);
+		assertEquals("pepe,SHA512,123,1989-01-06", str);
 	}
 	
 	@Test
 	public final void testUnmarshall() {
-		PasswordChangedMessage msg = marshaller.unMarshall("pepe,SHA512,123,1989-01-06,2");
+		PasswordChangedMessage msg = marshaller.unMarshall("pepe,SHA512,123,1989-01-06");
 		Date expectedDate = DateUtils.truncate(sampleDate(), Calendar.DAY_OF_MONTH);
 		assertEquals("pepe", msg.getUsername());
 		assertEquals("SHA512", msg.getHashType());
 		assertEquals("123", msg.getPassword());
-		assertEquals(expectedDate, msg.getServerDate());
-		assertEquals(Integer.valueOf(2),msg.getDaysValid());
+		assertEquals(expectedDate, msg.getPasswordExpiration());
 	}
 	
 	/** fecha de prueba: 6 de enero de 1989, 22 hs. */
