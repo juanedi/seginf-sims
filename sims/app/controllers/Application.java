@@ -225,10 +225,12 @@ public class Application extends SecureController {
                         if (!roles.contains(role)) {
                             changed = true;
                             toRemove.add(role);
-                            accountingLogger.logRoleChanged(connectedUser(), user, role);
                         }
                     }
                     user.roles.removeAll(toRemove);
+                    for (Role role : toRemove) {
+						accountingLogger.logRoleChanged(connectedUser(), user, role);
+					}
                     
                     if (changed) {
                         modifiedUsers.add(user);
