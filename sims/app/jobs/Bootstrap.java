@@ -60,7 +60,7 @@ public class Bootstrap extends Job {
 
         /*------- USERS -------*/
         User admin = new User();
-        admin.email = "seginfadmistrador@gmail.com";
+        admin.email = "seginfapp@gmail.com";
         admin.firstName = "Administrador";
         admin.lastName = "de Identidades";
         admin.username = "admin";
