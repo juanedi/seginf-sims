@@ -1,5 +1,6 @@
 package services;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -49,6 +50,16 @@ public class LDAPService {
         }
     }
 
+    public void removeUser(final User user) {
+    	// borramos al usuario de todos los grupos
+    	user.groups = Collections.emptyList();
+    	updateRoles(user);
+    	
+    	// borramos al usuario
+    	Name name = userDN(user);
+    	ldapTemplate.unbind(name);
+    }
+    
     public void updateRoles(final User user) {
         List<String> userGroups = user.groups;
         List<String> allGroups = allGroups();

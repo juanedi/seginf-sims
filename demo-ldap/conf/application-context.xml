@@ -56,6 +56,17 @@
         </constructor-arg>
     </bean>
 
+    <bean id="userRemovedListener" class="ar.uba.dc.seginf.sims.util.MessageListenerFactoryBean">
+        <constructor-arg index="0">
+            <bean class="services.UserRemovedMessageProcessor">
+                <constructor-arg index="0" ref="ldapService" />
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <bean class="ar.uba.dc.seginf.sims.marshallers.UserRemovedMessageMarshaller" />
+        </constructor-arg>
+    </bean>
+
     <bean id="rolesChangedListener" class="ar.uba.dc.seginf.sims.util.MessageListenerFactoryBean">
         <constructor-arg index="0">
             <bean class="services.RolesChangedMessageProcessor">
@@ -91,6 +102,7 @@
 
     <rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="newUserListener" queue-names="${rmq.queues.newUser}" />
+        <rabbit:listener ref="userRemovedListener" queue-names="${rmq.queues.userRemoved}" />
         <rabbit:listener ref="rolesChangedListener" queue-names="${rmq.queues.rolesChanged}" />
         <rabbit:listener ref="passwordChangedListener" queue-names="${rmq.queues.passwordChanged}" />
         <rabbit:listener ref="passwordExpiredListener" queue-names="${rmq.queues.passwordExpired}" />
