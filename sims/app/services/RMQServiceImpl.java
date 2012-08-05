@@ -60,7 +60,7 @@ public class RMQServiceImpl implements RMQService {
         admin.declareExchange(new TopicExchange(appName));
         for (MessageType messageType : MessageType.values()) {
             // se crea una queue para cada tipo de mensaje,
-            // y se routean los mensaje s ala queue según el
+            // y se routean los mensajes a la queue según el
             // tipo de mensaje.
             String queueName = appName + "/" + messageType;
             admin.declareQueue(new Queue(queueName));

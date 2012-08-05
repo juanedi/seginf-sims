@@ -11,7 +11,6 @@ public class ModelTest extends UnitTest {
     private App app;
     private Role rol1;
     private Role rol2;
-    private PasswordPolicy passPolicy;
 
     /** init */
     @Before

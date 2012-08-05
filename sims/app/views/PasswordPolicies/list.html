@@ -11,6 +11,13 @@
 	            <tr>
 	                <th>Activa</th>
 	                <th>Nombre</th>
+	                <th>Período validez</th>
+	                <th>Longitud mínima</th>
+	                <th>Comparar con anteriores</th>
+	                <th>Mayúsculas</th>
+	                <th>Minúsculas</th>
+	                <th>Números</th>
+	                <th>Caracteres especiales</th>
 	            </tr>
 	        </thead>
 	        <tbody>
@@ -24,6 +31,13 @@
 			       		>
 		       		</td>
 			       <td>${pp.name}</td>
+			       <td>${pp.duration}</td>
+			       <td>${pp.passwordLength}</td>
+			       <td>${pp.differentToLast}</td>
+			       <td><input type="checkbox" disabled="disabled" #{if pp.useUpperCaseLetters} checked="checked" #{/if}></td>
+			       <td><input type="checkbox" disabled="disabled" #{if pp.useLowerCaseLetters} checked="checked" #{/if}></td>
+			       <td><input type="checkbox" disabled="disabled" #{if pp.useNumbers} checked="checked" #{/if}></td>
+			       <td><input type="checkbox" disabled="disabled" #{if pp.useSpecialCharsLetters} checked="checked" #{/if}></td>
 			    </tr>
 			    #{/list}
 	        </tbody>
