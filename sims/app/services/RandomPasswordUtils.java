@@ -88,31 +88,26 @@ public class RandomPasswordUtils {
 		// genero claves 5 characteres más largas que el mínimo
 		int missing = policy.passwordLength - upperCaseCount - lowerCaseCount - numericCount - specialCount + 5;
 		
-		if (missing < 0) {
-			throw new IllegalStateException("la política es inconsistente.");
+		if (missing >= 0) {
+			int moreUpper = randomInt(missing);
+			upperCaseCount += moreUpper;
+			missing -= moreUpper;
+			
+			int moreLower = randomInt(missing);
+			lowerCaseCount += moreLower;
+			missing -= moreLower;
+			
+			int moreNumeric = randomInt(missing);
+			numericCount += moreNumeric;
+			missing -= moreNumeric;
+			
+			numericCount += missing;
 		}
-		
-		int moreUpper = randomInt(missing);
-		upperCaseCount += moreUpper;
-		missing -= moreUpper;
-		
-		int moreLower = randomInt(missing);
-		lowerCaseCount += moreLower;
-		missing -= moreLower;
-		
-		int moreNumeric = randomInt(missing);
-		numericCount += moreNumeric;
-		missing -= moreNumeric;
-
-		numericCount += missing;
 		
 		return new Integer[] {upperCaseCount, lowerCaseCount, numericCount, specialCount};
 	}
 
 	private static void addAllChars(List<Character> chars, String st) {
-//		char[] charArray = randomUpperCase(upperCaseCount).toCharArray();
-//		List<Character> asList = Arrays.asList(ArrayUtils.toObject(charArray));
-//		chars.addAll(asList);
 		chars.addAll(Arrays.asList(ArrayUtils.toObject(st.toCharArray())));
 	}
 }
