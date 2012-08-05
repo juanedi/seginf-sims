@@ -19,15 +19,15 @@ public class PasswordChangedMessage implements Message {
     private Date passwordExpiration;
     
     public PasswordChangedMessage(final String username, final String hashType, final String password, 
-    							  final Date serverDate) {
+    							  final Date passwordExpiration) {
 		Validate.notEmpty(username);
 		Validate.notNull(hashType);
 		Validate.notNull(password);
-		Validate.notNull(serverDate);
+		Validate.notNull(passwordExpiration);
 		this.username = username;
 		this.hashType = hashType;
 		this.password = password;
-		this.passwordExpiration = serverDate;
+		this.passwordExpiration = passwordExpiration;
     }
 
     /** Returns the username. */

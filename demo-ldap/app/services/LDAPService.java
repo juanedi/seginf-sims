@@ -71,6 +71,14 @@ public class LDAPService {
         return ldapTemplate.authenticate("ou=users", filter.encode(), password);
     }
     
+    /** cambia la clave de un usuario */
+    public void changePassword(final User user) {
+        Name userDN = userDN(user);
+        DirContextOperations ctx = ldapTemplate.lookupContext(userDN);
+        ctx.setAttributeValue("userpassword", "{MD5}" + user.password); // la pass ya viene hasheada al momento de crear.
+        ldapTemplate.modifyAttributes(ctx);
+    }
+    
     /** Listado de grupos del usuario. */
     public List<String> listGroups(final String username) {
         Validate.notEmpty(username);
