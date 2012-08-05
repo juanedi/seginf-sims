@@ -1,12 +1,15 @@
 package ar.uba.dc.seginf.sims.marshallers;
 
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
 
 import ar.uba.dc.seginf.sims.messages.NewUserMessage;
+import ar.uba.dc.seginf.sims.util.ISODateUtils;
 
 /**
  * Parsea y serializa mensajes de usuario nuevo.
@@ -25,6 +28,7 @@ public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMes
                                         + "([\\w]+),"               // lastName
                                         + "([\\w]+),"               // hashType
                                         + "((?:[\\w]|\\+|/|=)+),"   // password hasheado
+                                        + "((?:[\\d]|\\-)+),"		// fecha de vencimiento de clave
                                         + "\\[((?:[\\w],?)*)\\]";   // listado de roles separados por coma
                                                                     // se captura un grupo con todo el listado
                                                                     // el '?' se usa para no capturar el \\w de
@@ -43,9 +47,10 @@ public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMes
         String lastName = matcher.group(3);
         String hashType = matcher.group(4);
         String password = matcher.group(5);
-        String roleList = matcher.group(6);
+        Date passwordExpiration = parseDate(matcher.group(6));
+        String roleList = matcher.group(7);
         List<String> roles = Arrays.asList(StringUtils.split(roleList, ","));
-        return new NewUserMessage(username, firstName, lastName, hashType, password, roles);
+        return new NewUserMessage(username, firstName, lastName, hashType, password, passwordExpiration, roles);
     }
 
     /** @see RegexpMessageMarshaller#doMarshall(Message) */
@@ -56,9 +61,17 @@ public class NewUserMessageMarshaller extends RegexpMessageMarshaller<NewUserMes
                 msg.getFirstName(),
                 msg.getLastName(),
                 msg.getHashType(), 
-                msg.getPassword(), 
+                msg.getPassword(),
+                ISODateUtils.format(msg.getPasswordExpiration()),
                 "[" + listJoin(msg.getRoles().toArray()) + "]");
     }
 
-
+    private static Date parseDate(final String dateStr) {
+    	try {
+			return ISODateUtils.parse(dateStr);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+    }
+    
 }

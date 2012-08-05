@@ -31,7 +31,7 @@ public class PasswordChangedMessage implements Message {
 		this.password = password;
 		this.serverDate = serverDate;
 		this.daysValid = daysValid;
-}
+    }
 
     /** Returns the username. */
     public String getUsername() {

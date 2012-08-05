@@ -155,6 +155,14 @@ public class PasswordPolicy extends Model {
 		return User.find("lastPasswordChanged < ?1", limitDate(current())).fetch();	
     }
     
+    /** retorna la fecha de expiración para nuevas claves. es decir, hoy + tiempo_expiracion */
+    public Date expirationDateForNewPassword() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(new Date());
+    	cal.add(Calendar.DAY_OF_YEAR, duration);
+    	return cal.getTime();
+    }
+    
 	private static Date limitDate(PasswordPolicy policy) {
 		Calendar limitDate = Calendar.getInstance();
 		limitDate.add(Calendar.DATE, (-1) * policy.duration);

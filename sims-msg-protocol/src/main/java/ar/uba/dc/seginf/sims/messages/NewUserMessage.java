@@ -1,6 +1,7 @@
 package ar.uba.dc.seginf.sims.messages;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
@@ -19,22 +20,27 @@ public class NewUserMessage implements Message {
     private String lastName;
     private String hashType;
     private String password;
+    private Date passwordExpiration;
     private List<String> roles;
     
     /** Creates the NewUserMessage. */
     public NewUserMessage(final String username, final String firstName, final String lastName,
-                          final String hashType, final String password, final List<String> roles) {
+                          final String hashType, final String password, final Date passwordExpiration,
+                          final List<String> roles) {
         Validate.notEmpty(username);
         Validate.notEmpty(firstName);
         Validate.notEmpty(lastName);
         Validate.notNull(hashType);
         Validate.notNull(password);
+        Validate.notNull(passwordExpiration);
         Validate.notNull(roles);
+        Validate.notNull(passwordExpiration);
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hashType = hashType;
         this.password = password;
+        this.passwordExpiration = passwordExpiration;
         this.roles = roles;
     }
 
@@ -63,7 +69,12 @@ public class NewUserMessage implements Message {
         return password;
     }
 
-    /** Returns the roles. */
+    /** Returns the passwordExpiration */
+    public Date getPasswordExpiration() {
+		return passwordExpiration;
+	}
+
+	/** Returns the roles. */
     public List<String> getRoles() {
         return Collections.unmodifiableList(roles);
     }
