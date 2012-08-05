@@ -1,4 +1,4 @@
-package util;
+package jobs;
 import models.App;
 import models.Hash;
 import models.PasswordPolicy;

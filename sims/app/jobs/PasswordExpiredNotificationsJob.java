@@ -1,10 +1,12 @@
-package util;
+package jobs;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import notifiers.Mailer;
 
 import org.apache.commons.lang.time.DateUtils;
 
@@ -23,7 +25,7 @@ import services.AppNotificationService;
  * @author jedi
  */
 @Every("1d")
-public class ExpiredPasswordNotificationsJob extends Job {
+public class PasswordExpiredNotificationsJob extends Job {
 
 	@Inject static AccountingLogger accountingLogger;
 	@Inject static AppNotificationService notificationService; 
@@ -32,9 +34,9 @@ public class ExpiredPasswordNotificationsJob extends Job {
 		if (PasswordPolicy.current() != null) {
 			List<User> expiredUsers = PasswordPolicy.usersWithExpiredPasswords();
 			for (User user : expiredUsers) {
-				System.out.println("tu vieja");
 				accountingLogger.logPasswordExpired(user);
 				notificationService.broadcastPasswordExpired(user);
+				Mailer.passwordExpired(user);
 			}
 		}
 	}

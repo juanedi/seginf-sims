@@ -21,4 +21,18 @@ public class Mailer extends play.mvc.Mailer {
         send(user, generatedPassword);
     }
     
+    public static void passwordExpired(final User user) {
+        setSubject("Su clave ha expirado");
+        addRecipient(user.email);
+        setFrom(FROM);
+        send(user);    	
+    }
+    
+    public static void passwordNearExpiration(final User user, final int daysUntilExpires) {
+        setSubject("Su clave está próxima a vencer");
+        addRecipient(user.email);
+        setFrom(FROM);
+        send(user, daysUntilExpires);    	
+    }
+    
 }
