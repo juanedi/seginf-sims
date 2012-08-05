@@ -1,0 +1,144 @@
+\section{Descripción de la Solución}
+
+La función principal del sistema de administración de identidades es la administración centralizada de usuarios y roles para diversas aplicaciones. La información generada es enviada a las aplicaciones cliente a través del broker de mensajes.
+
+Por cada acción realizada el sistema registra logs de auditoría que posteriormente pueden ser consultados.
+Para el acceso a estas funcionalidades el sistema tiene definido un esquema de roles, practicamente un rol por funcionalidad, que es detallado a continuación. 
+
+El sistema cuenta en un comienzo con un usuario administrador (admin), el mismo tiene asociado todos los roles.
+
+Respecto a la seguridad la aplicación de administración chequea su clave utilizando como hash SHA512, pero al igual que el resto de las aplicaciones, la clave está persistida en la base en todos los Hash definidos.
+
+Los usuarios no son deshabilitados pero no se pueden loguear si su clave ha expirado, la clave del administrador no expira, pero se recomienda que cumpla con las medidas de seguridad dada la importancia de su rol.
+
+El sistema envía un mail a cada usuario 15 y 7 días antes del vencimiento de la clave y el día de vencimiento, y además, cuando faltan 15 días al momento del login muestra un mensaje recordándole el vencimiento de su clave.  
+
+\subsection{Esquema de roles}
+
+En el sistema de administración de identidades están definidos los siguientes roles:
+
+\begin{itemize}
+\item Base: Permite a cualquier usuario cambiar su clave, si bien no es un rol persistido cualquier usuario creado tiene permiso de cambiar su clave
+\item Creación de usuarios
+\item Creación de aplicaciones: Permite el alta de la aplicación, alta de roles y la asignación de usuarios a aplicaciones asociándolo a los roles que tiene definidos.	
+\item Politica de Claves: Permite dar de alta o modificar políticas de claves
+\item Auditoria: Permite consultar los eventos registrados para la auditoría
+\end{itemize}
+
+\subsection{Creación de Usuarios}
+
+Para el alta de usuarios se ingresa usuario, email, nombre y apellido.
+El sistema envía un mail al usuario con los datos ingresados más una clave generada aleatoriamente. El rol asociado al usuario para el sistema administrador es el base. 
+
+\subsection{Alta de aplicaciones}
+Al dar de alta una nueva aplicación es necesario el alta de la misma en el administrador, la creación de las queues en el broker de mensajes y la configuración en las aplicaciones cliente.
+ 
+\subsubsection{Configuración en el administrador}
+En primer lugar le damos el alta ingresando nombre, usuario a cargo y el método de encriptación de clave.
+
+En esta instancia estamos en condiciones de pasar a la configuración de la aplicación donde se crean los roles que son únicos por aplicación y se configura la clave para acceder al broker de mensajes.
+
+Se brinda la posibilidad de setear roles por defecto, estos roles serán aplicados automáticamente cuando se asignen usuarios a la aplicación. 
+
+Al confirmar la configuración se crean las queues en el broker de mensajes utilizando la clave ingresada y como nombre de usuario el nombre dado a la aplicación. Desde este momento cualquier mensaje que sea generado para la aplicación será enviado al broker y quedará almacenado a la espera de ser consumido.
+
+\subsubsection{Configuración de aplicación cliente}
+En cada aplicación cliente hay que escribir los listeners por cada mensaje que se quiera implementar y se debe configurar el acceso a cada queue en un archivo de propiedades. 
+
+\subsection{Política de Claves}
+La política de claves nos permite definir
+
+\begin{itemize}
+  \item longitud de la clave
+  \item Tipo de caracteres de los cuales debe tener al menos una ocurrencia
+  \begin{itemize}
+    \item minúsculas (a-z)  
+    \item mayúsculas (A-Z)
+    \item números (0-9)
+    \item caracteres especiales (@\#\$\%)
+  \end{itemize}
+  \item duración (en cantidad de días)
+  \item cantidad de claves diferentes sin repetición
+\end{itemize}
+
+Esta política es validada en la creación de usuarios y en los cambios de clave. 
+
+\subsection{Auditoría}
+
+Hay determinados eventos que registran log para la posterior auditoría, en un principio el sistema registra
+
+\begin{itemize}
+  \item Cambio de clave
+  \item Clave expirada
+  \item Creación de un usuario
+  \item Creación de una aplicación
+  \item Asignación o revocación de acceso de un usuario a una aplicación
+  \item Asignación o revocación de un rol a un usuario
+  \item Nueva política de complejidad de clave
+  \item Cambio de la política de complejidad de claves
+\end{itemize}
+
+Para la consulta de estos eventos es necesario ser un usuario con el rol auditor.
+
+Se puede filtrar por tipo de evento, rango de fechas, aplicación y usuario. %No entendí bien lo de usuarios relacionados
+
+\subsection{Protocolo de comunicación con aplicaciones}
+
+La comunicación con las aplicaciones cliente se realiza a través del broker de mensajes.
+Por cada acción que marca un cambio que es necesario que se actualice en alguna aplicación cliente, el sistema envía un mensaje al broker, la aplicación cliente que está escuchando por medio del listener ejecuta la acción si es que la tiene implementada.
+Cada tipo de mensaje tiene creada una queue en el broker por cada aplicación. 
+
+Los mensajes que el sistema envía son los siguientes:
+
+\subsubsection{Nuevo Usuario}
+Junto con los datos del usuario y los roles asignados se envía la fecha de expiración para que cada aplicación pueda notificar al usuario de acuerdo a la política que implemente.
+El tipo de hash es tomado de una enumeración, en este momento los implementados son MD5, SHA1, SHA256 y SHA512.
+
+  \begin{verbatim}
+    class NewUser
+        String username;
+        String firstName;
+        String lastName;
+        String hashType;
+        String password;
+        Date passwordExpiration;
+        List<String> roles;
+  \end{verbatim}
+
+\subsubsection{Cambio de Clave}
+Al igual que en la creación de usuario se envía la fecha de expiración de la clave 
+
+  \begin{verbatim}
+    class PasswordChangedMessage    
+        String username;
+        String hashType;    
+        String password;
+        Date passwordExpiration;
+  \end{verbatim}
+
+\subsubsection{Notificación de vencimiento de clave}
+Este mensaje es enviado automaticamente cuando la clave expiró
+
+  \begin{verbatim}
+    class PasswordExpiredMessage
+        String username;
+        String hashType;    
+        String password;
+  \end{verbatim}
+
+\subsubsection{Remoción de usuario}
+Este mensaje es enviado cuando un usuario es deshabilitado para una aplicación
+  \begin{verbatim}
+    class UserRemovedMessage
+        String username;
+  \end{verbatim}
+ 
+\subsubsection{Cambio de roles}
+Este mensaje se envía cuando hay algún cambio en la asignación de roles a un usuario.
+
+  \begin{verbatim}
+    class UserRolesChangedMessage
+        String username;
+        List<String> roles;
+  \end{verbatim}
+

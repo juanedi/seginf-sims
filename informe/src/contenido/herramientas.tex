@@ -1,1 +1,42 @@
 \section{Herramientas Utilizadas}
+
+A continuación se presentan las principales herramientas utilizadas, el criterio de elección estuvo basado en la utilidad para el proyecto, el conocimiento de los integrantes del grupo y además se privilegió a las herramientas open source.
+
+\subsection{Play! Framework}
+
+Una vez tomada la decisión de que la aplicación fuera web nos decidimos por el framework Play, principalmente por que se puede
+escribir código Java que es el lenguaje mayormente manejado por el grupo, otro de los motivos fue por la rapidez que se logra en el desarrollo de aplicaciones web.
+
+Play es un framework open source escrito en Java y Scala basado en el patrón de diseño model view controller y similar a Ruby on Rails o Django. Entre sus principales características se encuentran:
+
+\begin{itemize}
+\item Stateless
+\item Poca configuración, basado más en convención que en configuración.
+\item Integrado a JUnit	
+\item Se integra fácilmente con los principales IDE (Eclipse, Netbeans o IntelliJ).
+\end{itemize}
+
+\subsection{Rabbitmq}
+
+Al momento de la elección del broker de mensajes nos decidimos por RabbitMQ que es un broker de mensajes open source que implementa el estándard AMQP (Advanced Message Queuing Protocol), se integra perfectamente con Play y es multi plataforma. 
+Entre sus características principales se encuentran:
+
+\begin{itemize}
+\item Gateways para los protocolos HTTP, XMPP y STOMP.
+\item Servidores y Clientes en varios sistemas operativos y lenguajes.
+\item Fácil de usar.
+\end{itemize}
+ 
+\subsection{Motor de base de datos}
+
+Durante el ciclo de desarrollo se utilizó como motor de base de datos MySQL, pero una de las ventajas de play es que se adapta a cualquier motor de
+base de datos que posea un driver JDBC, por lo tanto sims puede ser utilizado con múltiples motores.
+
+\subsection{OpenLDAP}
+
+OpenLDAP es una implementación libre y open source del protocolo LDAP (Lightweight Directory Access Protocol), elegimos esta implementación por ser considerada un estandard.
+
+
+
+
+
