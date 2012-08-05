@@ -17,7 +17,7 @@
 			    #{list items:apps, as:'app'}
 			    <tr>
 			       <td>
-			         #{if app.owner.equals(user)}
+			         #{if app.owner.equals(loggedUser)}
 			             <a class="btn" href="@{Application.detail(app.name)}"><i class="icon-pencil"></i></a>
 			         #{/if}
 			       </td>

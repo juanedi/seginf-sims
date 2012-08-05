@@ -19,7 +19,7 @@ public abstract class SecureController extends Controller {
     static void setConnectedUser() {
         if (Security.isConnected()) {
             User user = connectedUser();
-            renderArgs.put("user", user);
+            renderArgs.put("loggedUser", user);
         }
     }
     
