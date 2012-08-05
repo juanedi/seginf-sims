@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="span8 offset2">
-    <div class="page-header"><h2>Configuración de ${app.name}</h2></div>
+    <div class="page-header"><h3>Configuración de ${app.name}</h3></div>
         #{if app.configured}
         <div class="well">
             <table id="appUserData" class="table table-condensed">
@@ -55,7 +55,7 @@
             </table>
             <div class="form-actions">
                 <input id="submitUsers" type="button" class="btn btn-primary" value="Aceptar">
-                <input id="resetUsers" type="button" class="btn btn-cancel" value="Resetear">
+                <input id="resetUsers" type="button" class="btn btn-cancel" value="Descartar cambios">
             </div>
             <div id="changeSuccess" style="display:none" class="alert alert-success">
                 El cambio se efectuó correctamente
